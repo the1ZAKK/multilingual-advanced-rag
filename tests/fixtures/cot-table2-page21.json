@@ -1,0 +1,16 @@
+{
+  "purpose": "Independent evaluation-only actual PDF control, visually inspected Table2 page21",
+  "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+  "page": 21,
+  "text": "Table 2: Standard prompting versus chain of thought prompting on ﬁve arithmetic reasoning bench-\nmarks. Note that chain of thought prompting is an emergent ability of model scale—it does not\npositively impact performance until used with a model of sufﬁcient scale.\nGSM8K\nSVAMP\nASDiv\nAQuA\nMAWPS\nModel\nstandard\nCoT standard\nCoT standard\nCoT standard\nCoT standard\nCoT\nUL2\n20B\n4.1\n4.4\n10.1 12.5\n16.0 16.9\n20.5 23.6\n16.6 19.1\nLaMDA 420M\n2.6\n0.4\n2.5\n1.6\n3.2\n0.8\n23.5\n8.3\n3.2\n0.9\n2B\n3.6\n1.9\n3.3\n2.4\n4.1\n3.8\n22.9 17.7\n3.9\n3.1\n8B\n3.2\n1.6\n4.3\n3.4\n5.9\n5.0\n22.8 18.6\n5.3\n4.8\n68B\n5.7\n8.2\n13.6 18.8\n21.8 23.1\n22.3 20.2\n21.6 30.6\n137B\n6.5 14.3\n29.5 37.5\n40.1 46.6\n25.5 20.6\n43.2 57.9\nGPT\n350M\n2.2\n0.5\n1.4\n0.8\n2.1\n0.8\n18.1\n8.7\n2.4\n1.1\n1.3B\n2.4\n0.5\n1.5\n1.7\n2.6\n1.4\n12.6\n4.3\n3.1\n1.7\n6.7B\n4.0\n2.4\n6.1\n3.1\n8.6\n3.6\n15.4 13.4\n8.8\n3.5\n175B\n15.6 46.9\n65.7 68.9\n70.3 71.3\n24.8 35.8\n72.7 87.1\nCodex\n-\n19.7 63.1\n69.9 76.4\n74.0 80.4\n29.5 45.3\n78.7 92.6\nPaLM\n8B\n4.9\n4.1\n15.1 16.8\n23.7 25.2\n19.3 21.7\n26.2 30.5\n62B\n9.6 29.9\n48.2 46.7\n58.7 61.9\n25.6 22.4\n61.8 80.3\n540B\n17.9 56.9\n69.4 79.0\n72.1 73.9\n25.2 35.8\n79.2 93.3\nTable 3: Standard prompting versus chain of thought prompting on the four subsets of the MAWPS\nbenchmark. The point of stratifying the MAWPS benchmark is to show that performance gains are\nminimal on easy one-step or two-step problems where large language models already achieve high\nperformance (e.g., SingleOp, SingleEq, and AddSub).\nSingleOp\nSingleEq\nAddSub\nMultiArith\nModel\nstandard\nCoT standard\nCoT standard\nCoT standard\nCoT\nUL2\n20B\n24.9 27.2\n18.0 20.2\n18.5 18.2\n5.0 10.7\nLaMDA 420M\n2.8\n1.0\n2.4\n0.4\n1.9\n0.7\n5.8\n1.5\n2B\n4.6\n4.1\n2.4\n3.3\n2.7\n3.2\n5.8\n1.8\n8B\n8.0\n7.0\n4.5\n4.4\n3.4\n5.2\n5.2\n2.4\n68B\n36.5 40.8\n23.9 26.0\n17.3 23.2\n8.7 32.4\n137B\n73.2 76.2\n48.8 58.7\n43.0 51.9\n7.6 44.9\nGPT\n350M\n3.2\n1.8\n2.0\n0.2\n2.0\n1.5\n2.3\n0.8\n1.3B\n5.3\n3.0\n2.4\n1.6\n2.3\n1.5\n2.2\n0.5\n6.7B\n13.5\n3.9\n8.7\n4.9\n8.6\n2.5\n4.5\n2.8\n175B\n90.9 88.8\n82.7 86.6\n83.3 81.3\n33.8 91.7\nCodex\n-\n93.1 91.8\n86.8 93.1\n90.9 89.1\n44.0 96.2\nPaLM\n8B\n41.8 46.6\n29.5 28.2\n29.4 31.4\n4.2 15.8\n62B\n87.9 85.6\n77.2 83.5\n74.7 78.2\n7.3 73.7\n540B\n94.1 94.1\n86.5 92.3\n93.9 91.9\n42.2 94.7\n21\n",
+  "control_reference": {
+    "table": 2,
+    "page": 21,
+    "model": "PaLM",
+    "size": "540B",
+    "task": "GSM8K",
+    "metric": "accuracy percentage",
+    "standard": "17.9",
+    "chain-of-thought": "56.9"
+  }
+}

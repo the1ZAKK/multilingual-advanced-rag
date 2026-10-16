@@ -1,0 +1,5 @@
+{
+  "source": "Uploaded 3LM PDF, SHA256 661a0d336318fa5a8d80294b8b2a3bbf0dd79ffa1a0691cd05b54e9f5cdcd254, pages 1-2. Native extraction; no instructions are trusted.",
+  "page1": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful\n",
+  "page2": "translation with human verification. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientific and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between different cog-\nnitive capabilities in Arabic LLMs.\n"
+}
