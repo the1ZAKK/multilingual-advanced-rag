@@ -1,5 +1,16 @@
 # Implementation and validation tracker
 
+## Workflow continuation — 18 October 2026
+
+- [x] Run seven source-checked development cases on three isolated papers with real Qwen/learned embeddings.
+- [x] Keep source-provenance checks separate from explicit AI-assisted/human review.
+- [x] Add review exports, preserve failed chat turns and refuse ambiguous paper names.
+- [x] Diagnose native single-column extraction/word-boundary defect; implement parser v4 and retest the method case.
+- [ ] Fully complete multi-part answers and reliable Arabic research output; independent human review and actual Windows execution.
+
+See [workflow validation](docs/workflow-validation-20261018.md).
+
+
 ## Current cloud continuation — October 2026
 
 - [x] Scoped retrieval, table binding/selection, bounded generation and evaluation audit fixes.

@@ -7,7 +7,9 @@ It reads an existing corpus and never uploads, deletes or reindexes documents.
 
 import argparse
 import json
+from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 from rag.config import Settings
 from rag.evaluation.benchmark import citation_provenance
@@ -16,8 +18,10 @@ from rag.query import resolve_language, validate_output_language
 from rag.service import RAGService
 
 
-def run_questions(service, cases, output: Path):
-    documents = {d.name: d.document_id for d in service.documents()}
+def run_questions(service, cases, output: Path, *, use_llm=True):
+    documents = service.documents()
+    run_id = str(uuid4())
+    created_at = datetime.now(timezone.utc).isoformat()
     records = []
     output.parent.mkdir(parents=True, exist_ok=True)
     for case in cases:
@@ -25,15 +29,27 @@ def run_questions(service, cases, output: Path):
             "id": case["id"],
             "question": case["question"],
             "language": case.get("language", "auto"),
+            "document_name": case["document_name"],
+            "document_id": case.get("document_id"),
         }
         try:
-            doc_id = documents[case["document_name"]]
+            matches = [
+                d
+                for d in documents
+                if d.name == case["document_name"]
+                and (not case.get("document_id") or d.document_id == case["document_id"])
+            ]
+            if len(matches) != 1:
+                raise ValueError("Document name/identity is missing or ambiguous; specify its ID")
+            doc_id = matches[0].document_id
+            record["document_id"] = doc_id
+            record["extraction_version"] = matches[0].extraction_version
             answer = service.chat(
                 ChatRequest(
                     query=case["question"],
                     language=record["language"],
                     document_ids=[doc_id],
-                    use_llm=True,
+                    use_llm=use_llm,
                 )
             )
             record.update(
@@ -54,6 +70,9 @@ def run_questions(service, cases, output: Path):
         output.write_text(
             json.dumps(
                 {
+                    "run_id": run_id,
+                    "created_at_utc": created_at,
+                    "use_llm": use_llm,
                     "model": service.settings.ollama_model,
                     "translation_model": service.settings.translation_model
                     or service.settings.ollama_model,
@@ -63,6 +82,13 @@ def run_questions(service, cases, output: Path):
                         "max_statements": service.settings.max_answer_statements,
                     },
                     "embedding_model": service.embedder.key,
+                    "retrieval": {
+                        "mode": "hybrid",
+                        "embedding_backend": service.settings.embedding_backend,
+                        "reranker_used": False,
+                        "configured_reranker_backend": service.settings.reranker_backend,
+                    },
+                    "documents": [d.model_dump() for d in documents],
                     "records": records,
                     "note": "Question smoke controls. Language/script and exact source provenance checks are not semantic correctness grades.",
                 },

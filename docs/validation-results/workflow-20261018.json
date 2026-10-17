@@ -1,0 +1,180 @@
+{
+  "scope": "Seven development controls; frozen native-page references, not an unseen benchmark. No independent human reviews performed.",
+  "baseline": {
+    "run_id": "62cda6a1-9a1e-49f2-a807-2dba04edd1b4",
+    "parser_version": "columns-sentences-v3",
+    "model": "qwen3-hf:1.7b",
+    "generation_limits": {
+      "context_chars": 6000,
+      "total_timeout": 150.0,
+      "max_statements": 3
+    },
+    "cases": [
+      {
+        "case_id": "legal-problem",
+        "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+        "mode": "ollama",
+        "latency_ms": 56060.496149002574,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "ArabLegalEval addresses the evaluation gap in assessing Arabic legal knowledge in large language models [S5] (page 1).\nThe benchmark uses tasks derived from original Arabic legal sources, in consultation with legal professionals, to test the legal reasoning capabilities of Arabic LLMs [S2] (page 2).\nArabLegalEval includes tasks to assess legal reasoning capabilities in Arabic and tasks to measure the ability to recall and use legal knowledge embedded in finetuned models [S2] (page 2).",
+        "warning": null,
+        "reviewer_type": "ai_assisted",
+        "verdict": "partial",
+        "review_notes": "Correct evaluation gap and original legal sources, but omits Saudi legal documents and synthesized questions requested by the source-material expectation."
+      },
+      {
+        "case_id": "legal-retrieval",
+        "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+        "mode": "ollama",
+        "latency_ms": 56683.963137009414,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "The initial ArabLegalEval benchmark includes tasks to assess the legal reasoning capabilities in Arabic as well as tasks to measure the ability to recall and use legal knowledge embedded in the fine-tuned models [S1] (page 2).\nThe benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases [S2] (page 2).\nFuture plans include adding more KSA regulatory documents, court cases, and judicial decisions to enhance this benchmark and promote advancements in Arabic legal AI [S6] (page 9).",
+        "warning": null,
+        "reviewer_type": "ai_assisted",
+        "verdict": "partial",
+        "review_notes": "Correctly states the current non-retrieval scope. Substitutes other future expansion plans for the requested explicit future assessment of retrieval abilities."
+      },
+      {
+        "case_id": "legal-retrieval-ar",
+        "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+        "mode": "extractive",
+        "latency_ms": 145453.53947399417,
+        "source_provenance_check": true,
+        "language_check": false,
+        "answer": "[Source excerpts; full response retained in the local run.]",
+        "warning": "Ollama generation failed (ValueError: Answer translation changed round-trip content; source excerpts required); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "reviewer_type": "ai_assisted",
+        "verdict": "fail",
+        "review_notes": "No verified Arabic answer; fallback excerpts remain in the source language."
+      },
+      {
+        "case_id": "table-tasks",
+        "question": "Which three task types does AraTable cover?",
+        "mode": "ollama",
+        "latency_ms": 42329.296779003926,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "AraTable covers three key tasks: direct question answering, fact verification, and reasoning [S8] (page 2).",
+        "warning": null,
+        "reviewer_type": "ai_assisted",
+        "verdict": "pass",
+        "review_notes": "The three task types match the native PDF statement on page 2."
+      },
+      {
+        "case_id": "table-method",
+        "question": "How is AraTable content curated, and what mechanism does its automated evaluation framework use?",
+        "mode": "extractive",
+        "latency_ms": 55731.766771990806,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "[Source excerpts; full response retained in the local run.]",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises do not provide sufficient information to confirm the claim. The claim mentions 'AraTable's automated evaluation framework uses a self-deliberation mechanism,' but the premises only mention 'ated evaluation framework that uses a self-' which is incomplete and ambiguous. The source document does not explicitly state the mechanism used in the framework, making it impossible to determine if the claim is fully supported or not.); showing evidence excerpts",
+        "reviewer_type": "ai_assisted",
+        "verdict": "fail",
+        "review_notes": "No generated answer. Quote fragments in the retrieved/sorted abstract lost continuous method evidence; corrected in parser v4 and retested separately."
+      },
+      {
+        "case_id": "table-prm",
+        "question": "Does the AraTable paper introduce an Arabic process reward model? Say if the retrieved evidence is insufficient.",
+        "mode": "insufficient-evidence",
+        "latency_ms": 651.4143729873467,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "The retrieved evidence is insufficient to establish the requested claim about “Arabic process reward model”. A positive introduction claim would need a direct statement; drawing it from these passages would be inference. This is a limit of the retrieved evidence, not proof of absence throughout the paper.\n\nContext references only: [S1] [S2].",
+        "warning": null,
+        "reviewer_type": "ai_assisted",
+        "verdict": "pass",
+        "review_notes": "Refuses unsupported positive PRM introduction and distinguishes retrieved-evidence limits from proof of paper-wide absence."
+      },
+      {
+        "case_id": "ace-table5",
+        "question": "Compare AceGPT-13B-chat and GPT-3.5 Turbo on All Set and Clean Set in Table 5, zero-shot F1. Give exact values.",
+        "mode": "source-tables",
+        "latency_ms": 688.1970989925321,
+        "source_provenance_check": true,
+        "language_check": true,
+        "answer": "**Table 5: Average F1 on ACVA in the zero-shot set- ting. The best performance is in bold and the second is underlined.** (page 5) [S4] [S5] [S6] [S7]\n\nModels and sizes in the table rows: AceGPT-13B-chat; GPT-3.5 Turbo [S4] [S5] [S6] [S7]\n\nMetric: F1 [S4] [S5] [S6] [S7]\n\nFocused view: 2 of 6 rows and 2 of 2 columns; 1 of 1 matching tables. This is not an exhaustive paper-wide model or result list.\n\n| Model | Size | All Set | Clean Set |\n| --- | --- | --- | --- |\n| AceGPT-13B-chat | - | 75.02% | 74.62% [S4] [S5] [S6] [S7] |\n| GPT-3.5 Turbo | - | 75.57% | 79.03% [S4] [S5] [S6] [S7] |",
+        "warning": null,
+        "reviewer_type": "ai_assisted",
+        "verdict": "pass",
+        "review_notes": "Exact Table 5 zero-shot F1 model-to-column relationships and all four values match original page 5."
+      }
+    ],
+    "review_summary": {
+      "run_id": "62cda6a1-9a1e-49f2-a807-2dba04edd1b4",
+      "cases": 7,
+      "reviewed": 7,
+      "counts": {
+        "fail": 2,
+        "not_reviewed": 0,
+        "partial": 2,
+        "pass": 3
+      },
+      "by_reviewer_type": {
+        "human": {
+          "reviewed": 0,
+          "counts": {
+            "pass": 0,
+            "partial": 0,
+            "fail": 0
+          },
+          "pass_rate": null
+        },
+        "ai_assisted": {
+          "reviewed": 7,
+          "counts": {
+            "pass": 3,
+            "partial": 2,
+            "fail": 2
+          },
+          "pass_rate": 0.42857142857142855
+        }
+      },
+      "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+    }
+  },
+  "targeted_v4_retest": {
+    "run_id": "b9cb9d6d-5c22-4c89-ac6a-309376f01cff",
+    "parser_version": "columns-sentences-v4",
+    "case_id": "table-method",
+    "mode": "ollama",
+    "answer": "AraTable is a novel and comprehensive benchmark designed to evaluate the reasoning and understanding capabilities of LLMs when applied to Arabic tabular data [S1] (page 1).\nThe methodology of AraTable follows a hybrid pipeline where initial content is generated by LLMs and subsequently filtered and verified by human experts to ensure high dataset quality [S2] (page 1).\nAraTable provides a framework for evaluating LLMs on three distinct QA tasks: direct extraction, reasoning, and fact verification [S5] (page 22).",
+    "reviewer_type": "ai_assisted",
+    "verdict": "partial",
+    "review_notes": "Parser v4 restores contiguous method evidence and generation succeeds. The answer correctly describes LLM generation plus human filtering, but still omits the requested self-deliberation evaluation mechanism; not a complete answer.",
+    "review_summary": {
+      "run_id": "b9cb9d6d-5c22-4c89-ac6a-309376f01cff",
+      "cases": 1,
+      "reviewed": 1,
+      "counts": {
+        "fail": 0,
+        "not_reviewed": 0,
+        "partial": 1,
+        "pass": 0
+      },
+      "by_reviewer_type": {
+        "human": {
+          "reviewed": 0,
+          "counts": {
+            "pass": 0,
+            "partial": 0,
+            "fail": 0
+          },
+          "pass_rate": null
+        },
+        "ai_assisted": {
+          "reviewed": 1,
+          "counts": {
+            "pass": 0,
+            "partial": 1,
+            "fail": 0
+          },
+          "pass_rate": 0.0
+        }
+      },
+      "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+    }
+  }
+}

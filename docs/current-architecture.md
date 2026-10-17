@@ -82,3 +82,15 @@ Responses distinguish `ollama`, `translated-answer`, `source-contributions`, `tr
 source language when no verified translation exists; this is disclosed rather
 than labeled a successful Arabic answer. The dashboard shows mode descriptions,
 unique source captions, all distinct verified quotations, and retrieval metadata.
+
+
+Parser v4 keeps native PDF order on single-column pages, where layout sorting can
+interleave margin stamps and destroy contiguous sentence quotes. Geometry still
+orders detected two-column pages; RTL text keeps its native order. Chunk fallback
+boundaries prefer whitespace, and overlap avoids ordinary mid-word starts. Original
+PDF bytes and quote checks are unchanged. Existing indexes are not migrated automatically.
+
+The review workflow in `rag.evaluation.review` verifies source hashes/native-page
+references and binds reviewer sheets to run IDs and exact responses. Human and
+AI-assisted verdicts are separate from source-provenance/language checks. The
+dashboard can export completed and failed turns without inventing gold answers.

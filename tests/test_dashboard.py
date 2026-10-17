@@ -39,3 +39,25 @@ def test_dashboard_chat_and_comparison(service, settings, pdf_bytes, monkeypatch
         next(b for b in app.button if b.label == "Compare").click().run(timeout=15)
         assert not app.exception
         assert len(app.expander) >= 3
+
+
+def test_dashboard_keeps_failed_chat_visible_after_rerun(monkeypatch):
+    real_client = httpx.Client
+
+    def handle(request):
+        if request.url.path == "/chat":
+            return httpx.Response(500, json={"detail": "backend test failure"})
+        return httpx.Response(200, json=[])
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handle))
+    )
+    app = AppTest.from_file(str(Path(__file__).parents[1] / "app/streamlit_app.py")).run(timeout=15)
+    app.chat_input[0].set_value("Question during backend failure").run(timeout=15)
+    assert not app.exception
+    messages = app.session_state["messages"]
+    assert len(messages) == 2
+    assert "backend test failure" in messages[-1]["text"]
+    assert "response" not in messages[-1]
+    assert messages[-1]["request"]["query"] == "Question during backend failure"
+    assert any("backend test failure" in item.value for item in app.markdown)

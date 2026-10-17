@@ -7,6 +7,7 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
+from rag.evaluation.review import chat_review_export
 from rag.response_modes import MODE_DESCRIPTIONS
 
 load_dotenv(override=False)
@@ -18,15 +19,20 @@ st.caption("Arabic & English · Hybrid retrieval · Verifiable page citations")
 
 
 def api(method, path, **kwargs):
+    st.session_state.pop("_last_api_error", None)
     try:
         with httpx.Client(timeout=180, trust_env=False) as client:
             response = client.request(method, BASE + path, **kwargs)
         if response.status_code >= 400:
-            st.error(f"API {response.status_code}: {response.text}")
+            message = f"API {response.status_code}: {response.text}"
+            st.session_state["_last_api_error"] = message
+            st.error(message)
             return None
         return response.json()
-    except httpx.HTTPError as exc:
-        st.error(f"Backend unavailable: {exc}")
+    except (httpx.HTTPError, ValueError) as exc:
+        message = f"Backend unavailable: {exc}"
+        st.session_state["_last_api_error"] = message
+        st.error(message)
         return None
 
 
@@ -140,24 +146,41 @@ with chat_tab:
                         for quote in c["quotes"]:
                             rtl_text(quote)
                 passages(result["evidence"])
+    if any("response" in message or "error" in message for message in st.session_state.messages):
+        st.download_button(
+            "Export chat for review",
+            data=json.dumps(
+                chat_review_export(st.session_state.messages), ensure_ascii=False, indent=2
+            ),
+            file_name="chat-review.json",
+            mime="application/json",
+            help="Save questions, answers, citations and blank review fields for source checking.",
+        )
     question = st.chat_input("Ask a research question / اطرح سؤالاً")
     if question:
         st.session_state.messages.append({"role": "user", "text": question})
         with st.spinner("Retrieving evidence…"):
-            result = api(
-                "POST",
-                "/chat",
-                json={
-                    "query": question,
-                    "language": language,
-                    "use_llm": use_llm,
-                    "document_ids": selected_documents or None,
-                    "mode": chat_mode,
-                },
-            )
+            chat_request = {
+                "query": question,
+                "language": language,
+                "use_llm": use_llm,
+                "document_ids": selected_documents or None,
+                "mode": chat_mode,
+            }
+            result = api("POST", "/chat", json=chat_request)
         if result:
             st.session_state.messages.append(
-                {"role": "assistant", "text": result["answer"], "response": result}
+                {
+                    "role": "assistant",
+                    "text": result["answer"],
+                    "response": result,
+                    "request": chat_request,
+                }
+            )
+        else:
+            error = st.session_state.get("_last_api_error") or "Backend returned no chat response."
+            st.session_state.messages.append(
+                {"role": "assistant", "text": error, "error": error, "request": chat_request}
             )
         st.rerun()
 with search_tab:

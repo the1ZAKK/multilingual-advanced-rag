@@ -11,10 +11,13 @@ BM25、倒数排名融合与多语言重排序，使用本地 Qwen 模型生成�
 
 ## Status and evidence
 
+Start with the [daily project workflow](docs/project-workflow.md): source-checked batch runs, chat export, review sheets and reproducible failure reports.
+
 The uploaded Windows version has been extended with explicit document-scoped retrieval,
 focused table comparisons, safer author-list extraction, bounded generation, audit-friendly
 evaluation exports, real dashboard screenshots, and a source updater that protects existing
-local work. See [current validation](docs/validation-20261018.md),
+local work. See [workflow validation](docs/workflow-validation-20261018.md),
+[previous generation validation](docs/validation-20261018.md),
 [current architecture](docs/current-architecture.md), and [safe upgrade instructions](docs/upgrading.md).
 Historical Windows diagnosis reports remain available; their test counts are not current
 cloud results. Model mode, valid citations and passing unit tests do not imply answer correctness.
