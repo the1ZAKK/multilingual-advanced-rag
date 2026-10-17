@@ -7,7 +7,7 @@
 - [x] Portable source package and backup-first updater with conflict refusal.
 - [ ] Reliable ordinary Arabic generation, pristine unseen-paper/human evaluation and Windows execution.
 
-See [current validation](docs/validation-20261016.md). Sections below are historical;
+See [current validation](docs/validation-20261018.md). Sections below are historical;
 their old model-access blockers and counts do not describe the current cloud run.
 
 

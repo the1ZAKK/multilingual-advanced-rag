@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     reranker_revision: str | None = None
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3:1.7b"
+    translation_model: str | None = Field(default=None, min_length=1)
     llm_timeout: float = Field(120, gt=0)
     llm_total_timeout: float = Field(150, gt=0, le=600)
     llm_context_tokens: int = Field(8192, ge=2048, le=32768)

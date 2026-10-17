@@ -17,7 +17,7 @@ py -3.11 scripts/apply_update.py --target $target
 
 Set `$target` to the actual installation directory. Python 3.12 also works.
 The check refuses any changed file whose contents differ from both the uploaded
-baseline and the new version. Review/merge any refused files instead of forcing
+baseline, an explicitly recorded previous release, and the new version. Review/merge any refused files instead of forcing
 an overwrite. No files are written until every source precondition passes.
 
 Before applying, the helper creates a ZIP of replaced source files under
@@ -70,3 +70,19 @@ weights, environments, corpora, `.env`, bytecode and backups, checks ZIP integri
 and includes a SHA-256 inventory. Review documentation/screenshots before sharing
 if you added private material. The inventory detects accidental changes; it is
 not a publisher signature.
+
+## Preparing another source release (developers)
+
+In the Git checkout, preserve the previous shipped `UPDATE-MANIFEST.json` before
+editing. Then regenerate against the original uploaded baseline, accepting only
+recorded previous release hashes:
+
+```bash
+python -m scripts.prepare_update --baseline 6581c08 --previous-manifest /path/to/previous/UPDATE-MANIFEST.json
+python scripts/package_source.py --output /path/to/project-source-updated.zip
+```
+
+The baseline ref applies to this checkout. This release helper requires Git; end
+users applying an update do not. Unknown edits still cause preflight refusal.
+Deleted or reverted shipped files require a reviewed migration rather than silent
+deletions. Existing backups and runtime directories remain protected.

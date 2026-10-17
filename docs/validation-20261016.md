@@ -1,3 +1,5 @@
+> Superseded by the [18 October continuation report](validation-20261018.md). The results below describe the previous release.
+
 # Current validation and delivery — October 2026
 
 This supersedes historical setup counts. Work continued from uploaded

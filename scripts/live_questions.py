@@ -55,6 +55,13 @@ def run_questions(service, cases, output: Path):
             json.dumps(
                 {
                     "model": service.settings.ollama_model,
+                    "translation_model": service.settings.translation_model
+                    or service.settings.ollama_model,
+                    "generation_limits": {
+                        "context_chars": service.settings.max_context_chars,
+                        "total_timeout": service.settings.llm_total_timeout,
+                        "max_statements": service.settings.max_answer_statements,
+                    },
                     "embedding_model": service.embedder.key,
                     "records": records,
                     "note": "Question smoke controls. Language/script and exact source provenance checks are not semantic correctness grades.",

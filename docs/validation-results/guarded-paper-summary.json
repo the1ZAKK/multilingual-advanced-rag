@@ -1,0 +1,14 @@
+{
+  "model": "qwen3-hf:1.7b",
+  "translation_model": "qwen3-hf:1.7b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 150.0,
+    "max_statements": 3
+  },
+  "question": "ما هو معيار ArabicMMLU، وما مصدر أسئلته، وكم عدد المهام والأسئلة فيه؟",
+  "mode": "extractive",
+  "warning": "Ollama generation failed (ValueError: Reverse answer translation lost a source-grounded name); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+  "latency_ms": 127992.17338798917,
+  "note": "Failed closed; not a correct generated Arabic answer. Full diagnostic traces remain in ignored local reports, not in the source archive."
+}

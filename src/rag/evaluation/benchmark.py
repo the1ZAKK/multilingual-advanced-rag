@@ -157,6 +157,12 @@ def evaluate(service, request: EvaluationRequest) -> dict:
                 "chunk_overlap": service.settings.chunk_overlap,
                 "retrieval_depth": service.settings.retrieval_depth,
                 "rrf_k": service.settings.rrf_k,
+                "ollama_model": service.settings.ollama_model,
+                "translation_model": service.settings.translation_model
+                or service.settings.ollama_model,
+                "max_context_chars": service.settings.max_context_chars,
+                "llm_total_timeout": service.settings.llm_total_timeout,
+                "max_answer_statements": service.settings.max_answer_statements,
             },
             "documents": [d.model_dump() for d in service.documents()],
             "rows": rows,

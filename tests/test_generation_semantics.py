@@ -614,3 +614,242 @@ def test_trailing_conjunction_is_preserved_outside_model_span(service, monkeypat
     )
     assert service.generator.translate_span("control", "domains and") == "المجالات و"
     assert calls == ["domains"]
+
+
+def test_arabic_ordinary_answer_keeps_source_refs_and_requires_arabic_prose(service, monkeypatch):
+    hits = evidence("تحتوي مجموعة البيانات على 40 مهمة.")
+    calls = mock_model(
+        monkeypatch,
+        {"statements": [statement("تحتوي مجموعة البيانات على 40 مهمة.")]},
+    )
+    result = service.generator.generate("كم عدد المهام في مجموعة البيانات؟", "ar", hits)
+    assert result.mode == "ollama"
+    assert "40 مهمة" in result.answer
+    assert result.citations[0].quote == "تحتوي مجموعة البيانات على 40 مهمة."
+    generation = calls[0][0]
+    assert "اكتب كل جملة" in generation["messages"][0]["content"]
+    assert any(data.get("task") == "semantic-grounding-audit" for _, data in calls)
+
+
+@pytest.mark.parametrize(
+    "text,reason",
+    [
+        ("The dataset contains 40 tasks.", "Output language mismatch"),
+        ("تحتوي مجموعة البيانات على 99 مهمة.", "unsupported number"),
+    ],
+)
+def test_arabic_prompt_never_permits_english_output_or_unsupported_number(
+    service, monkeypatch, text, reason
+):
+    hits = evidence("تحتوي مجموعة البيانات على 40 مهمة.")
+    mock_model(monkeypatch, {"statements": [statement(text)]})
+    with pytest.raises(GenerationUnavailable, match=reason):
+        service.generator.generate("كم عدد المهام في مجموعة البيانات؟", "ar", hits)
+
+
+def test_ordinary_translation_runs_only_after_source_claim_audit(service, monkeypatch):
+    hits = evidence("The dataset contains 14,575 questions.")
+    calls = mock_model(
+        monkeypatch, {"statements": [statement("The dataset contains 14,575 questions.")]}
+    )
+    translations = []
+
+    def translate(text, language):
+        assert any(data.get("task") == "semantic-grounding-audit" for _, data in calls)
+        translations.append((text, language))
+        return (
+            "تحتوي مجموعة البيانات على ١٤٬٥٧٥ سؤالاً."
+            if language == "ar"
+            else "The dataset contains 14575 questions."
+        )
+
+    monkeypatch.setattr(service.generator, "translate_ordinary_text", translate)
+    result = service.generator.generate("كم عدد الأسئلة؟", "ar", hits)
+    assert result.mode == "translated-answer"
+    assert result.citations[0].quote == "The dataset contains 14,575 questions."
+    assert [language for _, language in translations] == ["ar", "en"]
+    audits = [
+        data["items"][0] for _, data in calls if data.get("task") == "semantic-grounding-audit"
+    ]
+    assert len(audits) == 2
+    assert audits[1]["require_complete"] is True
+    assert audits[1]["independent_reverse_translation"] == "The dataset contains 14575 questions."
+    assert audits[1]["full_author_statement"] == "The dataset contains 14,575 questions."
+
+
+@pytest.mark.parametrize(
+    "stage", ["source", "forward-number", "reverse-number", "translation-meaning"]
+)
+def test_ordinary_translation_cannot_bypass_grounding(service, monkeypatch, stage):
+    hits = evidence("The dataset contains 40 questions.")
+
+    def audit(data):
+        item = data["items"][0]
+        reject = (stage == "source" and item["item_id"] == "item-1") or (
+            stage == "translation-meaning" and item["item_id"].startswith("translation-")
+        )
+        return {
+            "verdicts": [
+                {
+                    "item_id": item["item_id"],
+                    "supported": not reject,
+                    "complete": not reject,
+                    "direct": True,
+                    "reason": "Meaning mismatch" if reject else "Supported claim",
+                }
+            ]
+        }
+
+    mock_model(
+        monkeypatch, {"statements": [statement("The dataset contains 40 questions.")]}, audit
+    )
+    translations = []
+
+    def translate(text, language):
+        translations.append(language)
+        if language == "ar":
+            return (
+                "تحتوي مجموعة البيانات على 99 سؤالاً."
+                if stage == "forward-number"
+                else "تحتوي مجموعة البيانات على 40 سؤالاً."
+            )
+        return (
+            "The dataset contains 99 questions."
+            if stage == "reverse-number"
+            else "The dataset contains 40 questions."
+        )
+
+    monkeypatch.setattr(service.generator, "translate_ordinary_text", translate)
+    with pytest.raises(GenerationUnavailable):
+        service.generator.generate("كم عدد الأسئلة؟", "ar", hits)
+    if stage == "source":
+        assert not translations
+
+
+def test_thousands_grouping_never_supports_truncated_quantity():
+    hits = evidence("The dataset contains 14,575 questions.")
+    with pytest.raises(ValueError, match="unsupported number"):
+        semantic_items(
+            {"statements": [statement("The dataset contains 14 questions.")]},
+            hits,
+            {},
+            "How many questions?",
+            "en",
+        )
+    items = semantic_items(
+        {"statements": [statement("تحتوي مجموعة البيانات على ١٤٬٥٧٥ سؤالاً.")]},
+        hits,
+        {},
+        "كم عدد الأسئلة؟",
+        "ar",
+    )
+    assert len(items) == 1
+
+
+def test_ordinary_translation_rejects_changed_identifier_before_reverse_audit(service, monkeypatch):
+    payload = {"statements": [statement("QA17 contains 40 questions.")]}
+    hits = evidence("QA17 contains 40 questions.")
+    calls = []
+
+    def translate(text, language):
+        calls.append(language)
+        return "تحتوي المجموعة XY17 على 40 سؤالاً."
+
+    monkeypatch.setattr(service.generator, "translate_ordinary_text", translate)
+    with pytest.raises(ValueError, match="identifier"):
+        service.generator.translate_verified_answer(payload, hits, "كم عدد الأسئلة؟")
+    assert calls == ["ar"]
+
+
+def test_reverse_translation_cannot_drop_geographical_names_even_if_judge_would_approve(
+    service, monkeypatch
+):
+    payload = {
+        "statements": [statement("The study uses school exams from the Levant and Gulf regions.")]
+    }
+    hits = evidence(payload["statements"][0]["text"])
+    monkeypatch.setattr(
+        service.generator,
+        "translate_ordinary_text",
+        lambda text, language: (
+            "تستخدم الدراسة امتحانات المدارس من مناطق أخرى."
+            if language == "ar"
+            else "The study uses school exams from Constantinople and the Eastern Roman Empire."
+        ),
+    )
+    monkeypatch.setattr(
+        service.generator,
+        "audit_semantic_item",
+        lambda item: pytest.fail("Lost names must fail before the model judge"),
+    )
+    with pytest.raises(ValueError, match="lost a source-grounded name"):
+        service.generator.translate_verified_answer(payload, hits, "ما مصدر البيانات؟")
+
+
+def test_arabic_attached_conjunction_keeps_full_grouped_quantity():
+    from rag.generation.ollama import numeric_atoms
+
+    assert (
+        numeric_atoms("40 tasks and 14,575 questions")
+        == numeric_atoms("40 مهمة و١٤٬٥٧٥ سؤالاً")
+        == {"40", "14575"}
+    )
+    assert numeric_atoms("QA17 uses 0.75 percent") == {"0.75"}
+
+
+def test_roundtrip_extra_properties_are_rejected_even_with_positive_small_judge(
+    service, monkeypatch
+):
+    hits = evidence("The dataset contains 64 sensor records.")
+    payload = {"statements": [statement(hits[0].chunk.text)]}
+    monkeypatch.setattr(
+        service.generator,
+        "translate_ordinary_text",
+        lambda text, language: (
+            "تحتوي البيانات على 64 ملاحظة من أجهزة مترابطة."
+            if language == "ar"
+            else "The data contains 64 observations from interconnected devices."
+        ),
+    )
+    monkeypatch.setattr(
+        service.generator,
+        "audit_semantic_item",
+        lambda item: pytest.fail("Novel content must fail before an unreliable judge"),
+    )
+    with pytest.raises(ValueError, match="round-trip content"):
+        service.generator.translate_verified_answer(payload, hits, "كم عدد السجلات؟")
+
+
+def test_ordinary_reverse_translator_never_receives_original_claim_or_sources(service, monkeypatch):
+    calls = []
+    arabic = "تحتوي مجموعة البيانات على 40 مهمة."
+    original_client = httpx.Client
+
+    def handle(request):
+        body = json.loads(request.content)
+        calls.append(body)
+        return httpx.Response(
+            200,
+            json={
+                "message": {
+                    "content": json.dumps(
+                        {"text": arabic if len(calls) == 1 else "The dataset contains 40 tasks."},
+                        ensure_ascii=False,
+                    )
+                }
+            },
+        )
+
+    transport = httpx.MockTransport(handle)
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kwargs: original_client(transport=transport, **kwargs)
+    )
+    generator = type(service.generator)(
+        service.settings.model_copy(update={"translation_model": "explicit-local-translator"})
+    )
+    translated = generator.translate_ordinary_text("The dataset contains 40 tasks.", "ar")
+    generator.translate_ordinary_text(translated, "en")
+    assert all(call["model"] == "explicit-local-translator" for call in calls)
+    reverse_input = json.loads(calls[1]["messages"][1]["content"])
+    assert reverse_input == arabic
+    assert "The dataset contains 40 tasks." not in json.dumps(calls[1])

@@ -1,0 +1,31 @@
+[
+  {
+    "source": "The dataset contains 64 questions.",
+    "question": "كم عدد الأسئلة في مجموعة البيانات؟",
+    "answer": "البيانات تحتوي على 64 سؤالا [S1] (الصفحة 1).",
+    "mode": "translated-answer",
+    "citations": [
+      {
+        "label": "S1",
+        "chunk_id": "fixture:p1:0",
+        "document_id": "fixture",
+        "document_name": "Synthetic fixture.pdf",
+        "page": 1,
+        "quote": "The dataset contains 64 questions."
+      },
+      {
+        "label": "S1",
+        "chunk_id": "fixture:p1:0",
+        "document_id": "fixture",
+        "document_name": "Synthetic fixture.pdf",
+        "page": 1,
+        "quote": "The dataset contains 64 questions."
+      }
+    ]
+  },
+  {
+    "source": "The dataset contains 64 sensor records.",
+    "question": "كم عدد السجلات في مجموعة البيانات؟",
+    "failure": "Ollama generation failed (ValueError: Answer translation changed round-trip content; source excerpts required); showing evidence excerpts"
+  }
+]

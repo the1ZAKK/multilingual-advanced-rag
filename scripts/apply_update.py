@@ -48,7 +48,8 @@ def apply_update(source: Path, target: Path, manifest: dict, *, check_only=False
         previous = destination.read_bytes() if destination.exists() else None
         if previous == data:
             continue
-        if previous is not None and digest(previous) != item.get("baseline_sha256"):
+        accepted = {item.get("baseline_sha256"), *item.get("accepted_sha256", [])}
+        if previous is not None and digest(previous) not in accepted:
             raise ValueError(
                 f"Unshared local edits detected in {relative}; nothing was changed. Review/merge this file first."
             )

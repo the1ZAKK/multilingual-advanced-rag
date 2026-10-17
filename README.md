@@ -14,7 +14,7 @@ BM25、倒数排名融合与多语言重排序，使用本地 Qwen 模型生成�
 The uploaded Windows version has been extended with explicit document-scoped retrieval,
 focused table comparisons, safer author-list extraction, bounded generation, audit-friendly
 evaluation exports, real dashboard screenshots, and a source updater that protects existing
-local work. See [current validation](docs/validation-20261016.md),
+local work. See [current validation](docs/validation-20261018.md),
 [current architecture](docs/current-architecture.md), and [safe upgrade instructions](docs/upgrading.md).
 Historical Windows diagnosis reports remain available; their test counts are not current
 cloud results. Model mode, valid citations and passing unit tests do not imply answer correctness.
@@ -22,8 +22,9 @@ cloud results. Model mode, valid citations and passing unit tests do not imply a
 The hash/lexical profile is explicitly offline and is **not learned semantic retrieval**.
 Source tables and author statements are labeled separately from generated Qwen prose.
 Local generation can fall back conservatively; research answers still require source review.
-Ordinary Arabic generation remains unreliable in live testing; rejected output is shown
-as explicitly labeled source excerpts. See the current validation report for failed cases.
+Ordinary Arabic questions over English-only evidence use verified English claims
+followed by guarded Arabic translation, labeled `translated-answer`. General Arabic
+quality remains unreliable; rejected output is shown as explicitly labeled excerpts. See the current validation report for failed cases.
 
 ## Architecture
 
@@ -299,3 +300,18 @@ judgments; non-finite results are rejected instead of exported as fabricated rep
 `scripts/live_questions.py` runs existing-paper questions without modifying the corpus and
 preserves outputs for manual review. `data/evaluation/research-questions.json` is a development
 smoke set; its source PDFs are not redistributed. It is not an unseen scientific benchmark.
+
+### Ordinary Arabic translation
+
+For English-only evidence, the server verifies English claims before translating
+them into Arabic. Forward/back translation preserve references and numeric values;
+identifier/name guards and a conservative lexical round-trip veto reject observed
+translation errors independently of the model judge. This can reject faithful
+paraphrases and is not a proof of semantic correctness or question coverage.
+
+The optional `RAG_TRANSLATION_MODEL` selects an already installed local model for
+ordinary answer translation only; when unset it uses `RAG_OLLAMA_MODEL`. It does
+not change the authored-contribution translator, download models or relax checks.
+The small Qwen models tested here still mistranslated research sentences. Use the
+English answer setting when you need to inspect the supported English prose, and
+review the original PDF for important claims. See the current validation report.

@@ -74,3 +74,16 @@ def test_partial_write_failure_restores_original_source(tmp_path, monkeypatch):
     with pytest.raises(OSError, match="simulated"):
         apply_update(source, target, manifest)
     assert (target / "module.py").read_bytes() == b"old code"
+
+
+def test_update_accepts_only_explicitly_recorded_previous_release(tmp_path):
+    source, target, manifest = fixture(tmp_path)
+    manifest["files"][0]["accepted_sha256"] = [digest(b"previous reviewed release")]
+    (target / "module.py").write_bytes(b"previous reviewed release")
+    result = apply_update(source, target, manifest)
+    assert result["changed_files"] == 1
+    with ZipFile(result["backup"]) as backup:
+        assert backup.read("module.py") == b"previous reviewed release"
+    (target / "module.py").write_bytes(b"previous reviewed release plus private edits")
+    with pytest.raises(ValueError, match="Unshared local edits"):
+        apply_update(source, target, manifest)

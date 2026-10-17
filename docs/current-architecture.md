@@ -20,7 +20,11 @@ flowchart TD
   Tables --> Views[Bounded source table views]
   Claims --> Qwen[Local Ollama / Qwen]
   Qwen --> Verify[Quote provenance / per-sentence claims / language / semantic audit]
-  Verify --> Answer[Cited generated response]
+  Verify --> Pivot[Optional Arabic translation of verified English claims]
+  Pivot --> Reverse[Independent reverse translation / number and identifier guards]
+  Reverse --> Answer[Cited response labeled translated-answer]
+  Verify --> Answer
+  Reverse --> Fallback
   Verify --> Fallback[Explicit original-language excerpts on failure]
   Context --> Refuse[Evidence-local insufficiency for unsupported claims]
 ```
@@ -62,7 +66,18 @@ source-counted author lists. Context size and time limits are configurable for
 CPU memory/latency. Models can still fail or disagree: this is not a guaranteed
 entailment oracle. No response-mode label is a correctness grade.
 
-Responses distinguish `ollama`, `source-contributions`, `translated-contributions`,
+For ordinary Arabic questions with English-only evidence, generation first produces
+English claims and audits them against their own sources. Only verified claims
+are translated. Each Arabic sentence preserves the original refs and identifiers,
+passes numeric-value and identifier/name checks, and receives an independent reverse translation
+whose complete meaning is checked against the original claim and source premises.
+The reverse translator never receives the original English claim. A conservative
+content-word veto rejects changed round-trip meaning even if the judge approves;
+it also rejects some faithful paraphrases. All calls share
+the original time budget; failure still falls back. This adds latency and does
+not guarantee question coverage or judge reliability.
+
+Responses distinguish `ollama`, `translated-answer`, `source-contributions`, `translated-contributions`,
 `source-tables`, `insufficient-evidence`, and `extractive`. Excerpts may retain the
 source language when no verified translation exists; this is disclosed rather
 than labeled a successful Arabic answer. The dashboard shows mode descriptions,
