@@ -17,9 +17,11 @@
     },
     {
       "path": ".gitattributes",
-      "sha256": "35ea77a7ea7bd44b26d077255063abc9b605a7d4675bac4426489ab30f027fd7",
+      "sha256": "12fa1866918578e02d461c719162d1f38752858f2a0ca18842b8e2e440a7a7b2",
       "baseline_sha256": null,
-      "accepted_sha256": []
+      "accepted_sha256": [
+        "35ea77a7ea7bd44b26d077255063abc9b605a7d4675bac4426489ab30f027fd7"
+      ]
     },
     {
       "path": ".gitignore",
