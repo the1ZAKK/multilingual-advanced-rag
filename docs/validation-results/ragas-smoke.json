@@ -1,0 +1,11 @@
+{
+  "rows": [
+    {
+      "faithfulness": 1.0,
+      "answer_correctness": 0.75
+    }
+  ],
+  "judge": "qwen3-hf:1.7b",
+  "warning": "Local LLM judge scores are model-dependent estimates; inspect Arabic judge reliability manually.",
+  "scope": "One synthetic English fixture; live model smoke only, no unseen benchmark or Arabic correctness claim."
+}

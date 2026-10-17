@@ -16,3 +16,5 @@ dist/
 data/demo-index/
 data/smoke-index/
 data/*-index/
+
+*.zip

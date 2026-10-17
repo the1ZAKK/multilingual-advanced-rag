@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3:1.7b"
     llm_timeout: float = Field(120, gt=0)
+    llm_total_timeout: float = Field(150, gt=0, le=600)
+    llm_context_tokens: int = Field(8192, ge=2048, le=32768)
+    max_answer_statements: int = Field(4, ge=1, le=20)
     max_context_chars: int = Field(12000, ge=1000, le=64000)
     min_dense_score: float = Field(0.25, ge=-1, le=1)
 

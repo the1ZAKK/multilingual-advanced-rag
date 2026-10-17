@@ -4,15 +4,38 @@ import re
 
 from rag.ingestion.text import normalize
 
-VERSION = "columns-sentences-v2"
+VERSION = "columns-sentences-v3"
 
 _COUNT_WORDS = {
-    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
-    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
-    "واحدة": 1, "اثنتان": 2, "اثنين": 2, "ثلاث": 3, "ثلاثة": 3,
-    "اربع": 4, "اربعة": 4, "خمس": 5, "خمسة": 5, "ست": 6,
-    "ستة": 6, "سبع": 7, "سبعة": 7, "ثمان": 8, "ثمانية": 8,
-    "تسع": 9, "تسعة": 9, "عشر": 10, "عشرة": 10,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "واحدة": 1,
+    "اثنتان": 2,
+    "اثنين": 2,
+    "ثلاث": 3,
+    "ثلاثة": 3,
+    "اربع": 4,
+    "اربعة": 4,
+    "خمس": 5,
+    "خمسة": 5,
+    "ست": 6,
+    "ستة": 6,
+    "سبع": 7,
+    "سبعة": 7,
+    "ثمان": 8,
+    "ثمانية": 8,
+    "تسع": 9,
+    "تسعة": 9,
+    "عشر": 10,
+    "عشرة": 10,
 }
 
 
@@ -24,14 +47,16 @@ def contribution_declarations(text: str) -> list[tuple[int, int, int | None]]:
     """
     declarations = []
     pattern = (
-        r"(?im)(?:\b(?:our|the|this\s+paper['’]s)\s+(?:main\s+)?contributions\b"
-        r"|\bwe\s+make\b[^\n:]{0,55}\bcontributions\b)[^.!?]{0,220}"
+        r"(?im)(?:\b(?:our|the|this\s+paper['’]s)\s+(?:(?:main|key|primary|novel)\s+)?contributions\b"
+        r"|\bwe\s+(?:make|highlight|summarize|summarise|present)\b[^\n:]{0,55}\bcontributions\b)[^.!?]{0,220}?"
         r"(?:\b(?:fold|following|follows|including|include|consist\s+of)\b|:)"
     )
     for match in re.finditer(pattern, text):
         declaration = normalize(match[0])
         count_match = re.search(
-            r"\b(" + "|".join(_COUNT_WORDS) + r"|\d{1,2})\s*(?:[- ]?fold|contributions?\b)",
+            r"\b("
+            + "|".join(_COUNT_WORDS)
+            + r"|\d{1,2})\s*(?:[- ]?fold|(?:(?:main|key|primary)\s+)?contributions?\b)",
             declaration,
         )
         count = None
@@ -56,14 +81,42 @@ def contribution_declarations(text: str) -> list[tuple[int, int, int | None]]:
 def contribution_markers(text: str, start: int = 0) -> list[tuple[int, int, int | None, str]]:
     """List markers with original offsets and source ordinal, where declared."""
     markers = []
-    for match in re.finditer(r"(?<!\w)(?:\((\d{1,2})\)|(\d{1,2})[)])\s+|(?m:^\s*(\d{1,2})\.\s+)", text[start:]):
+    for match in re.finditer(
+        r"(?<!\w)(?:\((\d{1,2})\)|(\d{1,2})[)])\s+|(?m:^\s*(\d{1,2})\.\s+)", text[start:]
+    ):
         number = int(next(group for group in match.groups() if group))
         markers.append((start + match.start(), start + match.end(), number, "number"))
-    ordinals = ("First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth")
+    romans = ("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x")
+    for number, roman in enumerate(romans, 1):
+        for match in re.finditer(rf"(?<!\w)(?:\({roman}\)|{roman}\))\s+", text[start:], re.I):
+            markers.append((start + match.start(), start + match.end(), number, "roman"))
+    ordinals = (
+        "First",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Sixth",
+        "Seventh",
+        "Eighth",
+        "Ninth",
+        "Tenth",
+    )
     for number, ordinal in enumerate(ordinals, 1):
         for match in re.finditer(rf"\b{ordinal}\s*[,،:]\s*", text[start:], re.IGNORECASE):
             markers.append((start + match.start(), start + match.end(), number, "ordinal"))
-    arabic_ordinals = ("اولا", "ثانيا", "ثالثا", "رابعا", "خامسا", "سادسا", "سابعا", "ثامنا", "تاسعا", "عاشرا")
+    arabic_ordinals = (
+        "اولا",
+        "ثانيا",
+        "ثالثا",
+        "رابعا",
+        "خامسا",
+        "سادسا",
+        "سابعا",
+        "ثامنا",
+        "تاسعا",
+        "عاشرا",
+    )
     marks = r"[\u0610-\u061a\u064b-\u065f\u0670]*"
     for number, word in enumerate(arabic_ordinals, 1):
         pattern = "".join((r"[اأإآ]" if char == "ا" else char) + marks for char in word)
@@ -97,7 +150,9 @@ def reading_text(page) -> str:
     middle = page.rect.width / 2
     left = [b for b in blocks if b[2] <= middle and b[2] - b[0] > page.rect.width * 0.2]
     right = [b for b in blocks if b[0] >= middle and b[2] - b[0] > page.rect.width * 0.2]
-    if len(left) < 2 or len(right) < 2:
+    left_column = len(left) >= 2 or any(b[3] - b[1] > 35 for b in left)
+    right_column = len(right) >= 2 or any(b[3] - b[1] > 35 for b in right)
+    if not (left_column and right_column):
         return page.get_text("text", sort=True)
     # Full-width titles/tables divide the page into bands. Within a band read down
     # the entire left column, then down the right, never across matching baselines.

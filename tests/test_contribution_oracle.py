@@ -51,7 +51,11 @@ def pdf_result(tmp_path):
     fragments = [
         ("S1", 1, source["page1"].strip()),
         ("S2", 2, source["page2"].split("Second,", 1)[0].strip()),
-        ("S2", 2, "Second," + source["page2"].split("Second,", 1)[1].split("Third,", 1)[0].rstrip()),
+        (
+            "S2",
+            2,
+            "Second," + source["page2"].split("Second,", 1)[1].split("Third,", 1)[0].rstrip(),
+        ),
         ("S2", 2, "Third," + source["page2"].split("Third,", 1)[1].rstrip()),
     ]
     citations = [
@@ -125,14 +129,24 @@ def test_keyword_rich_benchmark_components_do_not_become_authored_contributions(
     [
         (0, "native Arabic content curation, ", "", "native_arabic_curation"),
         (0, "synthetic generation, and ", "", "synthetic_generation"),
-        (0, "translations checked by human reviewers", "translations", "translation_with_human_verification"),
+        (
+            0,
+            "translations checked by human reviewers",
+            "translations",
+            "translation_with_human_verification",
+        ),
         (1, "more than forty", "exactly forty", "more_than_forty_models"),
         (1, "Arabic and multilingual", "Arabic", "arabic_and_multilingual_models"),
         (1, "scientific and programming", "scientific", "scientific_and_programming_evaluation"),
         (2, " and test robustness", "", "robustness_testing"),
         (2, "correlations across tasks", "scores", "analysis_of_cross_task_correlations"),
         (2, "how models behave and ", "", "insights_into_model_behavior"),
-        (2, " and how different cognitive abilities relate", "", "relationships_between_cognitive_capabilities"),
+        (
+            2,
+            " and how different cognitive abilities relate",
+            "",
+            "relationships_between_cognitive_capabilities",
+        ),
     ],
 )
 def test_each_essential_source_assertion_must_appear_in_its_item(
@@ -146,9 +160,10 @@ def test_each_essential_source_assertion_must_appear_in_its_item(
     checks = verify_source_answer(result, path, require_problem=False)
     assert all(checks["exact_pdf_quotes"])
     assert not checks["passed"]
-    assert missing_assertion in checks["contribution_items"][str(item_index + 1)][
-        "missing_or_wrong_assertions"
-    ]
+    assert (
+        missing_assertion
+        in checks["contribution_items"][str(item_index + 1)]["missing_or_wrong_assertions"]
+    )
 
 
 @pytest.mark.parametrize("order", [(1, 0, 2), (0, 2, 1), (0, 1, 1)])
@@ -183,9 +198,7 @@ def test_negated_keyword_complete_evaluation_is_not_an_authored_contribution(pdf
 
 def test_problem_is_separate_and_contributions_remain_one_to_three(pdf_result):
     path, result, _ = pdf_result
-    result["citations"].append(
-        {**result["citations"][0], "label": "S3", "quote": PROBLEM}
-    )
+    result["citations"].append({**result["citations"][0], "label": "S3", "quote": PROBLEM})
     result["answer"] = answer_for(PARAPHRASES, problem=True)
     checks = verify_source_answer(result, path, require_problem=True)
     assert checks["passed"] and checks["problem_evaluation_gap"]

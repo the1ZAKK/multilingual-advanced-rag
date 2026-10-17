@@ -6,11 +6,18 @@ from rag.models import ChatRequest, Chunk, Hit, SearchRequest
 
 
 def semantic_response(data):
-    return {"verdicts": [
-        {"item_id": item["item_id"], "supported": True, "complete": True,
-         "direct": True, "reason": "The mock premise supports this contract-test claim."}
-        for item in data["items"]
-    ]}
+    return {
+        "verdicts": [
+            {
+                "item_id": item["item_id"],
+                "supported": True,
+                "complete": True,
+                "direct": True,
+                "reason": "The mock premise supports this contract-test claim.",
+            }
+            for item in data["items"]
+        ]
+    }
 
 
 def test_citations_and_fallback(service, pdf_bytes, monkeypatch):
@@ -124,9 +131,9 @@ def test_three_lm_retries_invalid_quotes_without_losing_sources(service, monkeyp
         body = json.loads(request.content)
         data = json.loads(body["messages"][1]["content"])
         if data.get("task") == "semantic-grounding-audit":
-            return httpx.Response(200, json={"message": {"content": json.dumps(
-                semantic_response(data)
-            )}})
+            return httpx.Response(
+                200, json={"message": {"content": json.dumps(semantic_response(data))}}
+            )
         requests.append(data)
         return httpx.Response(
             200,
@@ -207,9 +214,9 @@ def test_ollama_http_contract(service, pdf_bytes, monkeypatch):
         seen.append(body)
         data = json.loads(body["messages"][1]["content"])
         if data.get("task") == "semantic-grounding-audit":
-            return httpx.Response(200, json={"message": {"content": json.dumps(
-                semantic_response(data)
-            )}})
+            return httpx.Response(
+                200, json={"message": {"content": json.dumps(semantic_response(data))}}
+            )
         return httpx.Response(
             200,
             json={

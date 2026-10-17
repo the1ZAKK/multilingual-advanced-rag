@@ -67,3 +67,22 @@ The committed `data/evaluation/demo-documents/` PDFs are synthetic English fixtu
 both with default chunk settings and evaluate `data/evaluation/demo.json` to reproduce the
 demo schema. `docs/demo-results.json` records an actual hash/lexical run on these fixtures.
 Running `scripts/demo.py` twice does not add duplicates: generated PDF bytes are deterministic.
+
+## Current audit exports
+
+Use `include_answers=true` to retain predictions and verified citations for independent
+review. Case-level document filters are validated before ranking and annotations outside
+the selected documents are rejected. Run IDs, UTC timestamps, configuration and document
+hashes support reproducibility. p50/p95 are observed query timings for that run, including
+cold loads; no throughput guarantee or significance claim follows from a tiny dataset.
+
+`citation_provenance_valid` checks identity and exact original/indexed substrings. It does
+not measure entailment. A refusal without citations returns null, not a vacuous true.
+Language checks use script heuristics; they do not establish fluent Arabic or translation
+quality. Scored denominators accompany aggregated rates. CSV nested fields contain JSON.
+
+The live question runner records source modes, fallback warnings and full answers, without
+changing uploaded documents. Reference-based semantic grading and additional held-out
+annotation still require independent review. Never turn a passing mode/quote check into a
+semantic accuracy score. Source-table and source-list responses are not Qwen-generation
+successes. See the current validation report for actual successful and failed runs.

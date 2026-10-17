@@ -1,0 +1,9 @@
+{
+  "description": "ANNOTATION TEMPLATE ONLY: replace placeholder IDs after ingestion; not runnable as a benchmark unchanged.",
+  "cases": [
+    {"id": "en-01", "question": "How does hybrid retrieval combine evidence?", "language": "en", "relevant": {"REPLACE_WITH_ACTUAL_CHUNK_ID": 1}, "reference_answer": "Hybrid retrieval combines dense and lexical rankings."},
+    {"id": "ar-01", "question": "كيف يتم دمج البحث الدلالي والبحث بالكلمات؟", "language": "ar", "relevant": {"REPLACE_WITH_ACTUAL_CHUNK_ID": 1}}
+  ],
+  "modes": ["dense", "bm25", "hybrid", "hybrid-rerank"],
+  "generate_answers": false
+}

@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 def _display(value):
-    return str(value).replace("|", "\\|").replace("\n", " ").strip()
+    text = str(value).replace("\n", " ").strip()
+    # Table structure is ours; document cells/captions must remain plain text.
+    return re.sub(r"([\\`*_{}\[\]<>|])", r"\\\1", text)
 
 
 def _aggregate_tables(tables):
@@ -28,16 +30,18 @@ def _aggregate_tables(tables):
     aggregate_variants = {
         (t.get("document_id"), t.get("context", {}).get("variant"))
         for t in tables
-        if {str(c.get("condition", "")).lower() for c in t["columns"]}
-        == {"mcq", "completion"}
+        if {str(c.get("condition", "")).lower() for c in t["columns"]} == {"mcq", "completion"}
         and len({c.get("benchmark") for c in t["columns"]}) <= 2
     }
-    return [t for t in tables if not (
-        {str(c.get("condition", "")).lower() for c in t["columns"]}
-        == {"mcq", "completion"}
-        and len({c.get("benchmark") for c in t["columns"]}) > 2
-        and (t.get("document_id"), t.get("context", {}).get("variant")) in aggregate_variants
-    )]
+    return [
+        t
+        for t in tables
+        if not (
+            {str(c.get("condition", "")).lower() for c in t["columns"]} == {"mcq", "completion"}
+            and len({c.get("benchmark") for c in t["columns"]}) > 2
+            and (t.get("document_id"), t.get("context", {}).get("variant")) in aggregate_variants
+        )
+    ]
 
 
 def _table_fragments(table):
@@ -51,11 +55,15 @@ def _table_fragments(table):
         if row.get("size") and " ".join(f["text"] for f in row["size_source"]) != row["size"]:
             raise ValueError("Table size conflicts with native size fragments")
         columns = {c["column_id"]: c for c in table["columns"]}
-        if (len(row["cells"]) != len(columns)
-                or {cell["column_id"] for cell in row["cells"]} != set(columns)):
+        if len(row["cells"]) != len(columns) or {cell["column_id"] for cell in row["cells"]} != set(
+            columns
+        ):
             raise ValueError("Incomplete result row")
         for cell in row["cells"]:
-            if cell["column_id"] not in columns or cell["path"] != columns[cell["column_id"]]["path"]:
+            if (
+                cell["column_id"] not in columns
+                or cell["path"] != columns[cell["column_id"]]["path"]
+            ):
                 raise ValueError("Result cell conflicts with column hierarchy")
             if len(cell["source"]) != 1 or cell["source"][0]["text"] != cell["value"]:
                 raise ValueError("Result value conflicts with exact native cell fragment")
@@ -70,19 +78,23 @@ def _native_quotes(indexed, native):
     if indexed in native:
         return [indexed]
     matcher = SequenceMatcher(None, indexed, native, autojunk=False)
-    return [indexed[match.a:match.a + match.size].strip()
-            for match in matcher.get_matching_blocks() if match.size >= 12
-            and indexed[match.a:match.a + match.size].strip()]
+    return [
+        indexed[match.a : match.a + match.size].strip()
+        for match in matcher.get_matching_blocks()
+        if match.size >= 12 and indexed[match.a : match.a + match.size].strip()
+    ]
 
 
 def _native_sources(table, evidence):
     native = table.get("native_page_text")
     if not isinstance(native, str) or not native:
         raise ValueError("Original native PDF page text is required for table provenance")
-    candidates = [(f"S{i}", hit.chunk) for i, hit in enumerate(evidence, 1)
-                  if hit.chunk.page == table["page"]
-                  and (not table.get("document_id")
-                       or hit.chunk.document_id == table["document_id"])]
+    candidates = [
+        (f"S{i}", hit.chunk)
+        for i, hit in enumerate(evidence, 1)
+        if hit.chunk.page == table["page"]
+        and (not table.get("document_id") or hit.chunk.document_id == table["document_id"])
+    ]
     if not candidates or len({chunk.document_id for _, chunk in candidates}) != 1:
         raise ValueError("Table page does not resolve to one source document")
     fragments = _table_fragments(table)
@@ -94,7 +106,9 @@ def _native_sources(table, evidence):
         text = fragment.get("text")
         if not isinstance(text, str) or not text:
             raise ValueError("Empty native table fragment")
-        matches = [(label, chunk) for label, chunk in candidates if text in chunk.text and text in native]
+        matches = [
+            (label, chunk) for label, chunk in candidates if text in chunk.text and text in native
+        ]
         if not matches:
             raise ValueError("Native table fragment missing from indexed source evidence")
         # Ambiguous repeated tokens are covered by all matching exact source
@@ -114,9 +128,17 @@ def _maxima_rows(table):
     leaders = set()
     for column in table["columns"]:
         col = column["column_id"]
-        values = [(row["row_id"], float(next(cell["value"] for cell in row["cells"]
-                                           if cell["column_id"] == col).rstrip("%")))
-                  for row in table["rows"]]
+        values = [
+            (
+                row["row_id"],
+                float(
+                    next(cell["value"] for cell in row["cells"] if cell["column_id"] == col).rstrip(
+                        "%"
+                    )
+                ),
+            )
+            for row in table["rows"]
+        ]
         maximum = max(value for _, value in values)
         leaders.update(row_id for row_id, value in values if value == maximum)
     return [row for row in table["rows"] if row["row_id"] in leaders]
@@ -127,7 +149,9 @@ def _verify_metric_declaration(binding):
     text = re.sub(r"\s+", " ", text).lower()
     metric = binding["metric"].lower()
     if metric == "accuracy":
-        declared = re.search(r"\baccuracy\s+(?:(?:is|was)\s+)?(?:computed|measured|reported)\b", text)
+        declared = re.search(
+            r"\baccuracy\s+(?:(?:is|was)\s+)?(?:computed|measured|reported)\b", text
+        )
     elif metric == "pass@1":
         declared = re.search(r"pass\s*@\s*1\s+evaluation\s+(?:was|is)\s+(?:adopted|used)\b", text)
     else:
@@ -189,7 +213,9 @@ def table_answer(evidence: list[Hit], language: str) -> GeneratedAnswer | None:
                     except ValueError:
                         continue
                 if not declared_quotes:
-                    raise ValueError("No contiguous native/source quote establishes the metric declaration")
+                    raise ValueError(
+                        "No contiguous native/source quote establishes the metric declaration"
+                    )
                 for exact in declared_quotes:
                     table_quotes[label, exact] = {"label": label, "quote": exact}
                 if label not in labels:
@@ -203,9 +229,14 @@ def table_answer(evidence: list[Hit], language: str) -> GeneratedAnswer | None:
         return None
     ar = language == "ar"
     model_label, size_label = ("النموذج", "الحجم") if ar else ("Model", "Size")
-    catalog_label = "النماذج وأحجامها في صفوف الجدول" if ar else "Models and sizes in the table rows"
-    representative_label = ("صفوف مختارة بحسب أعلى قيمة معروضة في كل عمود، مع التعادلات"
-                            if ar else "Representative rows selected by column maxima, including ties")
+    catalog_label = (
+        "النماذج وأحجامها في صفوف الجدول" if ar else "Models and sizes in the table rows"
+    )
+    representative_label = (
+        "صفوف مختارة بحسب أعلى قيمة معروضة في كل عمود، مع التعادلات"
+        if ar
+        else "Representative rows selected by column maxima, including ties"
+    )
     lines = []
     for table, labels, metrics in accepted:
         markers = " ".join(f"[{label}]" for label in labels)
@@ -217,21 +248,44 @@ def table_answer(evidence: list[Hit], language: str) -> GeneratedAnswer | None:
             groups.setdefault(row["entity"], [])
             if row.get("size") and row["size"] not in groups[row["entity"]]:
                 groups[row["entity"]].append(row["size"])
-        catalog = "; ".join(_display(entity) + (" (" + ", ".join(sizes) + ")" if sizes else "")
-                            for entity, sizes in groups.items())
+        catalog = "; ".join(
+            _display(entity) + (" (" + ", ".join(sizes) + ")" if sizes else "")
+            for entity, sizes in groups.items()
+        )
         lines.append(f"{catalog_label}: {catalog} {markers}")
         metric_label = "المقياس" if ar else "Metric"
         if metrics:
             lines.append(f"{metric_label}: {', '.join(metrics)} {markers}")
         else:
-            text = ("تُعرض القيم كما في المصدر؛ لم يحدد تعليق الجدول مقياسًا"
-                    if ar else "Values retain the source scale; the caption does not name a metric")
+            text = (
+                "تُعرض القيم كما في المصدر؛ لم يحدد تعليق الجدول مقياسًا"
+                if ar
+                else "Values retain the source scale; the caption does not name a metric"
+            )
             lines.append(f"{text} {markers}")
-        lines.append(f"{representative_label}: {markers}")
-        headers = [model_label, size_label] + [_display(" / ".join(c["path"])) for c in table["columns"]]
-        table_lines = ["| " + " | ".join(headers) + " |",
-                       "| " + " | ".join(["---"] * len(headers)) + " |"]
-        for row in _maxima_rows(table):
+        selection = table.get("selection")
+        if selection:
+            note = (
+                f"عرض محدد: {selection['shown_rows']} من {selection['source_rows']} صفوف، "
+                f"و{selection['shown_columns']} من {selection['source_columns']} أعمدة. "
+                "ليس هذا حصرًا شاملًا للنماذج أو النتائج في الورقة."
+                if ar
+                else f"Focused view: {selection['shown_rows']} of {selection['source_rows']} rows and "
+                f"{selection['shown_columns']} of {selection['source_columns']} columns; "
+                f"{selection['shown_tables']} of {selection['source_tables']} matching tables. "
+                "This is not an exhaustive paper-wide model or result list."
+            )
+            lines.append(note)
+        else:
+            lines.append(f"{representative_label}: {markers}")
+        headers = [model_label, size_label] + [
+            _display(" / ".join(c["path"])) for c in table["columns"]
+        ]
+        table_lines = [
+            "| " + " | ".join(headers) + " |",
+            "| " + " | ".join(["---"] * len(headers)) + " |",
+        ]
+        for row in table["rows"] if table.get("render_all_rows") else _maxima_rows(table):
             values = {c["column_id"]: c["value"] for c in row["cells"]}
             fields = [_display(row["entity"]), _display(row.get("size") or "-")]
             fields += [values[c["column_id"]] for c in table["columns"]]
@@ -242,8 +296,13 @@ def table_answer(evidence: list[Hit], language: str) -> GeneratedAnswer | None:
     # Reuse the strict existing citation verifier without interpreting Markdown
     # rows as prose sentences. Actual row entailment comes from trusted geometry.
     proof_markers = " ".join(f"[{label}]" for label, _ in quotes)
-    _, citations = validate_answer({"answer": f"Verified source table fragments {proof_markers}",
-                                   "citations": list(quotes.values())}, evidence)
+    _, citations = validate_answer(
+        {
+            "answer": f"Verified source table fragments {proof_markers}",
+            "citations": list(quotes.values()),
+        },
+        evidence,
+    )
     if set(re.findall(r"\[S\d+\]", answer)) != {f"[{c.label}]" for c in citations}:
         raise ValueError("Rendered table source markers do not match validated citations")
     return GeneratedAnswer(answer, citations, mode="source-tables")

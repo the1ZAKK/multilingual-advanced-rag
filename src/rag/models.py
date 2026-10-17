@@ -41,6 +41,8 @@ class Hit(BaseModel):
 
 
 class SearchRequest(BaseModel):
+    # Scope retrieval before ranking, not by filtering an already-truncated list.
+    document_ids: list[str] | None = Field(default=None, min_length=1, max_length=20)
     query: str = Field(min_length=1, max_length=4000)
     mode: Literal["dense", "bm25", "hybrid", "hybrid-rerank"] = "hybrid"
     top_k: int = Field(5, ge=1, le=50)

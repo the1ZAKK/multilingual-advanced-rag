@@ -21,6 +21,7 @@ from rag.query import (
     asks_problem,
     contribution_question,
     models_results_question,
+    overview_question,
     resolve_language,
     verification_question,
 )
@@ -153,6 +154,8 @@ class RAGService:
             )
             self.store.add(info, chunks, vectors, data, replace=True)
             self.index = candidate
+            self._table_cache.pop(document_id, None)
+            self._page_cache.pop(document_id, None)
             self._save_cache()
             logger.info("document_reindexed", extra={"document_id": document_id})
             return info
@@ -180,11 +183,17 @@ class RAGService:
             raise ValueError("Query must contain non-whitespace text")
         rerank_ms = 0
         with self.lock:
+            allowed = set(request.document_ids) if request.document_ids is not None else None
+            known = {d.document_id for d in self.store.documents()}
+            if allowed is not None and not allowed <= known:
+                raise ValueError("Unknown document identifier in retrieval scope")
             depth = max(self.settings.retrieval_depth, request.top_k)
             dense = []
             if request.mode != "bm25" and self.index.chunks:
-                dense = self.index.dense(self.embedder.encode([query], query=True), depth)
-            sparse = self.index.sparse(request.query, depth) if request.mode != "dense" else []
+                dense = self.index.dense(self.embedder.encode([query], query=True), depth, allowed)
+            sparse = (
+                self.index.sparse(request.query, depth, allowed) if request.mode != "dense" else []
+            )
             hits = (
                 dense
                 if request.mode == "dense"
@@ -210,16 +219,26 @@ class RAGService:
 
     def chat(self, request: ChatRequest) -> ChatResponse:
         start = perf_counter()
-        retrieval_request = request
-        if contribution_question(request.query) or models_results_question(request.query) or verification_question(request.query):
+        documents = (
+            set(request.document_ids)
+            if request.document_ids is not None
+            else self.named_documents(request.query)
+        )
+        retrieval_request = (
+            request.model_copy(update={"document_ids": sorted(documents)}) if documents else request
+        )
+        if (
+            contribution_question(request.query)
+            or models_results_question(request.query)
+            or verification_question(request.query)
+        ):
             # Inspect the candidate pool before intent-aware evidence selection;
             # a reranker's top five can otherwise discard the authors' section.
-            retrieval_request = request.model_copy(
+            retrieval_request = retrieval_request.model_copy(
                 update={"top_k": max(request.top_k, min(self.settings.retrieval_depth, 50))}
             )
         hits = self.search(retrieval_request).hits
         language = resolve_language(request.query, request.language)
-        documents = self.named_documents(request.query)
         if documents:
             hits = [h for h in hits if h.chunk.document_id in documents]
         supported = [
@@ -228,7 +247,7 @@ class RAGService:
             if (h.bm25_score or 0) > 0
             or (h.dense_score is not None and h.dense_score >= self.settings.min_dense_score)
         ]
-        evidence = self.select_evidence(supported, request.query)
+        evidence = self.select_evidence(supported, request.query, documents)
         self.bind_native_pages(evidence)
         warning = None
         if not evidence:
@@ -244,11 +263,15 @@ class RAGService:
                 if models_results_question(request.query):
                     from rag.generation.table_answer import table_answer
 
-                    evidence = self.table_evidence(evidence, documents)
+                    evidence = self.table_evidence(evidence, documents, query=request.query)
                     generated = table_answer(evidence, language)
                     if generated is None:
-                        logger.warning("table_answer_unavailable: no unambiguous source-bound table relations")
-                        raise GenerationUnavailable("No unambiguous source-bound numerical table relationships; showing evidence excerpts")
+                        logger.warning(
+                            "table_answer_unavailable: no unambiguous source-bound table relations"
+                        )
+                        raise GenerationUnavailable(
+                            "No unambiguous source-bound numerical table relationships; showing evidence excerpts"
+                        )
                 if generated is None:
                     generated = self.generator.generate(request.query, language, evidence)
                 answer, citations = generated
@@ -259,6 +282,15 @@ class RAGService:
         else:
             answer, citations = extractive(evidence, language)
             mode = "extractive"
+        if (
+            mode == "extractive"
+            and language == "ar"
+            and any(resolve_language(h.chunk.text) != "ar" for h in evidence)
+        ):
+            notice = (
+                "No verified Arabic answer was produced; the excerpts retain their source language."
+            )
+            warning = f"{warning} {notice}" if warning else notice
         return ChatResponse(
             answer=answer,
             citations=citations,
@@ -268,22 +300,42 @@ class RAGService:
             latency_ms=(perf_counter() - start) * 1000,
         )
 
-    def select_evidence(self, hits, query=""):
+    def select_evidence(self, hits, query="", document_ids=None):
         """Budget ranked seeds with adjacent same-section chunks, across page breaks.
 
         A neighbor is context, not an independent retrieval-score match. Keep its
         real chunk identity/page and don't expand across a section boundary.
         """
         with self.lock:
+            if overview_question(query):
+                named = document_ids or self.named_documents(query)
+                scope = named or ({hits[0].chunk.document_id} if hits else set())
+                abstracts = [
+                    c
+                    for c in self.index.chunks
+                    if c.document_id in scope and c.section == "Abstract"
+                ]
+                if abstracts:
+                    # The source's abstract is an explicit overview, unlike an
+                    # appendix question that merely repeats the query vocabulary.
+                    anchors = [
+                        Hit(chunk=c, score=0)
+                        for c in sorted(abstracts, key=lambda c: (c.page, c.start))[:3]
+                    ]
+                    anchor_ids = {h.chunk.chunk_id for h in anchors}
+                    hits = anchors + [h for h in hits if h.chunk.chunk_id not in anchor_ids]
             if contribution_question(query):
                 anchors = [h for h in hits if h.chunk.section == "Contributions"]
-                named = self.named_documents(query)
+                named = document_ids or self.named_documents(query)
                 if named:
                     # Explicit document identity + author section is stronger than
                     # multilingual lexical overlap. This is source selection, not
                     # a paper-specific answer or an entailment decision.
-                    anchors = [Hit(chunk=c, score=0) for c in self.index.chunks
-                               if c.document_id in named and c.section == "Contributions"]
+                    anchors = [
+                        Hit(chunk=c, score=0)
+                        for c in self.index.chunks
+                        if c.document_id in named and c.section == "Contributions"
+                    ]
                 if anchors:
                     docs = {h.chunk.document_id for h in anchors}
                     # The explicit authors' statement is stronger evidence for this
@@ -297,11 +349,7 @@ class RAGService:
                     ]
                     abstracts = [h for h in extra if h.chunk.section == "Abstract"]
                     extra = abstracts[:1] or extra[:1]
-                    hits = (
-                        anchors + extra
-                        if asks_problem(query)
-                        else anchors
-                    )
+                    hits = anchors + extra if asks_problem(query) else anchors
             corpus = sorted(self.index.chunks, key=lambda c: (c.document_id, c.page, c.start))
             positions = {c.chunk_id: i for i, c in enumerate(corpus)}
             selected, seen, budget = [], set(), self.settings.max_context_chars
@@ -350,18 +398,37 @@ class RAGService:
         """
         query_tokens = set(re.findall(r"[\w]+", query.casefold()))
         matches = set()
-        stop = {"paper", "pdf", "the", "and", "of", "for", "with", "from", "arabic", "english", "model", "models"}
+        stop = {
+            "paper",
+            "pdf",
+            "the",
+            "and",
+            "of",
+            "for",
+            "with",
+            "from",
+            "arabic",
+            "english",
+            "model",
+            "models",
+        }
         for document in self.documents():
             stem = os.path.splitext(document.name)[0]
             printed_tokens = re.findall(r"[\w]+", stem)
             tokens = [token.casefold() for token in printed_tokens]
-            acronym = {t for t in tokens if any(ch.isdigit() for ch in t) and any(ch.isalpha() for ch in t)}
+            acronym = {
+                t for t in tokens if any(ch.isdigit() for ch in t) and any(ch.isalpha() for ch in t)
+            }
             # A distinctive acronym/CamelCase identifier is uploaded metadata,
             # not a fixed paper-name lookup. Ordinary title-case words do not
             # scope retrieval, and ambiguous identifier matches remain open.
-            acronym.update(token.casefold() for token in printed_tokens
-                           if len(token) >= 3 and token.casefold() not in stop
-                           and (token.isupper() or re.search(r"[A-Z].*[A-Z]", token)))
+            acronym.update(
+                token.casefold()
+                for token in printed_tokens
+                if len(token) >= 3
+                and token.casefold() not in stop
+                and (token.isupper() or re.search(r"[A-Z].*[A-Z]", token))
+            )
             significant = [t for t in tokens if len(t) > 3 and t not in stop]
             explicit = bool(acronym & query_tokens) or (
                 len(significant) >= 3 and len(set(significant) & query_tokens) >= 3
@@ -377,7 +444,9 @@ class RAGService:
                 data = self.store.source(document_id)
                 if data:
                     with pymupdf.open(stream=data, filetype="pdf") as source:
-                        self._page_cache[document_id] = [page.get_text(sort=False) for page in source]
+                        self._page_cache[document_id] = [
+                            page.get_text(sort=False) for page in source
+                        ]
                 else:
                     self._page_cache[document_id] = []
             return self._page_cache[document_id]
@@ -388,7 +457,7 @@ class RAGService:
             if pages and 0 < hit.chunk.page <= len(pages):
                 hit.native_page_text = pages[hit.chunk.page - 1]
 
-    def table_evidence(self, evidence, documents=None):
+    def table_evidence(self, evidence, documents=None, query=""):
         """Read retained PDFs on demand; preserve cell geometry without reindexing.
 
         Table answers are rendered from source relations, so their native indexed
@@ -404,10 +473,15 @@ class RAGService:
                     self._table_cache[document] = extract_result_tables(data) if data else []
                     if data:
                         with pymupdf.open(stream=data, filetype="pdf") as source:
-                            self._page_cache[document] = [page.get_text(sort=False) for page in source]
+                            self._page_cache[document] = [
+                                page.get_text(sort=False) for page in source
+                            ]
                     else:
                         self._page_cache[document] = []
                 tables = [t for t in self._table_cache[document] if t.get("status") == "ok"]
+                from rag.retrieval.table_selection import select_tables
+
+                tables = select_tables(tables, query)
                 pages = {t["page"] for t in tables}
                 method_chunks = []
                 for c in self.index.chunks:
@@ -416,15 +490,23 @@ class RAGService:
                     prose = re.sub(r"-\s*\n", "", c.text)
                     prose = " ".join(prose.split())
                     stem = re.search(r"STEM\s+benchmarks.{0,400}\baccuracy\b", prose, re.I)
-                    code = re.search(r"(?:for\s+)?code\s+benchmarks[,\s]+pass\s*@\s*1\s+evaluation", prose, re.I)
+                    code = re.search(
+                        r"(?:for\s+)?code\s+benchmarks[,\s]+pass\s*@\s*1\s+evaluation", prose, re.I
+                    )
                     if stem:
                         method_chunks.append((c, "accuracy", "STEM"))
                     if code:
                         method_chunks.append((c, "pass@1", "code"))
                 method_ids = {c.chunk_id for c, _, _ in method_chunks}
-                chunks = sorted((c for c in self.index.chunks
-                                 if c.document_id == document and (c.page in pages or c.chunk_id in method_ids)),
-                                key=lambda c: (c.page, c.start))
+                chunks = sorted(
+                    (
+                        c
+                        for c in self.index.chunks
+                        if c.document_id == document
+                        and (c.page in pages or c.chunk_id in method_ids)
+                    ),
+                    key=lambda c: (c.page, c.start),
+                )
                 for chunk in chunks:
                     selected.append(Hit(chunk=chunk, score=0))
                 if chunks:
@@ -435,15 +517,40 @@ class RAGService:
                         # A declared benchmark metric can bind matching table
                         # headers; unknown metrics stay unknown. This does not
                         # use answer text, paper identity, table numbers or values.
-                        scope = "code" if re.search(r"HumanEval|MBPP", paths, re.I) else (
-                            "STEM" if re.search(r"MCQ", paths, re.I) and re.search(r"Completion", paths, re.I) else None
+                        scope = (
+                            "code"
+                            if re.search(r"HumanEval|MBPP", paths, re.I)
+                            else (
+                                "STEM"
+                                if re.search(r"MCQ", paths, re.I)
+                                and re.search(r"Completion", paths, re.I)
+                                else None
+                            )
                         )
                         native_pages = self._page_cache.get(document, [])
-                        bindings = [{"metric": metric, "scope": kind, "label": labels[c.chunk_id], "quote": c.text,
-                                     "native_page_text": native_pages[c.page - 1] if native_pages else None}
-                                    for c, metric, kind in method_chunks if kind == scope]
-                        enriched.append({**table, "document_id": document, "metric_bindings": bindings,
-                                         "native_page_text": native_pages[table["page"] - 1] if native_pages else None})
+                        bindings = [
+                            {
+                                "metric": metric,
+                                "scope": kind,
+                                "label": labels[c.chunk_id],
+                                "quote": c.text,
+                                "native_page_text": native_pages[c.page - 1]
+                                if native_pages
+                                else None,
+                            }
+                            for c, metric, kind in method_chunks
+                            if kind == scope
+                        ]
+                        enriched.append(
+                            {
+                                **table,
+                                "document_id": document,
+                                "metric_bindings": bindings,
+                                "native_page_text": native_pages[table["page"] - 1]
+                                if native_pages
+                                else None,
+                            }
+                        )
                     selected[-len(chunks)].tables = enriched
             self.bind_native_pages(selected)
             return selected or evidence

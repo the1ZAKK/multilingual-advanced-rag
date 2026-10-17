@@ -16,8 +16,14 @@ def test_optional_ragas_local_judge_wiring(settings, monkeypatch):
     class Metric:
         def __init__(self, **kwargs):
             seen.append(kwargs)
+            self.initialized = False
+
+        def init(self, run_config):
+            assert run_config.max_retries == 1
+            self.initialized = True
 
         async def single_turn_ascore(self, sample):
+            assert self.initialized
             assert sample.user_input == "question"
             seen.append(sample.reference)
             return 0.5  # Test double only; never exported as an experiment result.

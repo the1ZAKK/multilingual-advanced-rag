@@ -5,9 +5,6 @@ RUN --mount=type=secret,id=corporate_ca \
     if [ -f /run/secrets/corporate_ca ]; then export SSL_CERT_FILE=/run/secrets/corporate_ca PIP_CERT=/run/secrets/corporate_ca; fi; \
     pip install --no-cache-dir uv==0.12.19
 COPY pyproject.toml uv.lock ./
-RUN --mount=type=secret,id=corporate_ca \
-    if [ -f /run/secrets/corporate_ca ]; then export SSL_CERT_FILE=/run/secrets/corporate_ca; fi; \
-    uv sync --locked --extra models --no-dev --no-install-project
 COPY src ./src
 COPY api ./api
 COPY app ./app
@@ -15,7 +12,8 @@ COPY README.md LICENSE ./
 RUN --mount=type=secret,id=corporate_ca \
     if [ -f /run/secrets/corporate_ca ]; then export SSL_CERT_FILE=/run/secrets/corporate_ca; fi; \
     uv sync --locked --extra models --no-dev && useradd --create-home rag && \
-    mkdir -p /app/data/index /app/.cache/huggingface && chown -R rag:rag /app
+    chmod -R a+rX /app/src /app/api /app/app /app/README.md /app/LICENSE && \
+    mkdir -p /app/data/index /app/.cache/huggingface && chown -R rag:rag /app/data /app/.cache
 USER rag
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000 8501

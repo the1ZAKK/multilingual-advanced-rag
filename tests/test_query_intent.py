@@ -108,8 +108,10 @@ def test_information_questions_do_not_become_polar_claims(question):
 @pytest.mark.parametrize(
     ("question", "expected"),
     [
-        ("Does ExamplePaper introduce an Arabic process reward model? Cite evidence.",
-         "Arabic process reward model"),
+        (
+            "Does ExamplePaper introduce an Arabic process reward model? Cite evidence.",
+            "Arabic process reward model",
+        ),
         ("Did this study train a new sensor classifier?", "new sensor classifier"),
         ("هل تقدم ورقة ExamplePaper نموذج مكافأة عربي؟", "نموذج مكافاة عربي"),
         ("هل تقترح هذه الدراسة طريقة استرجاع؟", "طريقة استرجاع"),
@@ -164,7 +166,9 @@ def test_other_questions_do_not_force_numbering(question):
         ("What are the contributions?", "ar", "ar"),
     ],
 )
-def test_language_resolution_respects_preference_and_meaningful_script(question, requested, expected):
+def test_language_resolution_respects_preference_and_meaningful_script(
+    question, requested, expected
+):
     assert resolve_language(question, requested) == expected
 
 
@@ -196,8 +200,11 @@ def test_source_derived_plain_names_and_attached_arabic_clitics_are_allowed():
     [
         ("First, we present three comprehensive benchmarks spanning science and coding.", "ar"),
         ("الإجابة: The authors evaluate forty language models and analyze robustness.", "ar"),
-        ("تقدم الدراسة معايير جديدة لتقييم قدرات النماذج اللغوية في العلوم والبرمجة.\n"
-         "Second, the authors evaluate forty language models.", "ar"),
+        (
+            "تقدم الدراسة معايير جديدة لتقييم قدرات النماذج اللغوية في العلوم والبرمجة.\n"
+            "Second, the authors evaluate forty language models.",
+            "ar",
+        ),
         ("These are the results. تقدم الورقة ثلاثة معايير جديدة.", "en"),
         ("لا توجد أدلة كافية لإثبات هذا الادعاء.", "en"),
         ("Qwen3 PRM 1.7B [S1]", "ar"),

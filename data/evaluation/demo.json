@@ -1,0 +1,31 @@
+{
+  "description": "Synthetic English pipeline demonstration, NOT a scientific or multilingual benchmark.",
+  "cases": [
+    {
+      "id": "retrieval.pdf",
+      "question": "What combines dense and lexical search?",
+      "relevant": {
+        "0056dc34699af8e8cea6738edf4dde6aab2bd1d1ef206a4dbfc45c663e4d8919:p1:0-117": 1.0
+      },
+      "reference_answer": "Hybrid retrieval combines semantic vector search and BM25 keyword search. Reciprocal Rank Fusion merges ranked lists.",
+      "language": "en"
+    },
+    {
+      "id": "citations.pdf",
+      "question": "How are citations verified?",
+      "relevant": {
+        "2d68ebb96a88fa4a2a48ff3556cb47b41fa885ebeb7c049e477d560243efc6ad:p1:0-119": 1.0
+      },
+      "reference_answer": "Page citations identify the document and page of each evidence passage. Exact source quotes make references verifiable.",
+      "language": "en"
+    }
+  ],
+  "modes": [
+    "dense",
+    "bm25",
+    "hybrid",
+    "hybrid-rerank"
+  ],
+  "generate_answers": true,
+  "use_llm": false
+}

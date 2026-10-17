@@ -55,7 +55,10 @@ def citation_sources(citations):
     sources = {}
     for citation in citations:
         identity = (
-            citation["label"], citation["document_id"], citation["chunk_id"], citation["page"]
+            citation["label"],
+            citation["document_id"],
+            citation["chunk_id"],
+            citation["page"],
         )
         source = sources.setdefault(identity, {**citation, "quotes": []})
         if citation["quote"] not in source["quotes"]:
@@ -98,10 +101,21 @@ with docs_tab:
     documents = api("GET", "/documents")
     for doc in documents or []:
         col1, col2 = st.columns([5, 1])
-        col1.write(f"{doc['name']} — {doc['pages']} pages, {doc['chunks']} chunks")
+        col1.text(f"{doc['name']} — {doc['pages']} pages, {doc['chunks']} chunks")
         if col2.button("Delete", key=doc["document_id"]):
             if api("DELETE", "/documents/" + doc["document_id"]):
                 st.rerun()
+with st.sidebar:
+    available_documents = {d["document_id"]: d["name"] for d in documents or []}
+    selected_documents = st.multiselect(
+        "Search documents",
+        options=list(available_documents),
+        format_func=lambda key: available_documents[key],
+        help="Leave empty to search all documents. Selection is applied before retrieval ranking.",
+    )
+    chat_mode = st.selectbox("Chat retrieval", ["hybrid", "bm25", "dense", "hybrid-rerank"])
+    if st.button("Clear chat history"):
+        st.session_state["messages"] = []
 with chat_tab:
     st.session_state.setdefault("messages", [])
     for message in st.session_state.messages:
@@ -131,7 +145,15 @@ with chat_tab:
         st.session_state.messages.append({"role": "user", "text": question})
         with st.spinner("Retrieving evidence…"):
             result = api(
-                "POST", "/chat", json={"query": question, "language": language, "use_llm": use_llm}
+                "POST",
+                "/chat",
+                json={
+                    "query": question,
+                    "language": language,
+                    "use_llm": use_llm,
+                    "document_ids": selected_documents or None,
+                    "mode": chat_mode,
+                },
             )
         if result:
             st.session_state.messages.append(
@@ -139,22 +161,36 @@ with chat_tab:
             )
         st.rerun()
 with search_tab:
-    query = st.text_input("Comparison question")
-    modes = st.multiselect(
-        "Pipelines",
-        ["dense", "bm25", "hybrid", "hybrid-rerank"],
-        default=["dense", "bm25", "hybrid"],
-    )
-    if st.button("Compare", disabled=not query.strip()):
-        for mode, col in zip(modes, st.columns(max(len(modes), 1))):
-            with col:
-                st.subheader(mode)
-                result = api("POST", "/search", json={"query": query, "mode": mode, "top_k": 5})
-                if result:
-                    st.caption(
-                        f"{result['latency_ms']:.1f} ms; reranker: {result['reranker_backend']}"
+    with st.form("retrieval-comparison"):
+        query = st.text_input("Comparison question")
+        modes = st.multiselect(
+            "Pipelines",
+            ["dense", "bm25", "hybrid", "hybrid-rerank"],
+            default=["dense", "bm25", "hybrid"],
+        )
+        compare = st.form_submit_button("Compare")
+    if compare:
+        if not query.strip() or not modes:
+            st.info("Enter a question and select at least one pipeline.")
+        else:
+            for mode, col in zip(modes, st.columns(len(modes))):
+                with col:
+                    st.subheader(mode)
+                    result = api(
+                        "POST",
+                        "/search",
+                        json={
+                            "query": query,
+                            "mode": mode,
+                            "top_k": 5,
+                            "document_ids": selected_documents or None,
+                        },
                     )
-                    passages(result["hits"])
+                    if result:
+                        st.caption(
+                            f"{result['latency_ms']:.1f} ms; reranker: {result['reranker_backend']}"
+                        )
+                        passages(result["hits"])
 with eval_tab:
     st.info(
         "Upload manually annotated cases with current chunk IDs. Demo scores are not scientific benchmarks."

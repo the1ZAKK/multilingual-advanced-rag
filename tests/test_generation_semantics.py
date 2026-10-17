@@ -22,17 +22,30 @@ from rag.models import Chunk, Hit
 
 
 def evidence(text, *, section=None):
-    return [Hit(chunk=Chunk(
-        chunk_id="other-paper:p1:0", document_id="other-paper", document_name="Other paper.pdf",
-        page=1, text=text, normalized=text, start=0, end=len(text), section=section,
-    ), score=1)]
+    return [
+        Hit(
+            chunk=Chunk(
+                chunk_id="other-paper:p1:0",
+                document_id="other-paper",
+                document_name="Other paper.pdf",
+                page=1,
+                text=text,
+                normalized=text,
+                start=0,
+                end=len(text),
+                section=section,
+            ),
+            score=1,
+        )
+    ]
 
 
 def mock_model(monkeypatch, generated, audit=None, *, source_units=None):
     requests = []
-    originals = {name.casefold(): unit["text"] for name, unit in (
-        authored_contributions(source_units).items() if source_units else []
-    )}
+    originals = {
+        name.casefold(): unit["text"]
+        for name, unit in (authored_contributions(source_units).items() if source_units else [])
+    }
     translation_index = 0
     spans = {
         "a low-cost sensor for freshwater.": "مستشعر منخفض التكلفة للمياه العذبة.",
@@ -49,34 +62,56 @@ def mock_model(monkeypatch, generated, audit=None, *, source_units=None):
         system = body["messages"][0]["content"]
         if isinstance(data, str):
             if "Translate ONLY the supplied source span" in system:
-                data = {"task": "relation-translation", "source_span": data,
-                        "unit_id": ("first", "second", "third")[translation_index % 3]}
+                data = {
+                    "task": "relation-translation",
+                    "source_span": data,
+                    "unit_id": ("first", "second", "third")[translation_index % 3],
+                }
             else:
-                data = {"task": "source-translation", "author_statement": data,
-                        "unit_id": "reverse-" + ("first", "second", "third")[translation_index % 3],
-                        "protected_terms": []}
+                data = {
+                    "task": "source-translation",
+                    "author_statement": data,
+                    "unit_id": "reverse-" + ("first", "second", "third")[translation_index % 3],
+                    "protected_terms": [],
+                }
         requests.append((body, data))
         if data.get("task") == "semantic-grounding-audit":
-            result = audit(data) if audit else {"verdicts": [
-                {"item_id": item["item_id"], "supported": True, "complete": True,
-                 "direct": True, "reason": "The premise directly states the same claim."}
-                for item in data["items"]
-            ]}
+            result = (
+                audit(data)
+                if audit
+                else {
+                    "verdicts": [
+                        {
+                            "item_id": item["item_id"],
+                            "supported": True,
+                            "complete": True,
+                            "direct": True,
+                            "reason": "The premise directly states the same claim.",
+                        }
+                        for item in data["items"]
+                    ]
+                }
+            )
         elif data.get("task") == "source-translation":
             if data["unit_id"].startswith("reverse-"):
                 result = {"text": originals[data["unit_id"].removeprefix("reverse-")]}
                 translation_index += 1
             else:
-                result = generated(data) if callable(generated) else {
-                    "text": generated[data["unit_id"]]["text"]
-                }
+                result = (
+                    generated(data)
+                    if callable(generated)
+                    else {"text": generated[data["unit_id"]]["text"]}
+                )
         elif data.get("task") == "relation-translation":
             if callable(generated):
                 result = generated(data)
             else:
                 unit = generated[data["unit_id"]]["text"]
-                result = {"text": unit if unit.startswith(("تقدم الدراسة", "First", "Second", "Third"))
-                          else spans[data["source_span"]]}
+                result = {
+                    "text": unit
+                    if unit.startswith(("تقدم الدراسة", "First", "Second", "Third"))
+                    else spans[data["source_span"]]
+                }
         else:
             result = generated(data) if callable(generated) else generated
         return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
@@ -100,9 +135,17 @@ def test_valid_source_quote_does_not_establish_claim_entailment(service, monkeyp
     assert validate_answer(payload, hits)[1][0].quote in hits[0].chunk.text
 
     def audit(data):
-        return {"verdicts": [{"item_id": data["items"][0]["item_id"], "supported": False,
-                              "complete": True, "direct": False,
-                              "reason": "The premise identifies a benchmark, not a model."}]}
+        return {
+            "verdicts": [
+                {
+                    "item_id": data["items"][0]["item_id"],
+                    "supported": False,
+                    "complete": True,
+                    "direct": False,
+                    "reason": "The premise identifies a benchmark, not a model.",
+                }
+            ]
+        }
 
     calls = mock_model(monkeypatch, payload, audit)
     with pytest.raises(GenerationUnavailable, match="Semantic grounding failed"):
@@ -113,9 +156,16 @@ def test_valid_source_quote_does_not_establish_claim_entailment(service, monkeyp
 
 def test_supported_generic_claim_is_not_forced_into_numbered_list(service, monkeypatch):
     hits = evidence("The experiment evaluates a sensor classifier on WaterBench.")
-    calls = mock_model(monkeypatch, {"statements": [
-        statement("The evaluated model is a sensor classifier, and WaterBench is the benchmark.")
-    ]})
+    calls = mock_model(
+        monkeypatch,
+        {
+            "statements": [
+                statement(
+                    "The evaluated model is a sensor classifier, and WaterBench is the benchmark."
+                )
+            ]
+        },
+    )
     result = service.generator.generate("What model and benchmark are evaluated?", "en", hits)
     assert not result.answer.startswith("1.")
     assert result.mode == "ollama"
@@ -125,11 +175,12 @@ def test_supported_generic_claim_is_not_forced_into_numbered_list(service, monke
 def test_positive_introduction_requires_direct_object_evidence(service, monkeypatch):
     hits = evidence("We introduce an Arabic sensor classifier for water quality.")
     assert direct_support_candidates("Arabic sensor classifier", hits) == ["S1:Q1"]
-    calls = mock_model(monkeypatch, {"statements": [
-        statement("The work introduces an Arabic sensor classifier.")
-    ]})
-    result = service.generator.generate("Does this work introduce an Arabic sensor classifier?",
-                                        "en", hits)
+    calls = mock_model(
+        monkeypatch, {"statements": [statement("The work introduces an Arabic sensor classifier.")]}
+    )
+    result = service.generator.generate(
+        "Does this work introduce an Arabic sensor classifier?", "en", hits
+    )
     assert result.mode == "ollama"
     assert calls[1][1]["items"][0]["require_direct"]
 
@@ -138,8 +189,9 @@ def test_positive_introduction_requires_direct_object_evidence(service, monkeypa
 def test_unsupported_introduction_is_evidence_local_refusal(service, monkeypatch, language):
     hits = evidence("We introduce a benchmark suite for evaluating language models.")
     calls = mock_model(monkeypatch, {})
-    result = service.generator.generate("Does this study introduce a new water quality sensor?",
-                                        language, hits)
+    result = service.generator.generate(
+        "Does this study introduce a new water quality sensor?", language, hits
+    )
     assert result.mode == "insufficient-evidence" and not calls
     if language == "en":
         assert "retrieved evidence is insufficient to establish" in result.answer
@@ -151,24 +203,36 @@ def test_unsupported_introduction_is_evidence_local_refusal(service, monkeypatch
 
 
 def test_appendix_instruction_and_negation_are_not_direct_introduction_support():
-    assert not direct_support_candidates("sensor classifier", evidence(
-        "We introduce a sensor classifier.", section="A.1 Prompt examples"
-    ))
-    assert not direct_support_candidates("sensor classifier", evidence(
-        "We do not introduce a sensor classifier."
-    ))
+    assert not direct_support_candidates(
+        "sensor classifier",
+        evidence("We introduce a sensor classifier.", section="A.1 Prompt examples"),
+    )
+    assert not direct_support_candidates(
+        "sensor classifier", evidence("We do not introduce a sensor classifier.")
+    )
 
 
 def test_positive_claim_fails_if_semantic_audit_finds_only_indirect_support(service, monkeypatch):
     hits = evidence("Researchers introduce a sensor classifier in related work.")
 
     def audit(data):
-        return {"verdicts": [{"item_id": data["items"][0]["item_id"], "supported": True,
-                              "complete": True, "direct": False,
-                              "reason": "The introduction is attributed to other researchers."}]}
+        return {
+            "verdicts": [
+                {
+                    "item_id": data["items"][0]["item_id"],
+                    "supported": True,
+                    "complete": True,
+                    "direct": False,
+                    "reason": "The introduction is attributed to other researchers.",
+                }
+            ]
+        }
 
-    mock_model(monkeypatch, {"statements": [statement("This paper introduces a sensor classifier.")]},
-               audit)
+    mock_model(
+        monkeypatch,
+        {"statements": [statement("This paper introduces a sensor classifier.")]},
+        audit,
+    )
     with pytest.raises(GenerationUnavailable, match="direct=False"):
         service.generator.generate("Does the paper introduce a sensor classifier?", "en", hits)
 
@@ -199,8 +263,10 @@ def translated_slots(hits):
         "Third": "ثالثاً، نحلل انجراف المعايرة والمتانة عند تغير درجات الحرارة.",
     }
     return {
-        ordinal.casefold(): {"text": translations[ordinal],
-                             "citations": [{"ref_id": ref} for ref in item["refs"]]}
+        ordinal.casefold(): {
+            "text": translations[ordinal],
+            "citations": [{"ref_id": ref} for ref in item["refs"]],
+        }
         for ordinal, item in authored_contributions(hits).items()
     }
 
@@ -235,16 +301,24 @@ def test_incomplete_or_wrong_translated_contribution_rejected_semantically(
     bad_id = f"item-{('first', 'second', 'third').index(slot) + 1}"
 
     def audit(data):
-        return {"verdicts": [
-            {"item_id": item["item_id"], "supported": item["item_id"] != bad_id,
-             "complete": item["item_id"] != bad_id, "direct": True,
-             "reason": "The translated item replaces or omits the author's stated action."}
-            for item in data["items"]
-        ]}
+        return {
+            "verdicts": [
+                {
+                    "item_id": item["item_id"],
+                    "supported": item["item_id"] != bad_id,
+                    "complete": item["item_id"] != bad_id,
+                    "direct": True,
+                    "reason": "The translated item replaces or omits the author's stated action.",
+                }
+                for item in data["items"]
+            ]
+        }
 
     mock_model(monkeypatch, payload, audit, source_units=authored_other_paper)
-    with pytest.raises(GenerationUnavailable,
-                       match="supported=False, complete=False|Unfaithful|Protected translation token"):
+    with pytest.raises(
+        GenerationUnavailable,
+        match="supported=False, complete=False|Unfaithful|Protected translation token",
+    ):
         service.generator.generate("اذكر إسهامات البحث الثلاث.", "ar", authored_other_paper)
 
 
@@ -252,8 +326,10 @@ def test_english_source_const_cannot_override_arabic_output_requirement(
     service, monkeypatch, authored_other_paper
 ):
     payload = {
-        ordinal.casefold(): {"text": item["text"],
-                             "citations": [{"ref_id": ref} for ref in item["refs"]]}
+        ordinal.casefold(): {
+            "text": item["text"],
+            "citations": [{"ref_id": ref} for ref in item["refs"]],
+        }
         for ordinal, item in authored_contributions(authored_other_paper).items()
     }
     calls = mock_model(monkeypatch, payload, source_units=authored_other_paper)
@@ -262,10 +338,14 @@ def test_english_source_const_cannot_override_arabic_output_requirement(
     assert len(calls) == 2
 
 
-def test_translation_cannot_change_source_bound_citation(service, monkeypatch, authored_other_paper):
+def test_translation_cannot_change_source_bound_citation(
+    service, monkeypatch, authored_other_paper
+):
     def invent_reference(data):
-        return {"text": "نقدم مستشعراً منخفض التكلفة للمياه العذبة.",
-                "citations": [{"ref_id": "S1:Q99"}]}
+        return {
+            "text": "نقدم مستشعراً منخفض التكلفة للمياه العذبة.",
+            "citations": [{"ref_id": "S1:Q99"}],
+        }
 
     mock_model(monkeypatch, invent_reference, source_units=authored_other_paper)
     with pytest.raises(GenerationUnavailable, match="Invalid translated relation span"):
@@ -276,17 +356,37 @@ def test_semantic_audit_requires_every_claim_and_cannot_accept_truthy_strings():
     items = [{"item_id": "item-1", "require_direct": False}]
     for verdict in [
         {"verdicts": []},
-        {"verdicts": [{"item_id": "item-1", "supported": "true", "complete": True,
-                       "direct": True, "reason": "present"}]},
-        {"verdicts": [{"item_id": "item-2", "supported": True, "complete": True,
-                       "direct": True, "reason": "present"}]},
+        {
+            "verdicts": [
+                {
+                    "item_id": "item-1",
+                    "supported": "true",
+                    "complete": True,
+                    "direct": True,
+                    "reason": "present",
+                }
+            ]
+        },
+        {
+            "verdicts": [
+                {
+                    "item_id": "item-2",
+                    "supported": True,
+                    "complete": True,
+                    "direct": True,
+                    "reason": "present",
+                }
+            ]
+        },
     ]:
         with pytest.raises(ValueError):
             validate_semantic_verdicts(verdict, items)
 
 
 def test_generic_audit_uses_only_individually_cited_premises():
-    hits = evidence("WaterBench is a dataset. The sensor classifier achieves 82.4 percent accuracy.")
+    hits = evidence(
+        "WaterBench is a dataset. The sensor classifier achieves 82.4 percent accuracy."
+    )
     payload = {"statements": [statement("WaterBench is a dataset.")]}
     items = semantic_items(payload, hits, {}, "Explain WaterBench.", "en")
     assert items[0]["premises"] == ["WaterBench is a dataset."]
@@ -302,9 +402,13 @@ def test_native_arabic_author_list_preserves_three_distinct_complete_units(servi
     authored = authored_contributions(hits)
     assert list(authored) == ["First", "Second", "Third"]
     assert "المعايرة والمتانة" in authored["Third"]["text"]
-    payload = {ordinal.casefold(): {"text": item["text"],
-                                   "citations": [{"ref_id": ref} for ref in item["refs"]]}
-               for ordinal, item in authored.items()}
+    payload = {
+        ordinal.casefold(): {
+            "text": item["text"],
+            "citations": [{"ref_id": ref} for ref in item["refs"]],
+        }
+        for ordinal, item in authored.items()
+    }
     calls = mock_model(monkeypatch, payload)
     result = service.generator.generate("ما الإسهامات الثلاث لهذه الدراسة؟", "ar", hits)
     assert result.mode == "source-contributions" and len(calls) == 1
@@ -314,20 +418,41 @@ def test_native_arabic_author_list_preserves_three_distinct_complete_units(servi
 @pytest.mark.parametrize(
     ("source", "bad_translation", "error"),
     [
-        ("We present comprehensive benchmarks spanning code generation.",
-         "نقدم معايير مكثفة لتصنيف الكود.", "comprehensive|code generation"),
-        ("We evaluate over 40 multilingual models.",
-         "نقيم حوالي 40 نموذجا متعدد اللغات.", "numeric relation"),
-        ("We evaluate over 12 multilingual models.",
-         "نقيم 12 نموذجا متعدد اللغات.", "numeric relation"),
-        ("We analyze cross-task correlations and robustness testing.",
-         "نحلل التوصيات بين المهام والاختبارات المتينة.", "correlations|robustness"),
-        ("We curate native content using synthetic generation and human verification.",
-         "نرتب محتوى مصنعاً باستخدام إنتاج مصنف ومراجعة آلية.", "native|synthetic|verification"),
-        ("We analyze the relationship between different cognitive capabilities.",
-         "نحلل علاقة مختلفة من المهارات العقلية.", "capabilities"),
-        ("We conduct the most comprehensive assessment.",
-         "نجري التقييم الأكثر معرفة.", "comprehensive"),
+        (
+            "We present comprehensive benchmarks spanning code generation.",
+            "نقدم معايير مكثفة لتصنيف الكود.",
+            "comprehensive|code generation",
+        ),
+        (
+            "We evaluate over 40 multilingual models.",
+            "نقيم حوالي 40 نموذجا متعدد اللغات.",
+            "numeric relation",
+        ),
+        (
+            "We evaluate over 12 multilingual models.",
+            "نقيم 12 نموذجا متعدد اللغات.",
+            "numeric relation",
+        ),
+        (
+            "We analyze cross-task correlations and robustness testing.",
+            "نحلل التوصيات بين المهام والاختبارات المتينة.",
+            "correlations|robustness",
+        ),
+        (
+            "We curate native content using synthetic generation and human verification.",
+            "نرتب محتوى مصنعاً باستخدام إنتاج مصنف ومراجعة آلية.",
+            "native|synthetic|verification",
+        ),
+        (
+            "We analyze the relationship between different cognitive capabilities.",
+            "نحلل علاقة مختلفة من المهارات العقلية.",
+            "capabilities",
+        ),
+        (
+            "We conduct the most comprehensive assessment.",
+            "نجري التقييم الأكثر معرفة.",
+            "comprehensive",
+        ),
     ],
 )
 def test_observed_and_other_paper_translation_meaning_changes_fail_source_activated_guards(
@@ -340,18 +465,27 @@ def test_observed_and_other_paper_translation_meaning_changes_fail_source_activa
 @pytest.mark.parametrize(
     ("source", "translation"),
     [
-        ("We present three comprehensive benchmarks spanning code generation.",
-         "نقدم ثلاثة معايير تقييم شاملة لتوليد الشفرة البرمجية."),
-        ("We evaluate over 12 multilingual models.",
-         "نقيّم أكثر من ١٢ نموذجاً متعدد اللغات."),
-        ("We evaluate over 40 multilingual models.",
-         "نقيم ما يزيد على أربعين نموذجا متعدد اللغات."),
-        ("We analyze cross-task correlations and robustness testing.",
-         "نحلل الترابط عبر المهام واختبارات المتانة."),
-        ("We use native content curation, synthetic generation, and translation with human verification.",
-         "نستخدم تنظيم المحتوى الأصيل والتوليد الاصطناعي والترجمة مع مراجعة بشرية."),
-        ("We analyze the relationship between different cognitive capabilities.",
-         "نحلل العلاقة بين القدرات المعرفية المختلفة."),
+        (
+            "We present three comprehensive benchmarks spanning code generation.",
+            "نقدم ثلاثة معايير تقييم شاملة لتوليد الشفرة البرمجية.",
+        ),
+        ("We evaluate over 12 multilingual models.", "نقيّم أكثر من ١٢ نموذجاً متعدد اللغات."),
+        (
+            "We evaluate over 40 multilingual models.",
+            "نقيم ما يزيد على أربعين نموذجا متعدد اللغات.",
+        ),
+        (
+            "We analyze cross-task correlations and robustness testing.",
+            "نحلل الترابط عبر المهام واختبارات المتانة.",
+        ),
+        (
+            "We use native content curation, synthetic generation, and translation with human verification.",
+            "نستخدم تنظيم المحتوى الأصيل والتوليد الاصطناعي والترجمة مع مراجعة بشرية.",
+        ),
+        (
+            "We analyze the relationship between different cognitive capabilities.",
+            "نحلل العلاقة بين القدرات المعرفية المختلفة.",
+        ),
     ],
 )
 def test_faithful_scientific_translation_paraphrases_preserve_source_concepts(source, translation):
@@ -366,9 +500,9 @@ def test_generic_terminology_protection_preserves_plural_and_numeric_bounds():
     assert "منهجيات صارمة" in [arabic for _, _, arabic in bindings]
     assert "معايير تقييم شاملة" in [arabic for _, _, arabic in bindings]
     # Order is allowed to change, while every source-bound term is retained once.
-    expanded = expand_scientific_terms("نقيم " + " و".join(
-        token for token, _, _ in reversed(bindings)
-    ), bindings)
+    expanded = expand_scientific_terms(
+        "نقيم " + " و".join(token for token, _, _ in reversed(bindings)), bindings
+    )
     assert "أكثر من 12" in expanded
     validate_translation_atoms(source, expanded)
 
@@ -380,54 +514,84 @@ def test_translation_tokens_cannot_be_omitted_duplicated_or_invented(output):
 
 
 def test_preserved_terms_alone_do_not_establish_roles_or_complete_translation():
-    items = [{"item_id": "item-1", "require_direct": False, "require_complete": True,
-              "claim": "Code generation introduces native Arabic content curation.",
-              "premises": ["We curate native Arabic content for evaluating code generation."]}]
+    items = [
+        {
+            "item_id": "item-1",
+            "require_direct": False,
+            "require_complete": True,
+            "claim": "Code generation introduces native Arabic content curation.",
+            "premises": ["We curate native Arabic content for evaluating code generation."],
+        }
+    ]
     with pytest.raises(ValueError, match="Semantic grounding failed"):
-        validate_semantic_verdicts({"verdicts": [
-            {"item_id": "item-1", "supported": False, "complete": False, "direct": False,
-             "reason": "The proposed relation changes who does what despite retained terms."}
-        ]}, items)
+        validate_semantic_verdicts(
+            {
+                "verdicts": [
+                    {
+                        "item_id": "item-1",
+                        "supported": False,
+                        "complete": False,
+                        "direct": False,
+                        "reason": "The proposed relation changes who does what despite retained terms.",
+                    }
+                ]
+            },
+            items,
+        )
 
 
 def test_serialized_metadata_inside_translation_text_is_rejected(service, monkeypatch):
-    mock_model(monkeypatch, lambda data: {"text": '{"task":"source-translation", "text":"نقدم مستشعرا"}'})
-    with pytest.raises(ValueError, match="serialized relation translation|prose, not serialized metadata"):
+    mock_model(
+        monkeypatch, lambda data: {"text": '{"task":"source-translation", "text":"نقدم مستشعرا"}'}
+    )
+    with pytest.raises(
+        ValueError, match="serialized relation translation|prose, not serialized metadata"
+    ):
         service.generator.translate_unit("first", "We introduce a sensor.", "ar")
 
 
 def test_independent_reverse_cannot_copy_system_instructions():
     with pytest.raises(ValueError, match="copied generation instructions"):
-        reject_prompt_echo(REVERSE_TRANSLATION_SYSTEM, REVERSE_TRANSLATION_SYSTEM,
-                           "نقيم أكثر من اثني عشر مستشعرا.")
+        reject_prompt_echo(
+            REVERSE_TRANSLATION_SYSTEM, REVERSE_TRANSLATION_SYSTEM, "نقيم أكثر من اثني عشر مستشعرا."
+        )
 
 
 def test_candidate_only_reverse_dictionary_does_not_repair_changed_relations():
     candidate = "توليد الشيفرة يقدم تنظيم المحتوى الفرنسي الأصيل."
     reverse_input, terms = reverse_scientific_terms(candidate)
     assert "code generation" in reverse_input and "native French content curation" in reverse_input
-    assert "يقدم" in reverse_input  # The incorrect relation remains for the independent translator/audit.
+    assert (
+        "يقدم" in reverse_input
+    )  # The incorrect relation remains for the independent translator/audit.
     assert "Arabic" not in reverse_input and "40" not in reverse_input
     assert all(term in reverse_input for term in terms)
 
 
 def test_source_bound_translation_portable_to_other_domain_and_quantity(service, monkeypatch):
     source = "We evaluate over 12 sensor classifiers in three river datasets."
-    translations = {"sensor classifiers in": "مصنفًا للمستشعرات في",
-                    "river datasets.": "مجموعات بيانات من الأنهار."}
+    translations = {
+        "sensor classifiers in": "مصنفًا للمستشعرات في",
+        "river datasets.": "مجموعات بيانات من الأنهار.",
+    }
     requests = []
 
     def handle(request):
         body = json.loads(request.content)
         span = json.loads(body["messages"][1]["content"])
         requests.append(span)
-        return httpx.Response(200, json={"message": {"content": json.dumps(
-            {"text": translations[span]}, ensure_ascii=False
-        )}})
+        return httpx.Response(
+            200,
+            json={
+                "message": {"content": json.dumps({"text": translations[span]}, ensure_ascii=False)}
+            },
+        )
 
     real_client = httpx.Client
-    monkeypatch.setattr("rag.generation.ollama.httpx.Client",
-                        lambda **kwargs: real_client(transport=httpx.MockTransport(handle)))
+    monkeypatch.setattr(
+        "rag.generation.ollama.httpx.Client",
+        lambda **kwargs: real_client(transport=httpx.MockTransport(handle)),
+    )
     result = service.generator.translate_unit("control", source, "ar")
     assert result == "نقيم أكثر من 12 مصنفًا للمستشعرات في ثلاثة مجموعات بيانات من الأنهار."
     assert requests == ["sensor classifiers in", "river datasets."]
@@ -444,7 +608,9 @@ def test_trailing_conjunction_is_preserved_outside_model_span(service, monkeypat
         return httpx.Response(200, json={"message": {"content": json.dumps({"text": "المجالات"})}})
 
     real_client = httpx.Client
-    monkeypatch.setattr("rag.generation.ollama.httpx.Client",
-                        lambda **kwargs: real_client(transport=httpx.MockTransport(handle)))
+    monkeypatch.setattr(
+        "rag.generation.ollama.httpx.Client",
+        lambda **kwargs: real_client(transport=httpx.MockTransport(handle)),
+    )
     assert service.generator.translate_span("control", "domains and") == "المجالات و"
     assert calls == ["domains"]

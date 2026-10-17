@@ -15,6 +15,10 @@ def main():
     parser.add_argument("--pdf", type=Path)
     args = parser.parse_args()
     settings = Settings()
+    if not (settings.data_dir / "corpus.sqlite3").is_file():
+        parser.error(
+            "No existing indexed corpus in RAG_DATA_DIR; refusing to create an empty migration database"
+        )
     backup_dir = settings.data_dir / "backups"
     backup_dir.mkdir(parents=True, exist_ok=True)
     backup = backup_dir / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ") + ".sqlite3")

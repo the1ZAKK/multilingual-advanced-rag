@@ -25,11 +25,20 @@ class SearchIndex:
                 df = sum(term in words for words in self.bm25.doc_freqs)
                 self.bm25.idf[term] = math.log(1 + (n - df + 0.5) / (df + 0.5))
 
-    def dense(self, vector: np.ndarray, k: int) -> list[Hit]:
+    def dense(self, vector: np.ndarray, k: int, document_ids: set[str] | None = None) -> list[Hit]:
         if not self.chunks:
             return []
+        params = None
+        if document_ids is not None:
+            positions = np.asarray(
+                [i for i, chunk in enumerate(self.chunks) if chunk.document_id in document_ids],
+                dtype=np.int64,
+            )
+            if not len(positions):
+                return []
+            params = faiss.SearchParameters(sel=faiss.IDSelectorBatch(positions))
         scores, indices = self.faiss.search(
-            np.ascontiguousarray(vector, dtype=np.float32), min(k, len(self.chunks))
+            np.ascontiguousarray(vector, dtype=np.float32), min(k, len(self.chunks)), params=params
         )
         return [
             Hit(chunk=self.chunks[int(i)], score=float(s), dense_score=float(s))
@@ -37,11 +46,16 @@ class SearchIndex:
             if i >= 0
         ]
 
-    def sparse(self, query: str, k: int) -> list[Hit]:
+    def sparse(self, query: str, k: int, document_ids: set[str] | None = None) -> list[Hit]:
         if self.bm25 is None:
             return []
         scores = self.bm25.get_scores(tokenize(query, casefold=self.bm25_casefold))
-        order = sorted(range(len(scores)), key=lambda i: (-scores[i], self.chunks[i].chunk_id))
+        positions = [
+            i
+            for i, c in enumerate(self.chunks)
+            if document_ids is None or c.document_id in document_ids
+        ]
+        order = sorted(positions, key=lambda i: (-scores[i], self.chunks[i].chunk_id))
         return [
             Hit(chunk=self.chunks[i], score=float(scores[i]), bm25_score=float(scores[i]))
             for i in order[:k]

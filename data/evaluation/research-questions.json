@@ -1,0 +1,41 @@
+{
+  "description": "Local question smoke controls, not a scientific benchmark; source PDFs are not distributed. Upload these papers first with matching filenames.",
+  "cases": [
+    {
+      "id": "mmlu-en",
+      "question": "What is ArabicMMLU, where were its questions sourced, and how many tasks and questions does it contain?",
+      "language": "en",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf"
+    },
+    {
+      "id": "mmlu-ar",
+      "question": "ما هو معيار ArabicMMLU، وما مصدر أسئلته، وكم عدد المهام والأسئلة فيه؟",
+      "language": "ar",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf"
+    },
+    {
+      "id": "alghafa-en",
+      "question": "What is AlGhafa, and what newly introduced text dataset did the authors use to train their models?",
+      "language": "en",
+      "document_name": "5- AlGhafa Evaluation Benchmark for Arabic Language Models.pdf"
+    },
+    {
+      "id": "alghafa-prm",
+      "question": "Does the AlGhafa paper introduce a process reward model? Say if retrieved evidence is insufficient.",
+      "language": "en",
+      "document_name": "5- AlGhafa Evaluation Benchmark for Arabic Language Models.pdf"
+    },
+    {
+      "id": "ace-table",
+      "question": "Compare AceGPT-13B-chat and GPT-3.5 Turbo on All Set and Clean Set in Table 5, zero-shot F1. Give exact values.",
+      "language": "en",
+      "document_name": "21-AceGPT, Localizing Large Language Models in Arabic.pdf"
+    },
+    {
+      "id": "ace-table8",
+      "question": "What scores does AceGPT-13B-base report in Table 8 for Arabic MMLU and EXAMs?",
+      "language": "en",
+      "document_name": "21-AceGPT, Localizing Large Language Models in Arabic.pdf"
+    }
+  ]
+}

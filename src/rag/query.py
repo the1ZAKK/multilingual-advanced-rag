@@ -49,9 +49,7 @@ def contribution_question(question: str) -> bool:
         return bool(
             re.search(r"\b(?:paper|authors?|work|study|research|main|novel|original)\b", text)
         )
-    return bool(
-        re.search(r"\b(?:paper|authors?|work|study)\b.*\bcontribut(?:e|es|ed)\b", text)
-    )
+    return bool(re.search(r"\b(?:paper|authors?|work|study)\b.*\bcontribut(?:e|es|ed)\b", text))
 
 
 def asks_problem(question: str) -> bool:
@@ -71,31 +69,55 @@ def explicit_author_list_question(question: str) -> bool:
     if not contribution_question(question):
         return False
     text = normalize(question)
-    return bool(re.search(
-        r"\b(?:explicit(?:ly)?|author[- ]stated|all|every|actual count|complete list)\b|"
-        r"\b(?:list|enumerate)\b.{0,45}\b(?:one|two|three|four|five|six|\d+)\b|"
-        r"\b(?:صراحة|صريح|صريحة|صريحا|جميع|كل|كامل|كاملة|عددها|العدد الفعلي)\b|"
-        r"(?:يذكر|ذكر|يسرد|سرد).{0,25}(?:المؤلف|الباحث)", text
-    ))
+    return bool(
+        re.search(
+            r"\b(?:explicit(?:ly)?|author[- ]stated|all|every|actual count|complete list)\b|"
+            r"\b(?:list|enumerate)\b.{0,45}\b(?:one|two|three|four|five|six|\d+)\b|"
+            r"\b(?:صراحة|صريح|صريحة|صريحا|جميع|كل|كامل|كاملة|عددها|العدد الفعلي)\b|"
+            r"(?:يذكر|ذكر|يسرد|سرد).{0,25}(?:المؤلف|الباحث)",
+            text,
+        )
+    )
 
 
 def models_results_question(question: str) -> bool:
     """Identify requests for evaluated models and quantitative performance."""
     text = normalize(question)
-    if verification_question(question) or contribution_question(question) or re.search(
-        r"\b(?:define|definition|meaning|what (?:is|does).{0,25}(?:mean|metric))\b|"
-        r"(?:ما معني|تعريف|ما المقصود|كيف (?:تحسب|يحسب))", text
+    if (
+        verification_question(question)
+        or contribution_question(question)
+        or re.search(
+            r"\b(?:define|definition|meaning|what (?:is|does).{0,25}(?:mean|metric))\b|"
+            r"(?:ما معني|تعريف|ما المقصود|كيف (?:تحسب|يحسب))",
+            text,
+        )
     ):
         return False
     if re.search(r"\btable\s+\d+\b|\bالجدول\s+\d+\b", text) and re.search(
         r"\b(?:scores?|results?|values?|f1|accuracy|compare|comparison|numbers?)\b|"
-        r"(?:درجات|نتائج|قيم|دقة|مقارنة)", text
+        r"(?:درجات|نتائج|قيم|دقة|مقارنة)",
+        text,
     ):
         return True
+    # Quantities in an experimental protocol (temperature, examples, decoding)
+    # are not automatically comparative model-performance tables.
+    protocol = re.search(
+        r"\b(?:temperature|demonstrations?|api|decoding|prompting protocol)\b|"
+        r"درجة الحرارة|درجات الحرارة|واجهة برمجة|امثلة توضيحية|امثلة.{0,12}تلقين",
+        text,
+    )
+    performance = re.search(
+        r"\b(?:accuracy|f1|pass@|scores?|compare|comparison|outperform)\b|"
+        r"دقة|مقارنة|تفوق|درجات الاداء",
+        text,
+    )
+    if protocol and not performance:
+        return False
     if asks_problem(question) or re.search(
         r"^(?:according to .{0,100},\s*)?(?:how|why)\b|"
         r"\b(?:methodology|pipeline|adaptation|metric definition)\b|"
-        r"^(?:كيف|لماذا)\b|(?:طريقة حساب|تعريف المقياس)", text
+        r"^(?:كيف|لماذا)\b|(?:طريقة حساب|تعريف المقياس)",
+        text,
     ):
         return False
     models = re.search(r"\b(?:models?|llms?|systems?)\b", text) or re.search(
@@ -151,8 +173,9 @@ def claim_target(question: str) -> str | None:
     target = match[1]
     # Relation/method qualifiers stay in the full question for semantic audit;
     # this object-only retrieval hint need not put every clause in one quote.
-    target = re.split(r"\busing\b|\b(?:باستخدام|باستعمال)\b", target, maxsplit=1,
-                      flags=re.IGNORECASE)[0]
+    target = re.split(
+        r"\busing\b|\b(?:باستخدام|باستعمال)\b", target, maxsplit=1, flags=re.IGNORECASE
+    )[0]
     if arabic and not english:
         target = re.sub(r"^(?:هذه\s+)?(?:الورقة|ورقة|البحث|الدراسة|العمل)\s+", "", target)
         target = re.sub(r"^[A-Za-z0-9][\w.+/-]*\s+", "", target)
@@ -185,9 +208,7 @@ def numbered_list_question(question: str) -> bool:
 def _prose(text: str, identifiers: Iterable[str] = ()) -> str:
     for name in identifiers:
         if name:
-            text = re.sub(
-                rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])", " ", text
-            )
+            text = re.sub(rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])", " ", text)
     text = re.sub(r"https?://\S+|\[[^\[\]]*\]|`[^`]+`", " ", text)
     text = re.sub(r"\((?:pages?|الصفحات?|صفحات?)\s+[\d\s,،–-]+\)", " ", text)
     # Model IDs, acronyms, CamelCase names and snake_case identifiers are allowed
@@ -221,16 +242,12 @@ def resolve_language(question: str, requested: str = "auto") -> str:
     text = _prose(question)
     arabic = _arabic_letters(text)
     latin = len(re.findall(r"[A-Za-z]", text))
-    if arabic and (
-        re.match(r"\W*[\u0600-\u06ff]", text) or arabic >= max(2, latin * 0.6)
-    ):
+    if arabic and (re.match(r"\W*[\u0600-\u06ff]", text) or arabic >= max(2, latin * 0.6)):
         return "ar"
     return "en"
 
 
-def validate_output_language(
-    text: str, language: str, *, identifiers: Iterable[str] = ()
-) -> None:
+def validate_output_language(text: str, language: str, *, identifiers: Iterable[str] = ()) -> None:
     """Reject prose in the wrong language; keep citations/proper IDs separate.
 
     Script checks enforce language following, not translation faithfulness or
@@ -254,3 +271,25 @@ def validate_output_language(
     elif arabic >= 4 and arabic > latin * 0.1:
         raise ValueError("Output language mismatch: expected English answer prose")
 
+
+def overview_question(question: str) -> bool:
+    """Broad paper/dataset overview, not a score or a particular method detail."""
+    text = normalize(question)
+    if (
+        verification_question(question)
+        or models_results_question(question)
+        or contribution_question(question)
+    ):
+        return False
+    if re.search(
+        r"\b(?:summari[sz]e|overview|research problem|research gap)\b|لخص|ملخص|المشكلة البحثية",
+        text,
+    ):
+        return True
+    return bool(
+        re.search(r"\b(?:what is|what are|describe|introduce)\b|ما هو|ما هي|عرف", text)
+        and re.search(
+            r"\b(?:benchmark|dataset|corpus|paper|study|tasks?|questions?)\b|معيار|مجموعة بيانات|ورقة|دراسة",
+            text,
+        )
+    )

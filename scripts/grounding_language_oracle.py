@@ -144,7 +144,8 @@ def contribution_quality(answer, expected_language):
                         r"(?:ثلاث(?:ة)?|3)\s+(?:معايير|اختبارات|مجموعات|مقاييس|حزم)",
                     ),
                     "stem_and_code": _coordinated(
-                        text, r"stem|علوم|العلمي|علمية",
+                        text,
+                        r"stem|علوم|العلمي|علمية",
                         r"توليد\s+(?:الشيفر|الشفر|الكود)|(?:ال)?برمج|الاكواد",
                     ),
                     "native_arabic_curation": _relation(
@@ -179,8 +180,9 @@ def contribution_quality(answer, expected_language):
                     "arabic_and_multilingual_models": _relation(
                         text, r"عربي", r"متعدد.{0,25}لغ|متعددة.{0,25}لغ", 70
                     ),
-                    "scientific_and_programming_capabilities":
-                        _scientific_programming_capabilities(text),
+                    "scientific_and_programming_capabilities": _scientific_programming_capabilities(
+                        text
+                    ),
                     "evaluation_not_one_benchmark_component": not re.search(
                         r"^(?:تقديم|تطوير|انشاء|بناء|طرح)?\s*(?:معيار|مجموعة|اختبار|مقياس).{0,45}(?:اصطناعي|ترجم|اصيل)",
                         text,

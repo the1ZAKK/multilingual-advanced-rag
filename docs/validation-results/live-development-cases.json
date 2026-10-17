@@ -1,0 +1,60 @@
+{
+  "model": "qwen3-hf:1.7b",
+  "note": "Development cases, not an unseen benchmark. Arabic generic answer failed closed. Provenance does not establish semantic correctness.",
+  "records": [
+    {
+      "id": "mmlu-en",
+      "question": "What is ArabicMMLU, where were its questions sourced, and how many tasks and questions does it contain?",
+      "language": "en",
+      "mode": "ollama",
+      "latency_ms": 80293.07348898146,
+      "warning": null,
+      "answer": "ArabicMMLU is the first multi-task language understanding benchmark for the Arabic language, sourced from school exams across diverse educational levels in different countries spanning North Africa, the Levant, and the Gulf regions [S1] (page 1).\nThe data comprises 40 tasks and 14,575 multiple-choice questions in Modern Standard Arabic (MSA) [S1] (page 1).\nThe questions are sourced from eight different countries in North Africa (Morocco and Egypt), the Levant (Jordan, Palestine, and Lebanon), and the Gulf (UAE, Kuwait, and KSA) [S4] (page 3).\nEach question has 2–5 candidate answers, with one correct answer [S4] (page 3)."
+    },
+    {
+      "id": "mmlu-ar",
+      "question": "ما هو معيار ArabicMMLU، وما مصدر أسئلته، وكم عدد المهام والأسئلة فيه؟",
+      "language": "ar",
+      "mode": "extractive",
+      "latency_ms": 72680.47915099305,
+      "warning": "Ollama generation failed (ValueError: Output language mismatch: expected Arabic answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nAbstract [S1]\n\narXiv:2402.12840v2  [cs.CL]  30 Jul 2024 [S1]\n\nThe focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. [S1]\n\n14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1 [S2]\n\nAll answers are wrong [S3]\n\nالفاعلين األصليين-ب\n والمساهمين فقط والمشاركين\n الفاعلين األصليين والمساهمين-ج\nوالمشاركين وضد ورثتهم أو األشخاص [S3]\n\nالمسؤولين مدنيا عهيم\n جميع األجوبة خاطئة-د [S3]\n\nFigure 3: Examples of social science, math, and bar\nexam questions from Palestine, Jordan, and Morocco,\nrespectively. Left is the original text and right is the\nEnglish translation for illustrative purposes. The bold\noptions are the correct answer keys. [S3]\n\nand KSA, prioritize Islamic studies alongside sub-\njects like mathematics, natural science, social sci-\nence, and geography.4 In public schools, Arabic is\ncommonly used for teaching and assessment, while\nin international schools, English is the predominant\nlanguage of instruction for most subjects, following\neither the UK or USA curriculum. When designing\nArabicMMLU, we excluded questions in English and\nonly included questions in Arabic. [S3]\n\nWhen designing\nArabicMMLU, we excluded questions in English and\nonly included questions in Arabic. [S4]\n\nArabicMMLU is an Arabic multiple-choice\nquestion-answering dataset comprising 40 tasks\nspanning a wide range of subjects and education\nlevels. The questions are sourced from eight differ-\nent countries in North Africa (Morocco and Egypt),\nthe Levant (Jordan, Palestine, and Lebanon), and\nthe Gulf (UAE, Kuwait, and KSA). Each question\nhas 2–5 candidate answers, with one correct an-\nswer. Table 1 provides details of the subjects in\nArabicMMLU. The subjects are drawn from different\neducation levels (primary school, middle school, [S4]\n\n4https://www.tabahfoundation.\norg/wp-content/uploads/2018/12/\nTabahFuturesInitiative-Islamic-Education_En.pdf [S4]\n\nGroup\nSubjects [S5]\n\nSTEM\nNatural Science (P, M), Math (P),\nPhysics (H), Biology (H), Computer\nScience (P, M, H, U) [S5]\n\nSocial science\nSocial Science (P, M), Civics\neducation (M, H), Geography (P, M,\nH), Economics (M, H, U), Political\nScience (U) [S5]\n\nHumanities\nIslamic studies (P, M, H, U, NA),\nHistory (P, M, H), Accounting (U),\nLaw (U), Philosophy (H) [S5]\n\nLanguage\nArabic Language (P, M, H), Arabic\nLanguage - General (NA), Arabic\nLanguage - Grammar (NA) [S5]\n\nOther\nManagement (U), General\nKnowledge (P, M, NA), Driving\nTest (NA) [S5]\n\nTable 1: Subject areas in ArabicMMLU. “P”, “M”, “H”,\n“U”, and , “NA” indicate that questions in the subject are [S5]\n\navailable in primary school, middle school, high school,\nuniversity and professional, and others, respectively. [S5]\n\nhigh school, university, and professional) and are\ncategorized into STEM, social science, humanities,\nlanguage, and other fields. [S5]\n\nKoto et al., 2022, 2024), mathematical problems\n(Amini et al., 2019; Cobbe et al., 2021), coding\nchallenges (Chen et al., 2021; Austin et al., 2021;\nYu et al., 2024), and school exams (Hendrycks [S6]\n\net al., 2021; Li et al., 2023; Koto et al., 2023).\nOne notable dataset for knowledge evaluation is\nMMLU (Massive Multitask Language Understand-\ning) (Hendrycks et al., 2021), which comprises\nmultiple-choice questions across various subjects\nbased on the US education system.\nIn recent\nArabic-centric LLMs like Jais (Sengupta et al.,\n2023) and AceGPT (Huang et al., 2023), knowl-\nedge evaluation was carried out using MMLU trans-\nlated from English to Arabic. [S6]\n\nTo comprehensively evaluate the reasoning\nand knowledge capabilities of Arabic LLMs in\nlocal Arabic-speaking contexts, we introduce\nArabicMMLU, styled around MMLU and sourced\nfrom school exams across Arabic-speaking coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. ArabicMMLU was constructed\nthrough collaboration with native Arabic speak-\ners from Jordan, Egypt, UAE, Lebanon, and Saudi\nArabia (KSA), ensuring rich local context, partic-\nularly in the subject areas of history, geography,\nlaw, civics education, and driving tests. Figure 1\nsummarizes the distribution of education levels and\ncorresponding subjects in ArabicMMLU. The propor-\ntion of primary school, middle school, high school,\nand university level questions in ArabicMMLU are\n22.2%, 12.2%, 34%, and 6.1%, respectively, with\nthe remaining questions categorized as “NA”. [S7]\n\n3.3\nData Statistics [S8]\n\nTable 2 presents detailed statistics of ArabicMMLU,\ncategorized by education level and subject area.\nThe distribution of questions across education lev- [S8]\n\nGroup\n# Questions\n# Chars [S9]\n\nQuestion\nAnswer [S9]\n\nPrimary\n3239\n43.6\n30.4\nMiddle\n1775\n58.3\n54.6\nHigh\n4963\n76.7\n66.0\nUniv\n892\n69.1\n97.3\nNA\n3706\n311.4\n52.7 [S9]\n\nSTEM\n3220\n60.0\n49.4\nSocial Science\n3540\n62.2\n57.5\nHumanities\n3655\n57.1\n60.2\nLanguage\n1661\n647.3 [S9]\n\nTable 9: Zero-shot LLM performance (% accuracy) with Arabic prompt and Arabic alphabetic output, combined\nacross subject groups. “Average” means the average across all questions in ArabicMMLU. [S10]"
+    },
+    {
+      "id": "alghafa-en",
+      "question": "What is AlGhafa, and what newly introduced text dataset did the authors use to train their models?",
+      "language": "en",
+      "mode": "ollama",
+      "latency_ms": 41689.18193600257,
+      "warning": null,
+      "answer": "AlGhafa is a new multiple-choice evaluation benchmark for Arabic large language models [S1] (page 1).\nThe authors used a collection of publicly available datasets, as well as a newly introduced HandMade dataset consisting of 8 billion tokens [S1] (page 1)."
+    },
+    {
+      "id": "alghafa-prm",
+      "question": "Does the AlGhafa paper introduce a process reward model? Say if retrieved evidence is insufficient.",
+      "language": "en",
+      "mode": "insufficient-evidence",
+      "latency_ms": 176.30321497563273,
+      "warning": null,
+      "answer": "The retrieved evidence is insufficient to establish the requested claim about “process reward model”. A positive introduction claim would need a direct statement; drawing it from these passages would be inference. This is a limit of the retrieved evidence, not proof of absence throughout the paper.\n\nContext references only: [S1] [S2]."
+    },
+    {
+      "id": "ace-table",
+      "question": "Compare AceGPT-13B-chat and GPT-3.5 Turbo on All Set and Clean Set in Table 5, zero-shot F1. Give exact values.",
+      "language": "en",
+      "mode": "source-tables",
+      "latency_ms": 709.3417800206225,
+      "warning": null,
+      "answer": "**Table 5: Average F1 on ACVA in the zero-shot set- ting. The best performance is in bold and the second is underlined.** (page 5) [S4] [S5] [S6] [S7]\n\nModels and sizes in the table rows: AceGPT-13B-chat; GPT-3.5 Turbo [S4] [S5] [S6] [S7]\n\nMetric: F1 [S4] [S5] [S6] [S7]\n\nFocused view: 2 of 6 rows and 2 of 2 columns; 1 of 1 matching tables. This is not an exhaustive paper-wide model or result list.\n\n| Model | Size | All Set | Clean Set |\n| --- | --- | --- | --- |\n| AceGPT-13B-chat | - | 75.02% | 74.62% [S4] [S5] [S6] [S7] |\n| GPT-3.5 Turbo | - | 75.57% | 79.03% [S4] [S5] [S6] [S7] |"
+    },
+    {
+      "id": "ace-table8",
+      "question": "What scores does AceGPT-13B-base report in Table 8 for Arabic MMLU and EXAMs?",
+      "language": "en",
+      "mode": "source-tables",
+      "latency_ms": 90.67228401545435,
+      "warning": null,
+      "answer": "**Table 8: Accuracy on Arabic MMLU and EXAMs. The best is bold and the second is underlined.** (page 7) [S1] [S2] [S3] [S4] [S6] [S7]\n\nModels and sizes in the table rows: AceGPT-13B-base [S1] [S2] [S3] [S4] [S6] [S7]\n\nMetric: accuracy [S1] [S2] [S3] [S4] [S6] [S7]\n\nFocused view: 1 of 8 rows and 6 of 6 columns; 1 of 1 matching tables. This is not an exhaustive paper-wide model or result list.\n\n| Model | Size | Arabic MMLU / Average | Arabic MMLU / STEM | Arabic MMLU / Humanities | Arabic MMLU / Social Sciences | Arabic MMLU / Others | EXAMs |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| AceGPT-13B-base | - | 40.45 | 36.60 | 38.74 | 43.76 | 42.72 | 36.63 [S1] [S2] [S3] [S4] [S6] [S7] |"
+    }
+  ]
+}

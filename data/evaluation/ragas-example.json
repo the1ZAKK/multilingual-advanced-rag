@@ -1,0 +1,8 @@
+[
+  {
+    "user_input": "What is hybrid retrieval?",
+    "response": "Hybrid retrieval combines semantic and lexical search.",
+    "retrieved_contexts": ["Hybrid retrieval combines semantic vector search with lexical BM25 search."],
+    "reference": "Hybrid retrieval combines semantic and lexical search."
+  }
+]

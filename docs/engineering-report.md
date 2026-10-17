@@ -1,3 +1,5 @@
+> Historical report. See [current validation](validation-20261016.md) for current checks and limitations.
+
 # Engineering report
 
 ## What is implemented

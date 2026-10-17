@@ -30,12 +30,12 @@ def test_dashboard_chat_and_comparison(service, settings, pdf_bytes, monkeypatch
         app = AppTest.from_file(str(Path(__file__).parents[1] / "app/streamlit_app.py"))
         app.run(timeout=15)
         assert not app.exception
-        app.checkbox[0].uncheck().run()
+        next(c for c in app.checkbox if c.label == "Generate with local Ollama").uncheck().run()
         app.chat_input[0].set_value("What is BM25 retrieval?").run(timeout=15)
         assert not app.exception
         assert len(app.chat_message) == 2
         assert "Source excerpts" in app.session_state["messages"][-1]["text"]
-        app.text_input[0].set_value("BM25 retrieval").run()
+        app.text_input[0].set_value("BM25 retrieval")
         next(b for b in app.button if b.label == "Compare").click().run(timeout=15)
         assert not app.exception
         assert len(app.expander) >= 3

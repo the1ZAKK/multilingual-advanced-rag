@@ -1,5 +1,16 @@
 # Implementation and validation tracker
 
+## Current cloud continuation — October 2026
+
+- [x] Scoped retrieval, table binding/selection, bounded generation and evaluation audit fixes.
+- [x] Python 3.11/3.12 suites, live learned models and real browser screenshots.
+- [x] Portable source package and backup-first updater with conflict refusal.
+- [ ] Reliable ordinary Arabic generation, pristine unseen-paper/human evaluation and Windows execution.
+
+See [current validation](docs/validation-20261016.md). Sections below are historical;
+their old model-access blockers and counts do not describe the current cloud run.
+
+
 ## Resumed local validation — 2026-10-16
 - [x] Reuse existing Python and Ollama; start API/dashboard on 8000/8501 and verify configured Qwen.
 - [x] Verify live corpus/vector/source and both backup fingerprints unchanged without reindexing.

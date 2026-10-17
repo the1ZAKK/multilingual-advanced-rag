@@ -30,7 +30,9 @@ def main():
     for name, question, text in DEMO:
         pdf = pymupdf.open()
         page = pdf.new_page()
-        page.insert_text((72, 72), text, fontsize=11)
+        remaining = page.insert_textbox(pymupdf.Rect(72, 72, 523, 700), text, fontsize=11)
+        if remaining < 0:
+            raise RuntimeError("Synthetic demonstration text does not fit its page")
         info = service.ingest(pdf.tobytes(no_new_id=True), name)
         pdf.close()
         relevant = {

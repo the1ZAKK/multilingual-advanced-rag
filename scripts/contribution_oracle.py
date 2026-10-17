@@ -30,8 +30,9 @@ def numbered_items(answer):
     items = [
         {
             "number": int(marker.group(1)),
-            "text": answer[marker.end() : markers[i + 1].start() if i + 1 < len(markers) else None]
-            .strip(),
+            "text": answer[
+                marker.end() : markers[i + 1].start() if i + 1 < len(markers) else None
+            ].strip(),
         }
         for i, marker in enumerate(markers)
     ]
@@ -225,7 +226,9 @@ def verify_source_answer(result, path, *, require_problem):
     problem = prose(semantic["problem_text"])
     problem_gap = not require_problem or (
         bool(problem)
-        and matches(r"\b(?:gap|lack\w*|limited|shortage|scarcity|need\w*|absence|insufficient)\b", problem)
+        and matches(
+            r"\b(?:gap|lack\w*|limited|shortage|scarcity|need\w*|absence|insufficient)\b", problem
+        )
         and matches(r"\barabic\b", problem)
         and matches(r"\b(?:evaluat\w*|benchmarks?)\b", problem)
         and matches(r"\b(?:stem|scien\w*)\b", problem)

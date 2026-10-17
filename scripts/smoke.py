@@ -18,8 +18,8 @@ def main():
         response.raise_for_status()
         doc = pymupdf.open()
         page = doc.new_page()
-        page.insert_text(
-            (72, 72),
+        page.insert_textbox(
+            pymupdf.Rect(72, 72, 523, 700),
             "Hybrid retrieval combines FAISS vectors with BM25 keywords. " + str(uuid.uuid4()),
         )
         try:

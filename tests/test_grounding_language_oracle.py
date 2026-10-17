@@ -151,8 +151,12 @@ def test_swapping_duplicate_items_and_negating_qualifiers_fail():
     ("position", "old", "new", "missing"),
     [
         (0, "العلوم وتوليد الشيفرة", "STEM توليد الشيفرة", "stem_and_code"),
-        (1, "القدرات العلمية والبرمجية", "قدرات النماذج اللغوية العربية في علمي و برمجة المنطقة المحددة",
-         "scientific_and_programming_capabilities"),
+        (
+            1,
+            "القدرات العلمية والبرمجية",
+            "قدرات النماذج اللغوية العربية في علمي و برمجة المنطقة المحددة",
+            "scientific_and_programming_capabilities",
+        ),
         (2, "النماذج والعلاقات", "النماذج وأو العلاقات", "joint_behavior_and_capability_findings"),
     ],
 )
@@ -512,14 +516,31 @@ def test_other_paper_models_results_query_uses_its_own_independent_reference():
     result = {
         "answer": "For PaLM 540B on GSM8K, standard prompting scores 17.9%, while chain-of-thought prompting scores 56.9% [S1] (Table 2, page 21).",
         "generation_mode": "source-tables",
-        "citations": [{"label": "S1", "document_id": fixture["sha256"],
-                       "chunk_id": "cot:p21", "page": 21, "quote": quote}],
-        "evidence": [{"chunk": {"chunk_id": "cot:p21", "document_id": fixture["sha256"],
-                                  "page": 21, "text": quote}}],
+        "citations": [
+            {
+                "label": "S1",
+                "document_id": fixture["sha256"],
+                "chunk_id": "cot:p21",
+                "page": 21,
+                "quote": quote,
+            }
+        ],
+        "evidence": [
+            {
+                "chunk": {
+                    "chunk_id": "cot:p21",
+                    "document_id": fixture["sha256"],
+                    "page": 21,
+                    "text": quote,
+                }
+            }
+        ],
     }
     check = evaluate_answer(
         "Which models were evaluated in Chain-of-Thought Prompting Elicits Reasoning, and what numerical results were reported?",
-        result, fixture, {fixture["sha256"]: [""] * 20 + [fixture["text"]]},
+        result,
+        fixture,
+        {fixture["sha256"]: [""] * 20 + [fixture["text"]]},
     )
     assert check["answer_quality"]["kind"] == "other-paper-control"
     assert check["passed"]

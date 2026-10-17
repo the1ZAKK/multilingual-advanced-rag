@@ -11,16 +11,19 @@ BM25、倒数排名融合与多语言重排序，使用本地 Qwen 模型生成�
 
 ## Status and evidence
 
-Working offline pipeline with real FAISS/BM25, SQLite persistence, an explicit hash-vector
-baseline, and cited extractive responses. Sentence Transformer and cross-encoder adapters
-are implemented. The current local verification uses installed multilingual MiniLM,
-cross-encoder, and Qwen models. Ollama generation has HTTP-contract tests and repeated
-dashboard checks assessed against source PDFs. See the
-[grounding and language diagnosis](docs/grounding-language-diagnosis.md), the earlier
-[contribution diagnosis](docs/3lm-diagnosis.md), and the
-[engineering report](docs/engineering-report.md) for exact checks and limitations.
-Hash embeddings are **not semantic or cross-lingual embeddings**. Lexical reranking is
-**not a cross-encoder**. Neither fallback is presented as multilingual model performance.
+The uploaded Windows version has been extended with explicit document-scoped retrieval,
+focused table comparisons, safer author-list extraction, bounded generation, audit-friendly
+evaluation exports, real dashboard screenshots, and a source updater that protects existing
+local work. See [current validation](docs/validation-20261016.md),
+[current architecture](docs/current-architecture.md), and [safe upgrade instructions](docs/upgrading.md).
+Historical Windows diagnosis reports remain available; their test counts are not current
+cloud results. Model mode, valid citations and passing unit tests do not imply answer correctness.
+
+The hash/lexical profile is explicitly offline and is **not learned semantic retrieval**.
+Source tables and author statements are labeled separately from generated Qwen prose.
+Local generation can fall back conservatively; research answers still require source review.
+Ordinary Arabic generation remains unreliable in live testing; rejected output is shown
+as explicitly labeled source excerpts. See the current validation report for failed cases.
 
 ## Architecture
 
@@ -69,6 +72,19 @@ API afterward. Chunk IDs and their offsets change, so reannotate evaluation data
 that refer to previous chunk IDs; old citations remain interpretable using the backup.
 See [3LM diagnosis and validation](docs/3lm-diagnosis.md) for the measured failure and fix.
 
+## Resume an existing installation
+
+Keep your existing `.env`, `.venv`, data and models. After applying a source update:
+
+```powershell
+.\scripts\start.ps1
+```
+
+The launcher reuses recognizable services or opens separate API/dashboard terminals.
+Use Ctrl+C in those terminals to stop services. It does not install dependencies or pull
+models. If scripts are blocked by local policy, use the manual commands below. The launcher
+has been reviewed but cannot be executed as a Windows process in the Linux cloud.
+
 ## Windows PowerShell quick start
 
 Requires Python 3.11 or 3.12 (64-bit), Git and Internet access for packages/models. Clone the dedicated project branch (the repository's `main` branch contains the original
@@ -111,7 +127,7 @@ public model. Set `HF_HOME` in `.env` to keep caches inside the project. No API 
 ```powershell
 $env:RAG_EMBEDDING_BACKEND="hash"
 $env:RAG_RERANKER_BACKEND="lexical"
-$env:RAG_DATA_DIR="data/demo-index"
+$env:RAG_DATA_DIR="data/portable-demo-index"
 .\.venv\Scripts\python.exe scripts/demo.py
 .\.venv\Scripts\python.exe -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
@@ -136,7 +152,9 @@ ollama serve  # only if the Windows Ollama application is not already serving
 Set `RAG_OLLAMA_MODEL=qwen3:1.7b` (or an available compatible Qwen tag). `GET /health`
 checks Ollama reachability and lists local models. Without Ollama, retrieval still works and
 chat returns **source excerpts**, not a claimed generated answer. Insufficient evidence is
-reported separately. Conversation history is displayed by the UI; backend questions are
+reported separately. Use **Search documents** in the sidebar to scope both chat and retrieval comparisons before
+ranking. Use **Clear chat history** after changing profiles to avoid reading old responses.
+Conversation history is displayed by the UI; backend questions are
 independent and do not implicitly resolve follow-up pronouns.
 
 ## Models and hardware
@@ -247,8 +265,10 @@ No deployment or registry publication is configured. See [troubleshooting](docs/
 
 Four sections: document management, chat, retrieval comparison, evaluation. Passage text
 is escaped and rendered with automatic bidirectional layout. Histories live in Streamlit
-session memory. [Screenshot capture checklist](docs/screenshots.md) contains placeholders
-until real UI screenshots are captured; no fabricated screenshots are supplied.
+session memory. [Actual browser screenshots](docs/screenshots.md) show the synthetic offline workflow,
+including chat, comparison and evaluation. They are not model-performance evidence.
+
+![Cited offline source excerpts](docs/screenshots/chat-offline.png)
 
 ## Scope
 
@@ -260,3 +280,22 @@ for evidence, CV statements, and Arabic PRM research extensions.
 
 MIT-licensed application code; models, dependencies and source documents retain their own
 licenses. Research documents in the sibling repository were not copied or committed here.
+
+## Current operational controls
+
+- `RAG_LLM_CONTEXT_TOKENS=8192`: context allocation; lower values can reduce RAM but may cut evidence.
+- `RAG_LLM_TIMEOUT=120`: per-call limit.
+- `RAG_LLM_TOTAL_TIMEOUT=150`: shared generation/repair/translation/audit budget.
+- `RAG_MAX_ANSWER_STATEMENTS=4`: ordinary generated statement budget; source author lists remain source-counted.
+- `RAG_MAX_CONTEXT_CHARS=8000`: source-context character budget in the example configuration. Use 6000 for a smaller CPU experiment and evaluate lost coverage.
+
+Evaluation requests support `include_answers=true` for reviewable question/answer/citation
+records and optional case-level `document_ids`. Exports include run identity, configuration,
+source hashes, p50/p95 timing and separate language/provenance checks with scored denominators.
+Refusals with no citations are unassessed for provenance, not scored as perfect. These checks
+are not entailment or semantic-correctness metrics. Optional local Ragas scores are model
+judgments; non-finite results are rejected instead of exported as fabricated replacements.
+
+`scripts/live_questions.py` runs existing-paper questions without modifying the corpus and
+preserves outputs for manual review. `data/evaluation/research-questions.json` is a development
+smoke set; its source PDFs are not redistributed. It is not an unseen scientific benchmark.
