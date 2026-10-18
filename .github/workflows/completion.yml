@@ -1,0 +1,104 @@
+name: Completion acceptance
+on:
+  push:
+    branches: [completion-acceptance]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows-acceptance:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.19'
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --locked --extra dev --python 3.12
+      - run: uv run --no-sync python -m scripts.acceptance --output reports/windows-acceptance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-acceptance
+          path: reports/windows-acceptance
+  stronger-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
+      RAG_OLLAMA_MODEL: qwen3-hf:4b
+      RAG_LLM_TIMEOUT: '300'
+      RAG_LLM_TOTAL_TIMEOUT: '450'
+      RAG_GENERATION_TRACE_DIR: reports/translation-trace
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.19'
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --locked --extra dev --extra models --python 3.12
+      - name: Start official pinned Ollama runtime
+        run: |
+          docker run -d --name rag-model-${{ github.run_id }} -p 127.0.0.1:11434:11434 ollama/ollama@sha256:0e8ff22ff86b4718cfa886844062117af13b50eb5689cca78279778e15744980
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:11434/api/version; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Verify official GGUF before import
+        run: uv run --no-sync python -m scripts.prepare_model --cache .cache/quality-models --output reports/model-runtime.json
+      - name: Verify frozen public paper sources
+        run: uv run --no-sync python -m scripts.fetch_review_sources --dataset data/evaluation/completion-review.json --output reports/papers
+      - name: Run real 4B learned-model evaluation
+        run: uv run --no-sync python -m scripts.validate_workflow --dataset data/evaluation/completion-review.json --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
+      - name: Export ungraded review outputs
+        run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stronger-model
+          path: |
+            reports/model-runtime.json
+            reports/model-review.json
+            reports/completion-model/answers.json
+            reports/completion-model/review.csv
+      - name: Clean up owned model runtime
+        if: always()
+        run: docker rm -f rag-model-${{ github.run_id }} || true
+  publish-review-packet:
+    needs: [windows-acceptance, stronger-model]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-acceptance
+          path: reports/download/windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: stronger-model
+          path: reports/download/model
+      - name: Preserve compact results on an isolated review branch
+        env:
+          RESULT_BRANCH: ci-evaluation-${{ github.run_id }}
+        run: |
+          mkdir -p docs/validation-results
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name, source in [('completion-model', 'reports/download/model/model-review.json'), ('completion-windows', 'reports/download/windows/acceptance.json')]:
+              data = json.loads(Path(source).read_text())
+              Path(f'docs/validation-results/{name}.json').write_text(json.dumps(data, ensure_ascii=False, indent=2))
+          PY
+          git switch -c "$RESULT_BRANCH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/validation-results/completion-model.json docs/validation-results/completion-windows.json
+          git commit -m 'Record ungraded model outputs and hosted Windows acceptance'
+          git push origin "$RESULT_BRANCH"

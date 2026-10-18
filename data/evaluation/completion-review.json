@@ -1,0 +1,175 @@
+{
+  "description": "Frozen before the 4B run. Two fresh development papers (English and bilingual Arabic/English source passages), plus four previously exposed regression controls. AI-assisted reference curation; no independent human review or pristine scientific benchmark is claimed. Gold expectations are never generation input.",
+  "sources": [
+    {
+      "id": "legal",
+      "filename": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "sha256": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd"
+    },
+    {
+      "id": "table",
+      "filename": "13-AraTable -- Benchmarking LLMs’ Reasoning and Ubderstanding of Arabic Tabular Data.pdf",
+      "sha256": "2043c36e437d428d24cd6646aad1433417eb110cdffc4a91bfe69591c812ca32"
+    },
+    {
+      "id": "physics",
+      "filename": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "sha256": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6"
+    },
+    {
+      "id": "culture",
+      "filename": "15-Commonsense Reasoning in Arab Culture.pdf",
+      "sha256": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad"
+    }
+  ],
+  "cases": [
+    {
+      "id": "legal-problem",
+      "source_id": "legal",
+      "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+      "language": "en",
+      "expected_points": [
+        "Evaluation of Arabic legal knowledge in LLMs is underexplored.",
+        "Tasks are sourced from Saudi legal documents and synthesized questions."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "LLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim t"
+        }
+      ]
+    },
+    {
+      "id": "legal-retrieval",
+      "source_id": "legal",
+      "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+      "language": "en",
+      "expected_points": [
+        "No: the initial benchmark does not assess retrieval from external knowledge bases.",
+        "The paper says these retrieval abilities will be assessed in future tasks."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "legal-retrieval-ar",
+      "source_id": "legal",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "expected_points": [
+        "الإصدار الأول لا يقيس استرجاع الحقائق والقوانين من قواعد معرفة خارجية.",
+        "تذكر الورقة أن تقييم قدرات الاسترجاع سيأتي في مهام مستقبلية."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "table-method",
+      "source_id": "table",
+      "question": "How is AraTable content curated, and what mechanism does its automated evaluation framework use?",
+      "language": "en",
+      "expected_points": [
+        "LLMs generate initial content.",
+        "Human experts filter and verify it.",
+        "The automated evaluation framework uses self-deliberation."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Our methodology follows a hybrid pipeline, where initial content is gener-\nated by LLMs and subsequently filtered and verified by human experts to ensure\nhigh dataset quality. Initial analy"
+        },
+        {
+          "page": 1,
+          "text": "We also propose a fully automated evaluation framework that uses a self-\ndeliberation mechanism and achieves performance nearly identical to that of\n1\narXiv:2507.18442v1  [cs.CL]  24 Jul 2025"
+        }
+      ]
+    },
+    {
+      "id": "fresh-physics-classes",
+      "source_id": "physics",
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "expected_points": [
+        "The validity is proved for all NPT states.",
+        "The validity is shown for a family of two-qutrit PPT entangled states of rank four, not an unconditional result for every PPT state."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. "
+        }
+      ]
+    },
+    {
+      "id": "fresh-physics-ar",
+      "source_id": "physics",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "expected_points": [
+        "تثبت الورقة الصلاحية لجميع حالات NPT."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. "
+        }
+      ]
+    },
+    {
+      "id": "fresh-culture-scope",
+      "source_id": "culture",
+      "question": "According to the ArabCulture abstract, how many countries, daily-life domains and fine-grained subtopics are covered?",
+      "language": "en",
+      "expected_points": [
+        "13 countries.",
+        "12 daily-life domains.",
+        "54 fine-grained subtopics."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "To address this, we intro-\nduce ArabCulture, a commonsense reasoning\ndataset in Modern Standard Arabic (MSA), cov-\nering cultures of 13 countries across the Gulf,\nLevant, North Africa, and the Nile Valley. The\ndataset was built from scratch by engaging na-\ntive speakers to write and validate culturally\nrelevant questions for their respective countries.\nArabCulture spans 12 daily life domains with\n54 fine-grained subtopics, reflecting various\naspects of social norms, traditions, and every-\nday experiences. "
+        }
+      ]
+    },
+    {
+      "id": "fresh-culture-native-ar",
+      "source_id": "culture",
+      "question": "في المثال العربي عن كريم الذي يتناول الكسكسي في الشكل الأول، ما البلد والمنطقة المكتوبان في المصدر؟",
+      "language": "ar",
+      "expected_points": [
+        "البلد الجزائر والمنطقة شمال أفريقيا؛ لا تستبدل ذلك باستنتاج من معرفة عامة بالمطبخ."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "الجزائر, شمال أفريقيا  :الموقع\nيتناول كريم على الغداء طبق الكسكسي\nأ.يتناول كريم الكسكسي مع الكسرة\nب. يتناول كريم الكسكسي مع صلصة باللحم\nج. يتناول كريم الكسكسي مع الشربة\n"
+        }
+      ]
+    },
+    {
+      "id": "fresh-culture-unsupported",
+      "source_id": "culture",
+      "question": "Does ArabCulture introduce an Arabic process reward model? Distinguish direct evidence from inference.",
+      "language": "en",
+      "expected_points": [
+        "The retrieved evidence does not establish introduction of a process reward model.",
+        "This is an evidence limitation, not proof of absence throughout the paper."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "To address this, we intro-\nduce ArabCulture, a commonsense reasoning\ndataset in Modern Standard Arabic (MSA), cov-\nering cultures of 13 countries across the Gulf,\nLevant, North Africa, and the Nile Valley. The\ndataset was built from scratch by engaging na-\ntive speakers to write and validate culturally\nrelevant questions for their respective countries.\nArabCulture spans 12 daily life domains with\n54 fine-grained subtopics, reflecting various\naspects of social norms, traditions, and every-\nday experiences. "
+        }
+      ]
+    }
+  ]
+}
