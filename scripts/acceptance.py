@@ -18,12 +18,12 @@ import pymupdf
 
 
 @contextmanager
-def running(root, output, index, api_port, ui_port):
+def running(root, output, index, api_port, ui_port, backend="hash"):
     env = {
         **os.environ,
         "RAG_DATA_DIR": str(index),
-        "RAG_EMBEDDING_BACKEND": "hash",
-        "RAG_RERANKER_BACKEND": "lexical",
+        "RAG_EMBEDDING_BACKEND": backend,
+        "RAG_RERANKER_BACKEND": "lexical" if backend == "hash" else "none",
         "RAG_API_URL": f"http://127.0.0.1:{api_port}",
         "PYTHONPATH": os.pathsep.join([str(root), str(root / "src")]),
     }
@@ -102,7 +102,7 @@ def free_port():
         return sock.getsockname()[1]
 
 
-def run(output):
+def run(output, learned=False):
     from streamlit.testing.v1 import AppTest
 
     root = Path(__file__).resolve().parents[1]
@@ -110,6 +110,7 @@ def run(output):
         raise ValueError("Choose a new acceptance output directory; prior results are preserved")
     output.mkdir(parents=True)
     checks = []
+    backend = "sentence-transformer" if learned else "hash"
     with tempfile.TemporaryDirectory(prefix="rag acceptance ") as temp:
         index = Path(temp) / "isolated index"
         api_port, ui_port = free_port(), free_port()
@@ -128,8 +129,8 @@ def run(output):
             hashlib.sha256(english).hexdigest(): english,
             hashlib.sha256(arabic).hexdigest(): arabic,
         }
-        with running(root, output, index, api_port, ui_port) as env:
-            with httpx.Client(trust_env=False, timeout=60) as client:
+        with running(root, output, index, api_port, ui_port, backend) as env:
+            with httpx.Client(trust_env=False, timeout=180) as client:
                 result = client.post(
                     base + "/documents/upload",
                     files=[
@@ -141,6 +142,10 @@ def run(output):
                 infos = result.json()["documents"]
                 assert {d["document_id"] for d in infos} == set(originals)
                 assert all(d["chunks"] > 0 and d["pages"] == 1 for d in infos)
+                health = client.get(base + "/health").json()
+                assert health["embedding_backend"] == backend
+                if learned:
+                    assert health["embedding_model_loaded"] is True
                 checks.append("English and native-Arabic PDF upload/index identities")
                 english_id = hashlib.sha256(english).hexdigest()
                 for mode in ["dense", "bm25", "hybrid"]:
@@ -202,8 +207,8 @@ def run(output):
         while api_port in previous_ports or ui_port in previous_ports or api_port == ui_port:
             api_port, ui_port = free_port(), free_port()
         base = f"http://127.0.0.1:{api_port}"
-        with running(root, output, index, api_port, ui_port):
-            with httpx.Client(trust_env=False, timeout=60) as client:
+        with running(root, output, index, api_port, ui_port, backend):
+            with httpx.Client(trust_env=False, timeout=180) as client:
                 docs = client.get(base + "/documents").json()
                 docs = docs["documents"] if isinstance(docs, dict) else docs
                 assert {d["document_id"] for d in docs} == set(originals)
@@ -217,7 +222,7 @@ def run(output):
     report = dict(
         platform=platform.platform(),
         python=platform.python_version(),
-        profile="hash/lexical; no model generation",
+        profile=backend + "; no model generation",
         checks=checks,
         passed=True,
         actual_user_laptop=False,
@@ -231,7 +236,9 @@ def run(output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    run(parser.parse_args().output.resolve())
+    parser.add_argument("--profile", choices=["offline", "learned"], default="offline")
+    args = parser.parse_args()
+    run(args.output.resolve(), args.profile == "learned")
 
 
 if __name__ == "__main__":

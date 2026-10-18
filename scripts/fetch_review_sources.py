@@ -2,26 +2,53 @@
 
 import argparse
 import hashlib
+import json
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import urlparse
 from urllib.request import urlopen
+
+import pymupdf
 
 from rag.evaluation.review import ReviewSuite, verify_sources
 
-REVISION = "18bc2fb43bd202cd68acda3ce231a935746c0431"
+ORIGINS = Path(__file__).resolve().parents[1] / "data/evaluation/source-origins.json"
 
 
 def fetch(dataset: Path, output: Path):
     suite = ReviewSuite.model_validate_json(dataset.read_text(encoding="utf-8"))
     if output.exists():
         raise ValueError("Choose a new source directory; existing files are preserved")
+    origins = json.loads(ORIGINS.read_text())
     output.mkdir(parents=True)
     for source in suite.sources:
-        url = f"https://raw.githubusercontent.com/the1ZAKK/project/{REVISION}/source%20papers/{quote(source.filename, safe='')}"
+        url = origins[source.sha256]
+        if urlparse(url).scheme != "https" or urlparse(url).hostname != "arxiv.org":
+            raise ValueError("Evaluation source must be a pinned official HTTPS arXiv URL")
         with urlopen(url, timeout=120) as response:
             data = response.read(26 * 1024 * 1024)
-        if hashlib.sha256(data).hexdigest() != source.sha256:
-            raise ValueError(f"Pinned public source hash mismatch: {source.id}")
+        actual = hashlib.sha256(data).hexdigest()
+        if actual != source.sha256:
+            references = [
+                q for case in suite.cases if case.source_id == source.id for q in case.references
+            ]
+            with pymupdf.open(stream=data, filetype="pdf") as pdf:
+                matches = [
+                    1 <= q.page <= len(pdf) and q.text in pdf[q.page - 1].get_text()
+                    for q in references
+                ]
+                pages = len(pdf)
+            diagnostic = dict(
+                source_id=source.id,
+                url=url,
+                expected_sha256=source.sha256,
+                actual_sha256=actual,
+                pages=pages,
+                native_reference_matches=matches,
+            )
+            (output / "fetch-error.json").write_text(json.dumps(diagnostic, indent=2))
+            raise ValueError(
+                f"Pinned official source hash mismatch: {source.id}; model evaluation not started"
+            )
         with (output / source.filename).open("xb") as file:
             file.write(data)
     verify_sources(suite, output)

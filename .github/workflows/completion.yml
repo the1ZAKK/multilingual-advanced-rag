@@ -8,7 +8,10 @@ permissions:
 jobs:
   windows-acceptance:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -16,8 +19,8 @@ jobs:
           version: '0.12.19'
           enable-cache: true
       - run: uv python install 3.12
-      - run: uv sync --locked --extra dev --python 3.12
-      - run: uv run --no-sync python -m scripts.acceptance --output reports/windows-acceptance
+      - run: uv sync --locked --extra dev --extra models --python 3.12
+      - run: uv run --no-sync python -m scripts.acceptance --output reports/windows-acceptance --profile learned
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -41,6 +44,8 @@ jobs:
           enable-cache: true
       - run: uv python install 3.12
       - run: uv sync --locked --extra dev --extra models --python 3.12
+      - name: Verify frozen public paper sources
+        run: uv run --no-sync python -m scripts.fetch_review_sources --dataset data/evaluation/completion-review.json --output reports/papers
       - name: Start official pinned Ollama runtime
         run: |
           docker run -d --name rag-model-${{ github.run_id }} -p 127.0.0.1:11434:11434 ollama/ollama@sha256:0e8ff22ff86b4718cfa886844062117af13b50eb5689cca78279778e15744980
@@ -51,8 +56,6 @@ jobs:
           exit 1
       - name: Verify official GGUF before import
         run: uv run --no-sync python -m scripts.prepare_model --cache .cache/quality-models --output reports/model-runtime.json
-      - name: Verify frozen public paper sources
-        run: uv run --no-sync python -m scripts.fetch_review_sources --dataset data/evaluation/completion-review.json --output reports/papers
       - name: Run real 4B learned-model evaluation
         run: uv run --no-sync python -m scripts.validate_workflow --dataset data/evaluation/completion-review.json --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs
@@ -62,6 +65,7 @@ jobs:
         with:
           name: stronger-model
           path: |
+            reports/papers/fetch-error.json
             reports/model-runtime.json
             reports/model-review.json
             reports/completion-model/answers.json
@@ -70,30 +74,72 @@ jobs:
         if: always()
         run: docker rm -f rag-model-${{ github.run_id }} || true
   publish-review-packet:
+    if: always()
     needs: [windows-acceptance, stronger-model]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: windows-acceptance
           path: reports/download/windows
+        continue-on-error: true
       - uses: actions/download-artifact@v4
         with:
           name: stronger-model
           path: reports/download/model
+        continue-on-error: true
+      - name: Record failed-step diagnostics when necessary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            fs.mkdirSync('reports', {recursive:true});
+            const args = {owner:context.repo.owner, repo:context.repo.repo, run_id:context.runId};
+            const jobs = (await github.rest.actions.listJobsForWorkflowRun(args)).data.jobs;
+            const failed = jobs.filter(j => j.conclusion === 'failure');
+            const diagnostics = [];
+            for (const job of failed) {
+              const steps = job.steps.filter(s => s.conclusion === 'failure');
+              let excerpt = '';
+              try {
+                const raw = await github.rest.actions.downloadJobLogsForWorkflowRun({owner:args.owner,repo:args.repo,job_id:job.id});
+                const text = typeof raw.data === 'string' ? raw.data : Buffer.from(raw.data).toString('utf8');
+                excerpt = text.split('\n').filter(l => /Error|Exception|Traceback|No space|raise |failed|mismatch/i.test(l)).slice(-30).join('\n');
+                excerpt = excerpt.replace(/https?:\/\/[^\s)]+/g,u => u.split('?')[0]);
+              } catch (error) { excerpt = 'Log retrieval status: ' + error.status; }
+              diagnostics.push({job:job.name,failed_steps:steps,excerpt});
+            }
+            fs.writeFileSync('reports/ci-failure.json', JSON.stringify(diagnostics,null,2));
       - name: Preserve compact results on an isolated review branch
         env:
           RESULT_BRANCH: ci-evaluation-${{ github.run_id }}
+          MODEL_RESULT: ${{ needs.stronger-model.result }}
+          WINDOWS_RESULT: ${{ needs.windows-acceptance.result }}
         run: |
           mkdir -p docs/validation-results
           python - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
+          from scripts.compact_run import compact
+          model_report = Path('reports/download/model/model-review.json')
+          partial = Path('reports/download/model/completion-model/answers.json')
+          runtime = Path('reports/download/model/model-runtime.json')
+          if not model_report.exists() and partial.exists() and runtime.exists():
+              compact(partial, runtime, model_report)
           for name, source in [('completion-model', 'reports/download/model/model-review.json'), ('completion-windows', 'reports/download/windows/acceptance.json')]:
-              data = json.loads(Path(source).read_text())
+              path = Path(source)
+              if path.exists():
+                  data = json.loads(path.read_text())
+              else:
+                  errors = list(Path('reports/download/model').rglob('fetch-error.json'))
+                  data = {'status': 'not_completed', 'independent_human_reviews': 0, 'source_error': json.loads(errors[0].read_text()) if errors else None}
+              data['ci_job_result'] = os.environ['MODEL_RESULT' if name == 'completion-model' else 'WINDOWS_RESULT']
+              if data['ci_job_result'] != 'success':
+                  data['ci_diagnostics'] = json.loads(Path('reports/ci-failure.json').read_text())
               Path(f'docs/validation-results/{name}.json').write_text(json.dumps(data, ensure_ascii=False, indent=2))
           PY
           git switch -c "$RESULT_BRANCH"
