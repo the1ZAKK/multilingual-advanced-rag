@@ -1,0 +1,141 @@
+{
+  "description": "Source-checked development controls frozen before this workflow run. Not a pristine unseen-paper benchmark. Human semantic review is separate from citation checks. Original PDFs are not redistributed.",
+  "sources": [
+    {
+      "id": "legal",
+      "filename": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "sha256": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd"
+    },
+    {
+      "id": "table",
+      "filename": "13-AraTable -- Benchmarking LLMs’ Reasoning and Ubderstanding of Arabic Tabular Data.pdf",
+      "sha256": "2043c36e437d428d24cd6646aad1433417eb110cdffc4a91bfe69591c812ca32"
+    },
+    {
+      "id": "ace",
+      "filename": "21-AceGPT, Localizing Large Language Models in Arabic.pdf",
+      "sha256": "9b1be62d712e541eba8d71c6deb4abe510325003b16745b1094acec6583a64af"
+    }
+  ],
+  "cases": [
+    {
+      "id": "legal-problem",
+      "source_id": "legal",
+      "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+      "language": "en",
+      "expected_points": [
+        "Evaluation of Arabic legal knowledge in LLMs is underexplored.",
+        "Tasks are sourced from Saudi legal documents and synthesized questions."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "LLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim t"
+        }
+      ]
+    },
+    {
+      "id": "legal-retrieval",
+      "source_id": "legal",
+      "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+      "language": "en",
+      "expected_points": [
+        "No: the initial benchmark does not assess retrieval from external knowledge bases.",
+        "The paper says these retrieval abilities will be assessed in future tasks."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "legal-retrieval-ar",
+      "source_id": "legal",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "expected_points": [
+        "الإصدار الأول لا يقيس استرجاع الحقائق والقوانين من قواعد معرفة خارجية.",
+        "تذكر الورقة أن تقييم قدرات الاسترجاع سيأتي في مهام مستقبلية."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "table-tasks",
+      "source_id": "table",
+      "question": "Which three task types does AraTable cover?",
+      "language": "en",
+      "expected_points": [
+        "Direct question answering.",
+        "Fact verification.",
+        "Reasoning."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "This benchmark focuses on three key tasks: direct question answering, fact verifi-\ncation, and reasoning, covering a range of complexity levels and requirin"
+        }
+      ]
+    },
+    {
+      "id": "table-method",
+      "source_id": "table",
+      "question": "How is AraTable content curated, and what mechanism does its automated evaluation framework use?",
+      "language": "en",
+      "expected_points": [
+        "LLMs generate initial content.",
+        "Human experts filter and verify it.",
+        "The automated evaluation framework uses self-deliberation."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Our methodology follows a hybrid pipeline, where initial content is gener-\nated by LLMs and subsequently filtered and verified by human experts to ensure\nhigh dataset quality. Initial analy"
+        },
+        {
+          "page": 1,
+          "text": "We also propose a fully automated evaluation framework that uses a self-\ndeliberation mechanism and achieves performance nearly identical to that of\n1\narXiv:2507.18442v1  [cs.CL]  24 Jul 2025"
+        }
+      ]
+    },
+    {
+      "id": "table-prm",
+      "source_id": "table",
+      "question": "Does the AraTable paper introduce an Arabic process reward model? Say if the retrieved evidence is insufficient.",
+      "language": "en",
+      "expected_points": [
+        "Do not claim that AraTable introduces a process reward model.",
+        "Distinguish insufficient retrieved evidence from proof of absence throughout the entire paper."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "This benchmark focuses on three key tasks: direct question answering, fact verifi-\ncation, and reasoning, covering a range of complexity levels and requirin"
+        }
+      ]
+    },
+    {
+      "id": "ace-table5",
+      "source_id": "ace",
+      "question": "Compare AceGPT-13B-chat and GPT-3.5 Turbo on All Set and Clean Set in Table 5, zero-shot F1. Give exact values.",
+      "language": "en",
+      "expected_points": [
+        "Table 5 reports zero-shot average F1 on ACVA.",
+        "AceGPT-13B-chat: All Set 75.02%, Clean Set 74.62%.",
+        "GPT-3.5 Turbo: All Set 75.57%, Clean Set 79.03%."
+      ],
+      "references": [
+        {
+          "page": 5,
+          "text": "AceGPT-13B-chat\n75.02%\n74.62%\nGPT-3.5 Turbo\n75.57%\n79.03%\nTable 6: Average performance ratio of GPT-3.5 Turbo\n"
+        }
+      ]
+    }
+  ]
+}

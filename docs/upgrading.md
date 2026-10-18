@@ -42,11 +42,14 @@ project terminals to load changed code or configuration.
 ## Index compatibility and optional migration
 
 Embedding keys and existing SQLite records retain compatibility. This update
-**does not reindex automatically**. The v3 parser improves reading order and
-Roman-numbered author lists for new uploads. Table geometry is read from the
+**does not reindex automatically**. The v4 parser preserves native single-column reading order, recognizes indented
+abstract headings and avoids cutting ordinary words at overlap boundaries. It also
+retains the earlier Roman-numbered author-list support for new uploads. Table geometry is read from the
 retained original PDF and needs no vector reindex to receive caption/selection fixes.
 
-If an older document needs new section/chunk boundaries, stop the API and use:
+Uploading an identical PDF again can return its existing duplicate entry without
+migrating chunks. If an older document needs v4 section/chunk boundaries, stop the
+API and use:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/reindex_document.py DOCUMENT_SHA256

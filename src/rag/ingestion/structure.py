@@ -1,10 +1,11 @@
 """Reading-order text offsets and bounded sentence/section-aware windows."""
 
 import re
+from bisect import bisect_right
 
 from rag.ingestion.text import normalize
 
-VERSION = "columns-sentences-v3"
+VERSION = "columns-sentences-v4"
 
 _COUNT_WORDS = {
     "one": 1,
@@ -153,7 +154,11 @@ def reading_text(page) -> str:
     left_column = len(left) >= 2 or any(b[3] - b[1] > 35 for b in left)
     right_column = len(right) >= 2 or any(b[3] - b[1] > 35 for b in right)
     if not (left_column and right_column):
-        return page.get_text("text", sort=True)
+        # Layout sorting can interleave a vertical margin stamp into ordinary
+        # prose and insert visual indentation absent from native PDF text.
+        # Keep native order for single-column pages; geometry is needed only
+        # when separate left/right text columns have actually been detected.
+        return native
     # Full-width titles/tables divide the page into bands. Within a band read down
     # the entire left column, then down the right, never across matching baselines.
     spanning = sorted([b for b in blocks if b[0] < middle < b[2]], key=lambda b: b[1])
@@ -176,7 +181,7 @@ def section_marks(
     for match in re.finditer(pattern, text):
         if bold_text is None or match.group(1).strip() in bold_text:
             marks.append((match.start(), match.group(0).strip().replace("\n", " ")))
-    for match in re.finditer(r"(?m)^(Abstract|References|Appendix)\s*\n", text):
+    for match in re.finditer(r"(?m)^[ \t]*(Abstract|References|Appendix)[ \t]*\n", text):
         marks.append((match.start(), match.group(1)))
     for start, _, _ in contribution_declarations(text):
         current = max((mark for mark in marks if mark[0] <= start), key=lambda m: m[0])[1]
@@ -191,6 +196,7 @@ def chunk_spans(
     sentences = [end for _, end in sentence_spans(text)]
     paragraphs = [m.end() for m in re.finditer(r"\n\s*\n", text)]
     boundaries = sorted(set(sentences + paragraphs + [len(text)]))
+    whitespace_ends = [m.end() for m in re.finditer(r"\s+", text)]
     result = []
     for index, (section_start, section) in enumerate(sections):
         stop = sections[index + 1][0] if index + 1 < len(sections) else len(text)
@@ -199,6 +205,10 @@ def chunk_spans(
             limit = min(start + size, stop)
             choices = [p for p in boundaries if start + size // 2 <= p <= limit]
             end = limit if limit == stop else max(choices, default=limit)
+            if end == limit and limit < stop and limit not in boundaries:
+                position = bisect_right(whitespace_ends, limit) - 1
+                if position >= 0 and whitespace_ends[position] >= start + size // 2:
+                    end = whitespace_ends[position]
             if text[start:end].strip():
                 result.append((start, end, section))
             if end == stop:
@@ -206,5 +216,14 @@ def chunk_spans(
             # Begin overlap at a sentence boundary, with a hard size bound on
             # pathological single sentences. This guarantees forward progress.
             candidates = [p for p in boundaries if end - overlap <= p < end]
-            start = max(start + 1, min(candidates, default=end - overlap))
+            if candidates:
+                next_start = min(candidates)
+            else:
+                lower = max(start + 1, end - overlap)
+                words = re.compile(r"(?<![\w-])\w").finditer(text, lower, end)
+                # Do not start at the continuation of a line-hyphenated word.
+                next_start = next(
+                    (m.start() for m in words if not text[: m.start()].rstrip().endswith("-")), end
+                )
+            start = max(start + 1, next_start)
     return result

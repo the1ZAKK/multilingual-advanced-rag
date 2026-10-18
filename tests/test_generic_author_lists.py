@@ -55,3 +55,35 @@ def test_one_tall_block_in_each_column_is_not_line_interleaved():
     )
     text = reading_text(page)
     assert text.index("final line reports") < text.index("Right column")
+
+
+def test_single_column_native_order_keeps_margin_stamp_out_of_method_sentence(settings):
+    doc = pymupdf.open()
+    page = doc.new_page(width=600, height=800)
+    page.insert_text((230, 80), "Abstract", fontsize=12)
+    page.insert_text(
+        (110, 120),
+        "We propose an evaluation framework.\nIt uses a self-\ndeliberation mechanism verified by experts.",
+        fontsize=11,
+    )
+    page.insert_text((25, 170), "arXiv:0000.00000", fontsize=10, rotate=90)
+    native = page.get_text(sort=False)
+    assert reading_text(page) == native
+    assert "self-\ndeliberation" in reading_text(page)
+    _, chunks = parse_pdf(doc.tobytes(), "OneColumn.pdf", settings)
+    abstract = [c for c in chunks if c.section == "Abstract"]
+    assert any("self-\ndeliberation" in c.text for c in abstract)
+    assert all(c.text in native for c in abstract)
+
+
+def test_overlap_does_not_begin_or_end_inside_ordinary_words():
+    from rag.ingestion.structure import chunk_spans
+
+    text = " ".join(["methodology", "evaluation", "framework", "reasoning"] * 30)
+    spans = chunk_spans(text, 100, 23, [(0, None)])
+    assert len(spans) > 5
+    for start, end, _ in spans:
+        assert end - start <= 100
+        assert start == 0 or not (text[start - 1].isalnum() and text[start].isalnum())
+        assert end == len(text) or not (text[end - 1].isalnum() and text[end].isalnum())
+    assert spans[-1][1] == len(text)

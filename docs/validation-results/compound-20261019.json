@@ -1,0 +1,180 @@
+{
+  "reviewer_type": "ai_assisted",
+  "independent_human_reviews": 0,
+  "not_an_unseen_benchmark": true,
+  "runs": [
+    {
+      "folder": "workflow-multipart-final",
+      "run_id": "0fdf1f10-b03d-480d-91ab-b1901366a1a5",
+      "created_at_utc": "2026-10-17T17:31:16.797179+00:00",
+      "model": "qwen3-hf:1.7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 150.0,
+        "max_statements": 3
+      },
+      "cases": [
+        {
+          "id": "legal-problem",
+          "mode": "ollama",
+          "latency_ms": 31409.3042720051,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "partial",
+          "notes": "Correct evaluation gap; does not identify the Saudi documents and synthesized questions requested.",
+          "answer": "ArabLegalEval addresses the evaluation gap in assessing Arabic legal knowledge in Large Language Models (LLMs) [S5] (page 1).\nIt uses source material to assess the legal reasoning capabilities in Arabic and the ability to recall and use legal knowledge embedded in the fine-tuned models [S2] (page 2).",
+          "warning": null
+        },
+        {
+          "id": "legal-retrieval",
+          "mode": "ollama",
+          "latency_ms": 35326.43928498146,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "fail",
+          "notes": "Contradictory denial and affirmation of current retrieval capability; model semantic judge incorrectly accepted.",
+          "answer": "The initial ArabLegalEval benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases [S2] (page 2).\nThe initial ArabLegalEval benchmark assesses retrieval of facts and laws from external knowledge bases, with future work focusing on expanding the scope to include more legal documents and cases [S9] [S2] [S8] (pages 1, 2).",
+          "warning": null
+        },
+        {
+          "id": "legal-retrieval-ar",
+          "mode": "extractive",
+          "latency_ms": 142480.07520998362,
+          "provenance_valid": true,
+          "language_matches": false,
+          "verdict": "fail",
+          "notes": "No verified Arabic answer; source-language fallback.",
+          "answer": "[Labeled source excerpts retained in the local run.]",
+          "warning": "Ollama generation failed (ValueError: Answer translation changed round-trip content; source excerpts required); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language."
+        },
+        {
+          "id": "table-tasks",
+          "mode": "extractive",
+          "latency_ms": 54601.65636200691,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "fail",
+          "notes": "No generated answer after semantic rejection; source excerpts are not task completion.",
+          "answer": "[Labeled source excerpts retained in the local run.]",
+          "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises state that AraTable is a benchmark designed to evaluate LLMs on Arabic tabular data, but they do not explicitly mention the three key tasks (direct question answering, fact verification, and reasoning) that AraTable covers. The claim is not directly supported by the premises provided in the source document.); showing evidence excerpts"
+        },
+        {
+          "id": "table-method",
+          "mode": "ollama",
+          "latency_ms": 38738.12346399063,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "pass",
+          "notes": "LLM generation, human filtering/verification and self-deliberation match native PDF page 1.",
+          "answer": "AraTable content is curated by first generating initial content using LLMs and then filtering and verifying this content by human experts to ensure high dataset quality [S2] [S5] [S6] (pages 1, 23, 24).\nIts automated evaluation framework uses a self-deliberation mechanism [S2] (page 1).",
+          "warning": null
+        },
+        {
+          "id": "table-prm",
+          "mode": "insufficient-evidence",
+          "latency_ms": 26.762644993141294,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "pass",
+          "notes": "Refuses unsupported PRM introduction without claiming paper-wide absence.",
+          "answer": "The retrieved evidence is insufficient to establish the requested claim about “Arabic process reward model”. A positive introduction claim would need a direct statement; drawing it from these passages would be inference. This is a limit of the retrieved evidence, not proof of absence throughout the paper.\n\nContext references only: [S1] [S2].",
+          "warning": null
+        },
+        {
+          "id": "ace-table5",
+          "mode": "source-tables",
+          "latency_ms": 692.2181739937514,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "pass",
+          "notes": "Both named models and four exact zero-shot F1 values match Table 5 on page 5.",
+          "answer": "**Table 5: Average F1 on ACVA in the zero-shot set- ting. The best performance is in bold and the second is underlined.** (page 5) [S4] [S5] [S6] [S7]\n\nModels and sizes in the table rows: AceGPT-13B-chat; GPT-3.5 Turbo [S4] [S5] [S6] [S7]\n\nMetric: F1 [S4] [S5] [S6] [S7]\n\nFocused view: 2 of 6 rows and 2 of 2 columns; 1 of 1 matching tables. This is not an exhaustive paper-wide model or result list.\n\n| Model | Size | All Set | Clean Set |\n| --- | --- | --- | --- |\n| AceGPT-13B-chat | - | 75.02% | 74.62% [S4] [S5] [S6] [S7] |\n| GPT-3.5 Turbo | - | 75.57% | 79.03% [S4] [S5] [S6] [S7] |",
+          "warning": null
+        }
+      ]
+    },
+    {
+      "folder": "contradiction-retest",
+      "run_id": "8c4c0ee6-77f0-486b-8928-ec004498b66f",
+      "created_at_utc": "2026-10-18T17:26:05.576250+00:00",
+      "model": "qwen3-hf:1.7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 150.0,
+        "max_statements": 3
+      },
+      "cases": [
+        {
+          "id": "legal-retrieval",
+          "mode": "extractive",
+          "latency_ms": 124849.4042710081,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "fail",
+          "notes": "Safety regression passes: contradictory generation rejected twice and source fallback returned. Original complete-answer task still fails.",
+          "answer": "[Labeled source excerpts retained in the local run.]",
+          "warning": "Ollama generation failed (ValueError: Conflicting positive and negative assertions for the same subject/action); showing evidence excerpts"
+        }
+      ]
+    },
+    {
+      "folder": "multipart-final-guard",
+      "run_id": "50924dee-229b-4c01-99e1-605270e185ff",
+      "created_at_utc": "2026-10-18T17:28:43.523451+00:00",
+      "model": "qwen3-hf:1.7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 150.0,
+        "max_statements": 3
+      },
+      "cases": [
+        {
+          "id": "table-tasks",
+          "mode": "extractive",
+          "latency_ms": 164686.54125899775,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "fail",
+          "notes": "Restored single-question prompt; runtime timeout and source fallback. Not a completed answer.",
+          "answer": "[Labeled source excerpts retained in the local run.]",
+          "warning": "Ollama generation failed (ReadTimeout: timed out); showing evidence excerpts"
+        },
+        {
+          "id": "table-method",
+          "mode": "ollama",
+          "latency_ms": 150244.19171200134,
+          "provenance_valid": true,
+          "language_matches": true,
+          "verdict": "pass",
+          "notes": "LLM generation, human filtering/verification and self-deliberation match native PDF page 1.",
+          "answer": "AraTable content is curated by first generating initial content using LLMs and then filtering and verifying this content by human experts to ensure high dataset quality [S2] [S5] [S6] (pages 1, 23, 24).\nIts automated evaluation framework uses a self-deliberation mechanism [S2] (page 1).",
+          "warning": null
+        }
+      ]
+    },
+    {
+      "folder": "multipart-ar-focus",
+      "run_id": "38584ad2-358e-4a34-a715-9ebdaed958b1",
+      "created_at_utc": "2026-10-18T17:34:24.163513+00:00",
+      "model": "qwen3-hf:1.7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 150.0,
+        "max_statements": 3
+      },
+      "cases": [
+        {
+          "id": "legal-retrieval-ar",
+          "mode": "extractive",
+          "latency_ms": 162243.41972899856,
+          "provenance_valid": true,
+          "language_matches": false,
+          "verdict": "fail",
+          "notes": "No verified Arabic answer after preserving full cross-language evidence; fallback remains a known limit.",
+          "answer": "[Labeled source excerpts retained in the local run.]",
+          "warning": "Ollama generation failed (ReadTimeout: timed out); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language."
+        }
+      ]
+    }
+  ]
+}

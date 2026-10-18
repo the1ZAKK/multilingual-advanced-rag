@@ -86,3 +86,8 @@ changing uploaded documents. Reference-based semantic grading and additional hel
 annotation still require independent review. Never turn a passing mode/quote check into a
 semantic accuracy score. Source-table and source-list responses are not Qwen-generation
 successes. See the current validation report for actual successful and failed runs.
+
+
+## Source review workflow
+
+See [daily project workflow](project-workflow.md) for the isolated `scripts.validate_workflow` runner and run-bound review sheets. Seven frozen development cases have source hashes and native-page reference quotes. Expectations are not passed to Qwen. Review grades remain empty until a reviewer records them; human and AI-assisted results are reported separately.

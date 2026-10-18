@@ -1,5 +1,28 @@
 # Implementation and validation tracker
 
+## Continuation — 19 October 2026
+
+- [x] Required slots for explicit compound questions, source-bound quote focus and budget refusal.
+- [x] Reproduce an accepted contradictory answer; add a deterministic polarity veto and real-model fallback retest.
+- [x] Preserve the ordinary single-question prompt and cross-language evidence context.
+- [x] Verify prior branch Windows/Ubuntu Python matrix and Docker CI from public GitHub Actions.
+- [ ] Reliable general Arabic and complete answers; independent human review and laptop acceptance remain open.
+- [ ] Optional stronger-model evaluation: publisher metadata verified, but model download blocked at `us.aws.cdn.hf.co`.
+
+See [continuation evidence](docs/compound-questions-20261019.md). Rejected conflicting
+output is a safety success, not a complete-answer success.
+
+## Workflow continuation — 18 October 2026
+
+- [x] Run seven source-checked development cases on three isolated papers with real Qwen/learned embeddings.
+- [x] Keep source-provenance checks separate from explicit AI-assisted/human review.
+- [x] Add review exports, preserve failed chat turns and refuse ambiguous paper names.
+- [x] Diagnose native single-column extraction/word-boundary defect; implement parser v4 and retest the method case.
+- [ ] Fully complete multi-part answers and reliable Arabic research output; independent human review and actual Windows execution.
+
+See [workflow validation](docs/workflow-validation-20261018.md).
+
+
 ## Current cloud continuation — October 2026
 
 - [x] Scoped retrieval, table binding/selection, bounded generation and evaluation audit fixes.
