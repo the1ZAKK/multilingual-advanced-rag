@@ -1,0 +1,47 @@
+name: Recover acceptance diagnostics
+on:
+  push:
+    branches: [diagnostics-recovery]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-acceptance
+          run-id: 39153370136
+          github-token: ${{ github.token }}
+          path: reports/previous-windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: stronger-model
+          run-id: 39153370136
+          github-token: ${{ github.token }}
+          path: reports/previous-model
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const args = {owner: context.repo.owner, repo: context.repo.repo, run_id: 39153370136};
+            const jobs = (await github.rest.actions.listJobsForWorkflowRun(args)).data.jobs;
+            const failed = jobs.find(j => j.name === 'stronger-model');
+            const raw = await github.rest.actions.downloadJobLogsForWorkflowRun({owner: args.owner, repo: args.repo, job_id: failed.id});
+            const text = typeof raw.data === 'string' ? raw.data : Buffer.from(raw.data).toString('utf8');
+            const steps = failed.steps.filter(s => s.conclusion === 'failure');
+            const relevant = text.split('\n').filter(l => steps.some(s => l.slice(0,19) >= s.started_at.slice(0,19) && l.slice(0,19) <= s.completed_at.slice(0,19))).join('\n');
+            const sanitize = s => s.replace(/https?:\/\/[^\s)]+/g, u => u.split('?')[0]).replace(/(?:ghp_|github_pat_)[A-Za-z0-9_]+/g, '[redacted]');
+            fs.mkdirSync('docs/validation-results', {recursive:true});
+            fs.writeFileSync('docs/validation-results/ci-diagnosis.json', JSON.stringify({run_id:39153370136, failed_steps:steps, failure_log:sanitize(relevant || text.slice(-12000))},null,2));
+      - run: |
+          cp reports/previous-windows/acceptance.json docs/validation-results/completion-windows.json
+          cp reports/previous-model/model-runtime.json docs/validation-results/completion-runtime.json
+          git switch -c ci-diagnostics-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/validation-results/ci-diagnosis.json docs/validation-results/completion-windows.json docs/validation-results/completion-runtime.json
+          git commit -m 'Preserve hosted acceptance diagnostics and verified runtime metadata'
+          git push origin ci-diagnostics-${{ github.run_id }}
