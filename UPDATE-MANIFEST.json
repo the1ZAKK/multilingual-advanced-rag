@@ -37,18 +37,20 @@
     },
     {
       "path": "README.md",
-      "sha256": "c6b4facbc9b021110e0b6f2273e2e1e37f20ab60c07ac0c5909da323e9ac946e",
+      "sha256": "21431646ebfd876a43e5277a2c55db4d1a90028d2ffaa5fd74275ed5e7a17145",
       "baseline_sha256": "76c86d46697b057032472b9f79f9107c93b0dd2195169ab3052d3b14d48971cf",
       "accepted_sha256": [
         "3df8f47905a25d450c732acb8bceb9857992fedb475613731681fc33101beda1",
-        "8a9781b4f4d134b154377f41ead8f89cc71ddafbbdb3c8996a39cd3d6df3d0db"
+        "8a9781b4f4d134b154377f41ead8f89cc71ddafbbdb3c8996a39cd3d6df3d0db",
+        "c6b4facbc9b021110e0b6f2273e2e1e37f20ab60c07ac0c5909da323e9ac946e"
       ]
     },
     {
       "path": "TASKS.md",
-      "sha256": "4adc8c36d8fa54d9c9f62157ca9d29863428c56ded5466888d914f91a0ce1f06",
+      "sha256": "e309183348d9c2114fbda4613473f3f03e6e0b43834d773de3fc198d56b4adce",
       "baseline_sha256": "967c7b2491f20ad9089310248bcc8499c63d42a32bd91d2ddf4d5981d3987208",
       "accepted_sha256": [
+        "4adc8c36d8fa54d9c9f62157ca9d29863428c56ded5466888d914f91a0ce1f06",
         "75a4043b1d260e6ee09d1fbe3d2ce514c0b9b093abd1508283f6b7a3d42fea34",
         "7d0d288c2fb202758e7a6bf774ac383c7543df1bc1005e7c5ed980807d52d058"
       ]
@@ -100,6 +102,12 @@
     {
       "path": "data/evaluation/workflow-review.json",
       "sha256": "4eb1261d012f1cbc64e0bf791834c980997df8de964273ad28aba5d3a346a4bd",
+      "baseline_sha256": null,
+      "accepted_sha256": []
+    },
+    {
+      "path": "docs/compound-questions-20261019.md",
+      "sha256": "1c4cb79ed846da2d07d1a75dcfe51b91fb3ac95e3a884f21ea3b7aa2191a0a25",
       "baseline_sha256": null,
       "accepted_sha256": []
     },
@@ -194,6 +202,12 @@
     {
       "path": "docs/validation-20261018.md",
       "sha256": "4ba29d27b09198425abb67c3c9cf6893dd6f3f7f471d605364dc98be47107b2c",
+      "baseline_sha256": null,
+      "accepted_sha256": []
+    },
+    {
+      "path": "docs/validation-results/compound-20261019.json",
+      "sha256": "e1f188560c8c35bf8e7d2634f44d85f406df2e18e9cc6e58f1579fc74e9d923e",
       "baseline_sha256": null,
       "accepted_sha256": []
     },
@@ -369,12 +383,25 @@
       "accepted_sha256": []
     },
     {
+      "path": "src/rag/generation/contradictions.py",
+      "sha256": "1b764a8ad149e60d22d39f32fc00d92520443e2afc58a66975984cd3f8f59a9f",
+      "baseline_sha256": null,
+      "accepted_sha256": []
+    },
+    {
       "path": "src/rag/generation/ollama.py",
-      "sha256": "724e2047ccab8d0b60c5eaea739f4aa03c9e98cd1b6e1a69a7d8491c16e5fa34",
+      "sha256": "6af99364ec0c2f3fcfe8a226b687dfcfc4f9b219ba40bb80d9797c286bee12c4",
       "baseline_sha256": "e3f8a7da8a28a58c28dcbfdd23c6f9b041e567376400540095cd80d9839d7a9d",
       "accepted_sha256": [
+        "724e2047ccab8d0b60c5eaea739f4aa03c9e98cd1b6e1a69a7d8491c16e5fa34",
         "ea076e68fa759a63fa265a2f49a1ade9858f20809722c7cbabc2b7f814adb9bf"
       ]
+    },
+    {
+      "path": "src/rag/generation/questions.py",
+      "sha256": "4df6e3fdfde1bbdc6505b0c81a19b686d97fdb7a45edd993d05f703d78608e52",
+      "baseline_sha256": null,
+      "accepted_sha256": []
     },
     {
       "path": "src/rag/generation/table_answer.py",
@@ -430,6 +457,12 @@
       "path": "src/rag/service.py",
       "sha256": "6be767f7e2698baed072b3710c85db2703d2665687ff88f2085dbc958da8a5e9",
       "baseline_sha256": "7d836fc5f0e930d9dc5b3687033b108c1019facd3d6dbce582d3d40ebc1420c7",
+      "accepted_sha256": []
+    },
+    {
+      "path": "tests/test_contradictions.py",
+      "sha256": "e267fb708fe38c5a5314bd99c4aaf42230f13e2946c2f8c766ffb36aa315035f",
+      "baseline_sha256": null,
       "accepted_sha256": []
     },
     {
@@ -501,6 +534,12 @@
     {
       "path": "tests/test_live_question_runner.py",
       "sha256": "0051de36514e5f123cc6dc946b9bf012e4cb7a177fcda4eabc4189c9ede24c95",
+      "baseline_sha256": null,
+      "accepted_sha256": []
+    },
+    {
+      "path": "tests/test_multipart_questions.py",
+      "sha256": "37b4c3c69ac7c5bd6e394d2b127c0b6c37e2e0ee87f9781db9e2ee13c359a60f",
       "baseline_sha256": null,
       "accepted_sha256": []
     },

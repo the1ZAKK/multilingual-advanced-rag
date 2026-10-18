@@ -16,7 +16,8 @@ Start with the [daily project workflow](docs/project-workflow.md): source-checke
 The uploaded Windows version has been extended with explicit document-scoped retrieval,
 focused table comparisons, safer author-list extraction, bounded generation, audit-friendly
 evaluation exports, real dashboard screenshots, and a source updater that protects existing
-local work. See [workflow validation](docs/workflow-validation-20261018.md),
+local work. See [latest compound-question and safety checks](docs/compound-questions-20261019.md),
+[workflow validation](docs/workflow-validation-20261018.md),
 [previous generation validation](docs/validation-20261018.md),
 [current architecture](docs/current-architecture.md), and [safe upgrade instructions](docs/upgrading.md).
 Historical Windows diagnosis reports remain available; their test counts are not current
