@@ -1,0 +1,35 @@
+{
+  "status": "not_completed",
+  "independent_human_reviews": 0,
+  "source_error": {
+    "source_id": "3lm",
+    "url": "https://aclanthology.org/2025.arabicnlp-main.4.pdf",
+    "expected_sha256": "661a0d336318fa5a8d80294b8b2a3bbf0dd79ffa1a0691cd05b54e9f5cdcd254",
+    "actual_sha256": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+    "pages": 22,
+    "native_reference_matches": [
+      false,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "ci_job_result": "failure",
+  "ci_diagnostics": [
+    {
+      "job": "stronger-model",
+      "failed_steps": [
+        {
+          "name": "Verify frozen public paper sources",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-10-19T06:25:08Z",
+          "completed_at": "2026-10-19T06:25:10Z"
+        }
+      ],
+      "excerpt": "2026-10-19T06:25:02.0812489Z (node:2367) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n2026-10-19T06:25:10.5246546Z Traceback (most recent call last):\n2026-10-19T06:25:10.5258079Z     raise ValueError(\n2026-10-19T06:25:10.5258462Z ValueError: Pinned official source hash mismatch: 3lm; model evaluation not started\n2026-10-19T06:25:10.5742477Z ##[error]Process completed with exit code 1.\n2026-10-19T06:25:10.5927696Z   path: reports/papers/fetch-error.json\n2026-10-19T06:25:11.1225981Z (node:2503) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n2026-10-19T06:25:11.9252688Z Error response from daemon: No such container: rag-model-39209763589"
+    }
+  ]
+}
