@@ -1,0 +1,224 @@
+{
+  "run_id": "dc369051-10e5-4bf3-a101-46dbb6088004",
+  "created_at_utc": "2026-10-19T06:55:11.571647+00:00",
+  "model": "qwen3-hf:4b",
+  "translation_model": "qwen3-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600.0,
+    "max_statements": 4,
+    "question_coverage_audit": true
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "documents": [
+    {
+      "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+      "name": "3LM-publisher-2025.pdf",
+      "pages": 22,
+      "chunks": 121,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    }
+  ],
+  "runtime": {
+    "repository": "Qwen/Qwen3-4B-GGUF",
+    "revision": "bc640142c66e1fdd12af0bd68f40445458f3869b",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "bytes": 2497280256,
+    "installed_model": {
+      "name": "qwen3-hf:4b",
+      "model": "qwen3-hf:4b",
+      "modified_at": "2026-10-19T06:54:45.414841346Z",
+      "size": 2497280403,
+      "digest": "919c0333e0bd6b39bf327cbe00d9275073a446c878674b55d02884c84c7045df",
+      "details": {
+        "parent_model": "Qwen3-4B-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 40960,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "1b4d85f9fe7300653869e50ea72a879ce7cddd3f",
+  "independent_human_reviews": 0,
+  "review_status": "unreviewed; provenance/language flags are not semantic grades",
+  "records": [
+    {
+      "id": "publisher-3lm-problem-contributions",
+      "question": "According to the 3LM paper, what problem does the work address, and what are its main contributions? Cite supporting passages and page numbers.",
+      "language": "en",
+      "document_name": "3LM-publisher-2025.pdf",
+      "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "Most existing Arabic benchmarks focus on linguistic, cultural, or religious content, leaving a significant gap in domains like STEM and code which are increasingly relevant for real-world LLM applications [S3] (page 1).\n1. First, we present three comprehensive benchmarks spanning STEM domains and code generation, constructed through rigorous methodologies that ensure authenticity and quality from native Arabic content curation to synthetic generation and careful translation with human verification [S1] [S2] (pages 1, 2).\n2. Second, we conduct an extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs, providing the most comprehensive assessment of Arabic language model capabilities in scientific and programming domains to date [S2] (page 2).\n3. Third, we perform thorough analysis including cross-task correlations and robustness testing, revealing insights into model behavior and the relationship between different cognitive capabilities in Arabic LLMs [S2] (page 2).",
+        "citations": [
+          {
+            "label": "S3",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p1:270-983",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 1,
+            "quote": "Most existing\nArabic benchmarks focus on linguistic, cultural,\nor religious content, leaving a signiﬁcant gap\nin domains like STEM and code which are in-\ncreasingly relevant for real-world LLM applica-\ntions."
+          },
+          {
+            "label": "S1",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p1:3513-3965",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 1,
+            "quote": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "translation with human veriﬁcation."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientiﬁc and program-\nming domains to date."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between diﬀerent cog-\nnitive capabilities in Arabic LLMs."
+          }
+        ],
+        "generation_mode": "source-contributions",
+        "warning": null,
+        "latency_ms": 114167.17675200001
+      }
+    },
+    {
+      "id": "publisher-3lm-contributions-ar",
+      "question": "ما المساهمات الثلاث التي يذكرها مؤلفو ورقة 3LM؟ اذكر كل مساهمة مع الاستشهاد والصفحة.",
+      "language": "ar",
+      "document_name": "3LM-publisher-2025.pdf",
+      "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "1. أولًا، نقدم ثلاثة معايير تقييم شاملة تشمل مجالات STEM و توليد الشيفرة، أُنشئت باستخدام منهجيات صارمة تضمن أصالة و جودة من تنظيم المحتوى العربي الأصيل إلى توليد اصطناعي و ترجمة دقيقة مع تحقق بشري [S1] [S2] (الصفحات 1, 2).\n2. ثانيًا، نجري تقييم واسع النطاق لـ أكثر من 40 نموذجًا لغويًا كبيرًا متطورًا من النماذج العربية والمتعددة اللغات، مما يوفر أشمل تقييم لـ قدرات النماذج اللغوية العربية في المجالات العلمية والبرمجية حتى الآن [S2] (الصفحة 2).\n3. ثالثًا، نجري تحليل شامل بما في ذلك ارتباطات بين المهام و اختبار المتانة، مما يكشف رؤى حول سلوك النموذج و علاقة بين قدرات معرفية مختلفة في النماذج اللغوية الكبيرة العربية [S2] (الصفحة 2).",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p1:3513-3965",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 1,
+            "quote": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "translation with human veriﬁcation."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientiﬁc and program-\nming domains to date."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284:p2:0-745",
+            "document_id": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284",
+            "document_name": "3LM-publisher-2025.pdf",
+            "page": 2,
+            "quote": "Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between diﬀerent cog-\nnitive capabilities in Arabic LLMs."
+          }
+        ],
+        "generation_mode": "translated-contributions",
+        "warning": null,
+        "latency_ms": 83718.81972500001
+      }
+    }
+  ],
+  "translation_checks": [],
+  "generation_attempts": [
+    {
+      "question": "According to the 3LM paper, what problem does the work address, and what are its main contributions? Cite supporting passages and page numbers.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "first": {
+          "citations": [
+            {
+              "ref_id": "S1:Q1"
+            },
+            {
+              "ref_id": "S2:Q1"
+            }
+          ],
+          "text": "First, we present three comprehensive benchmarks spanning STEM domains and code generation, constructed through rigorous methodologies that ensure authenticity and quality from native Arabic content curation to synthetic generation and careful translation with human verification."
+        },
+        "problem": {
+          "citations": [
+            {
+              "ref_id": "S3:Q3"
+            }
+          ],
+          "text": "Most existing Arabic benchmarks focus on linguistic, cultural, or religious content, leaving a significant gap in domains like STEM and code which are increasingly relevant for real-world LLM applications."
+        },
+        "second": {
+          "citations": [
+            {
+              "ref_id": "S2:Q2"
+            }
+          ],
+          "text": "Second, we conduct an extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs, providing the most comprehensive assessment of Arabic language model capabilities in scientific and programming domains to date."
+        },
+        "third": {
+          "citations": [
+            {
+              "ref_id": "S2:Q3"
+            }
+          ],
+          "text": "Third, we perform thorough analysis including cross-task correlations and robustness testing, revealing insights into model behavior and the relationship between different cognitive capabilities in Arabic LLMs."
+        }
+      }
+    }
+  ],
+  "ci_job_result": "success"
+}
