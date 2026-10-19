@@ -21,7 +21,12 @@ def fetch(dataset: Path, output: Path):
     origins = json.loads(ORIGINS.read_text())
     output.mkdir(parents=True)
     for source in suite.sources:
-        url = origins[source.sha256]
+        url = origins.get(source.sha256)
+        if url is None:
+            raise ValueError(
+                f"No exact-byte public origin is configured for {source.id}; "
+                "use the matching local PDF or a separately verified publisher-edition suite"
+            )
         if urlparse(url).scheme != "https" or urlparse(url).hostname not in {
             "arxiv.org",
             "aclanthology.org",

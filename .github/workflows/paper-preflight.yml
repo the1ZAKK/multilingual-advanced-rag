@@ -1,8 +1,6 @@
 name: Inspect official 3LM paper identity
 on:
-  push:
-    branches: [completion-acceptance]
-    paths: [.github/workflows/paper-preflight.yml]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:

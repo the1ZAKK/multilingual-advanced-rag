@@ -175,3 +175,28 @@ def test_chat_export_keeps_failure_turns_without_inventing_answers_or_grades():
     assert all(t["review"]["verdict"] == "not_reviewed" for t in exported["turns"])
     exported["turns"][0]["response"]["answer"] = "later review edit"
     assert messages[1]["response"]["answer"] == "answer"
+
+
+def test_human_packet_binds_sources_and_leaves_human_verdicts_blank(tmp_path, pdf_bytes):
+    import json
+
+    from scripts.review_packet import packet
+
+    suite, result = fixture(tmp_path, pdf_bytes)
+    dataset, answers = tmp_path / "suite.json", tmp_path / "run.json"
+    dataset.write_text(suite.model_dump_json())
+    answers.write_text(json.dumps(result))
+    output = tmp_path / "packet"
+    packet(dataset, answers, output)
+    with (output / "review.csv").open(newline="", encoding="utf-8-sig") as f:
+        row = next(csv.DictReader(f))
+    assert row["reviewer_type"] == row["reviewer"] == ""
+    assert row["verdict"] == "not_reviewed"
+    with pytest.raises(ValueError, match="preserved"):
+        packet(dataset, answers, output)
+    result["records"][0]["document_id"] = "0" * 64
+    answers.write_text(json.dumps(result))
+    other = tmp_path / "invalid"
+    with pytest.raises(ValueError, match="Source identity mismatch"):
+        packet(dataset, answers, other)
+    assert not other.exists()

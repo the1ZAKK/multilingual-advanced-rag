@@ -7,9 +7,13 @@
 - [x] Preserve the ordinary single-question prompt and cross-language evidence context.
 - [x] Verify prior branch Windows/Ubuntu Python matrix and Docker CI from public GitHub Actions.
 - [ ] Reliable general Arabic and complete answers; independent human review and laptop acceptance remain open.
-- [ ] Optional stronger-model evaluation: publisher metadata verified, but model download blocked at `us.aws.cdn.hf.co`.
+- [x] Checksum-verify, import and execute Qwen3 4B on a hosted runner; first nine attempts received explicit AI-assisted source review.
+- [x] Hosted Windows learned-retrieval acceptance: upload/index, cited chat, live API/dashboard interaction, restart/persistence.
+- [ ] Promote a stronger model only after complete-answer and Arabic acceptance; the first 4B review had 2 pass, 3 partial, 4 fail.
+- [ ] Independent human review and actual user-laptop/model-generation acceptance remain pending.
 
-See [continuation evidence](docs/compound-questions-20261019.md). Rejected conflicting
+See [stronger-model results](docs/stronger-model-20261019.md) and
+[continuation evidence](docs/compound-questions-20261019.md). Rejected conflicting
 output is a safety success, not a complete-answer success.
 
 ## Workflow continuation — 18 October 2026

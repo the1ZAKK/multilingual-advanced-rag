@@ -29,13 +29,14 @@ def test_missing_or_extra_part_rejected():
             flatten_parts(value, ["first", "second"])
 
 
+@pytest.mark.parametrize("enable_coverage", [True, False])
 @pytest.mark.parametrize("cover_question", [True, False])
 def test_multipart_slots_reach_existing_citation_and_semantic_validation(
-    service, pdf_bytes, monkeypatch, cover_question
+    service, pdf_bytes, monkeypatch, cover_question, enable_coverage
 ):
     service.ingest(pdf_bytes(), "source.pdf")
     service.generator.settings = service.settings.model_copy(
-        update={"question_coverage_audit": True}
+        update={"question_coverage_audit": enable_coverage}
     )
     real_client = httpx.Client
     calls = []
@@ -53,7 +54,7 @@ def test_multipart_slots_reach_existing_citation_and_semantic_validation(
                         complete=True,
                         direct=True,
                         reason="Contract fixture.",
-                        answers_question=cover_question,
+                        **({"answers_question": cover_question} if enable_coverage else {}),
                     )
                     for i in user["items"]
                 ]
@@ -79,8 +80,11 @@ def test_multipart_slots_reach_existing_citation_and_semantic_validation(
         ChatRequest(query="What combines search methods, and how does retrieval work?")
     )
     audits = [c for c in calls if c.get("task") == "semantic-grounding-audit"]
-    assert all(i["question_part"] and i["question_answer"] for c in audits for i in c["items"])
-    if cover_question:
+    if enable_coverage:
+        assert all(i["question_part"] and i["question_answer"] for c in audits for i in c["items"])
+    else:
+        assert all("question_part" not in i for c in audits for i in c["items"])
+    if cover_question or not enable_coverage:
         assert result.generation_mode == "ollama"
         assert len(audits) == 2
     else:

@@ -54,3 +54,14 @@ def test_different_pdf_identity_reports_native_match_but_refuses_use(
     assert report["actual_sha256"] == actual
     assert report["native_reference_matches"] == [True]
     assert not (output / "one.pdf").exists()
+
+
+def test_unknown_exact_source_is_not_silently_replaced_by_publisher_edition(
+    tmp_path, monkeypatch, pdf_bytes
+):
+    dataset, _, _ = source_fixture(tmp_path, monkeypatch, pdf_bytes)
+    origins = tmp_path / "origins.json"
+    origins.write_text("{}")
+    monkeypatch.setattr(fetch_review_sources, "urlopen", lambda *a, **k: pytest.fail("No request"))
+    with pytest.raises(ValueError, match="No exact-byte public origin"):
+        fetch_review_sources.fetch(dataset, tmp_path / "papers")

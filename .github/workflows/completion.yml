@@ -1,8 +1,5 @@
 name: Record model tests and Windows acceptance
 on:
-  push:
-    branches: [completion-publisher-final]
-    paths: [src/rag/generation/ollama.py]
   workflow_dispatch:
     inputs:
       suite:
@@ -40,7 +37,7 @@ jobs:
     env:
       HF_HOME: ${{ github.workspace }}/.cache/huggingface
       HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
-      EVAL_DATASET: ${{ (inputs.suite == 'arabic' || github.ref_name == 'completion-arabic') && 'data/evaluation/arabic-regression.json' || (inputs.suite == 'publisher' || github.ref_name == 'completion-publisher-final') && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
+      EVAL_DATASET: ${{ inputs.suite == 'arabic' && 'data/evaluation/arabic-regression.json' || inputs.suite == 'publisher' && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
       RAG_QUESTION_COVERAGE_AUDIT: 'true'
       RAG_OLLAMA_MODEL: qwen3-hf:4b
       RAG_LLM_TIMEOUT: '300'

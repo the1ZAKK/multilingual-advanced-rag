@@ -1,0 +1,262 @@
+{
+  "run_id": "a42d25d9-8bea-40cb-9532-4d93d3aaa142",
+  "created_at_utc": "2026-10-18T18:28:05.169998+00:00",
+  "model": "qwen3-hf:4b",
+  "translation_model": "qwen3-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 450.0,
+    "max_statements": 4
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "runtime": {
+    "repository": "Qwen/Qwen3-4B-GGUF",
+    "revision": "bc640142c66e1fdd12af0bd68f40445458f3869b",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "bytes": 2497280256,
+    "installed_model": {
+      "name": "qwen3-hf:4b",
+      "model": "qwen3-hf:4b",
+      "modified_at": "2026-10-18T18:27:23.548094751Z",
+      "size": 2497280403,
+      "digest": "919c0333e0bd6b39bf327cbe00d9275073a446c878674b55d02884c84c7045df",
+      "details": {
+        "parent_model": "Qwen3-4B-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 40960,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "7e0520ac44ab93163f0993ff21f30345092a51a6",
+  "source_review": {
+    "run_id": "a42d25d9-8bea-40cb-9532-4d93d3aaa142",
+    "cases": 9,
+    "reviewed": 9,
+    "counts": {
+      "fail": 4,
+      "not_reviewed": 0,
+      "partial": 3,
+      "pass": 2
+    },
+    "by_reviewer_type": {
+      "human": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      },
+      "ai_assisted": {
+        "reviewed": 9,
+        "counts": {
+          "pass": 2,
+          "partial": 3,
+          "fail": 4
+        },
+        "pass_rate": 0.2222222222222222
+      }
+    },
+    "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+  },
+  "records": [
+    {
+      "id": "legal-problem",
+      "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+      "language": "en",
+      "mode": "ollama",
+      "warning": null,
+      "latency_ms": 135037.08506399998,
+      "answer": "ArabLegalEval addresses the evaluation gap of assessing Arabic legal knowledge in large language models, particularly in non-English languages such as Arabic [S5] (page 1).\nFigure 1: Tasks included in ArabLegalEval and their source documents [S7] (page 1).",
+      "citation_pages": [
+        1
+      ],
+      "ai_source_review": {
+        "verdict": "partial",
+        "notes": "Gap stated, but source-material answer is only a figure caption; omits Saudi legal documents and synthesized questions (PDF p1).",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "legal-retrieval",
+      "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+      "language": "en",
+      "mode": "ollama",
+      "warning": null,
+      "latency_ms": 112264.80996199996,
+      "answer": "The initial ArabLegalEval benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases [S2] (page 2).\nThe current scope of ArabLegalEval focuses on evaluating the proficiency of large language models in understanding and processing Arabic legal texts, while future work includes adding more KSA regulatory documents, court cases, and judicial decisions to enhance the benchmark and promote advancements in Arabic legal AI [S4] [S6] (page 9).",
+      "citation_pages": [
+        2,
+        9
+      ],
+      "ai_source_review": {
+        "verdict": "partial",
+        "notes": "Correct initial exclusion (p2), but future work is replaced with unrelated document expansion (p9); omits future retrieval tasks (p2).",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "legal-retrieval-ar",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ReadTimeout: timed out); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "latency_ms": 450241.03132000007,
+      "answer": null,
+      "citation_pages": [
+        1,
+        2,
+        8,
+        9,
+        17,
+        24
+      ],
+      "ai_source_review": {
+        "verdict": "fail",
+        "notes": "Timeout at 450 seconds; extractive English fallback does not answer in Arabic.",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "table-method",
+      "question": "How is AraTable content curated, and what mechanism does its automated evaluation framework use?",
+      "language": "en",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ValueError: Generated statement budget exceeded); showing evidence excerpts",
+      "latency_ms": 213210.89116999996,
+      "answer": null,
+      "citation_pages": [
+        1,
+        2,
+        22,
+        23,
+        24
+      ],
+      "ai_source_review": {
+        "verdict": "fail",
+        "notes": "Statement-budget validation failed; excerpt fallback is not a complete curated-content/mechanism answer.",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "fresh-physics-classes",
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "mode": "ollama",
+      "warning": null,
+      "latency_ms": 158283.3994130001,
+      "answer": "Each NPT state is detected by an EW in ELU [S2] (page 6).\nA complex and PPT entangled state ρ is detected by an EW in ELU (ELOCC) if and only if there exists a state σ LU (SLOCC) equivalent to ρ such that the real part of σ, i.e., σ+, is an entangled state [S2] (page 6).",
+      "citation_pages": [
+        6
+      ],
+      "ai_source_review": {
+        "verdict": "partial",
+        "notes": "States all NPT (Lemma 10 p6), but replaces the requested rank-four two-qutrit PPT-family result with a different conditional PPT statement; abstract-specific request is not covered (p1).",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "fresh-physics-ar",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premises do not explicitly state that a non-decomposable EW must detect at least one NPT state, only that it detects a PPT entangled state and an NPT state.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "latency_ms": 271455.762369,
+      "answer": null,
+      "citation_pages": [
+        3,
+        4,
+        10,
+        13,
+        15
+      ],
+      "ai_source_review": {
+        "verdict": "fail",
+        "notes": "Semantic validation rejected claim; excerpt fallback instead of a verified Arabic answer.",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "fresh-culture-scope",
+      "question": "According to the ArabCulture abstract, how many countries, daily-life domains and fine-grained subtopics are covered?",
+      "language": "en",
+      "mode": "ollama",
+      "warning": null,
+      "latency_ms": 205590.47039999996,
+      "answer": "The ArabCulture dataset covers 12 daily life domains and 54 fine-grained subtopics [S3] [S4] [S5] (pages 9, 12, 13).\nThe ArabCulture dataset covers cultures of 13 countries across the Gulf, Levant, North Africa, and the Nile Valley [S1] [S7] (pages 1, 2).",
+      "citation_pages": [
+        1,
+        2,
+        9,
+        12,
+        13
+      ],
+      "ai_source_review": {
+        "verdict": "pass",
+        "notes": "All three values match original abstract p1: 13 countries, 12 domains, 54 subtopics. Answer cites equivalent later text as well as p1; provenance checked separately.",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "fresh-culture-native-ar",
+      "question": "في المثال العربي عن كريم الذي يتناول الكسكسي في الشكل الأول، ما البلد والمنطقة المكتوبان في المصدر؟",
+      "language": "ar",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ValueError: Output language mismatch: expected Arabic answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "latency_ms": 262167.1103660001,
+      "answer": null,
+      "citation_pages": [
+        1,
+        2,
+        4,
+        13
+      ],
+      "ai_source_review": {
+        "verdict": "fail",
+        "notes": "Language validation failed; excerpt fallback rather than the requested Arabic country/region answer.",
+        "reviewer_type": "ai_assisted"
+      }
+    },
+    {
+      "id": "fresh-culture-unsupported",
+      "question": "Does ArabCulture introduce an Arabic process reward model? Distinguish direct evidence from inference.",
+      "language": "en",
+      "mode": "insufficient-evidence",
+      "warning": null,
+      "latency_ms": 77.62772499995663,
+      "answer": "The retrieved evidence is insufficient to establish the requested claim about “Arabic process reward model”. A positive introduction claim would need a direct statement; drawing it from these passages would be inference. This is a limit of the retrieved evidence, not proof of absence throughout the paper.\n\nContext references only: [S1] [S2].",
+      "citation_pages": [
+        2
+      ],
+      "ai_source_review": {
+        "verdict": "pass",
+        "notes": "Correctly limits claim to retrieved evidence, requires a direct introduction statement, and avoids treating non-retrieval as proof of paper-wide absence.",
+        "reviewer_type": "ai_assisted"
+      }
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "run_id": "c5fdf792-ceec-46f4-bb85-e594557628ad",
+  "created_at_utc": "2026-10-19T06:47:32.777032+00:00",
+  "model": "qwen3-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600.0,
+    "max_statements": 4,
+    "question_coverage_audit": true
+  },
+  "runtime": {
+    "repository": "Qwen/Qwen3-4B-GGUF",
+    "revision": "bc640142c66e1fdd12af0bd68f40445458f3869b",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "bytes": 2497280256,
+    "installed_model": {
+      "name": "qwen3-hf:4b",
+      "model": "qwen3-hf:4b",
+      "modified_at": "2026-10-19T06:47:03.379059002Z",
+      "size": 2497280403,
+      "digest": "919c0333e0bd6b39bf327cbe00d9275073a446c878674b55d02884c84c7045df",
+      "details": {
+        "parent_model": "Qwen3-4B-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 40960,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "00a15a1271f3b70d74f26289314d4e5be4c3a03c",
+  "review": {
+    "run_id": "c5fdf792-ceec-46f4-bb85-e594557628ad",
+    "cases": 2,
+    "reviewed": 2,
+    "counts": {
+      "fail": 2,
+      "not_reviewed": 0,
+      "partial": 0,
+      "pass": 0
+    },
+    "by_reviewer_type": {
+      "human": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      },
+      "ai_assisted": {
+        "reviewed": 2,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 2
+        },
+        "pass_rate": 0.0
+      }
+    },
+    "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+  },
+  "all_quotes_matched_original_native_pdf_pages": true,
+  "records": [
+    {
+      "id": "legal-retrieval-ar",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ValueError: Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and the question answer, and it is fully supported by the source metadata.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "latency_ms": 466020.6944519999
+    },
+    {
+      "id": "fresh-physics-ar",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "mode": "extractive",
+      "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions decomposable EWs detect NPT states only, but does not explicitly state that the paper 'mentions' this claim.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+      "latency_ms": 244421.96897400005
+    }
+  ]
+}

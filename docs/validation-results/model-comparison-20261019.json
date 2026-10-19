@@ -1,0 +1,200 @@
+{
+  "scope": "Paired exposed development regressions; AI-assisted review only; not unseen-paper accuracy.",
+  "independent_human_reviews": 0,
+  "dataset": "data/evaluation/completion-regression.json",
+  "hardware_note": "Different cloud/hosted machines; latency is not a fair speed comparison. Models also differ in quantization (1.7B Q8_0 versus 4B Q4_K_M).",
+  "runs": [
+    {
+      "run_id": "35778f25-eb52-4a27-8364-c64cf06fd2d4",
+      "created_at_utc": "2026-10-19T06:33:24.554579+00:00",
+      "model": "qwen3-hf:1.7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4
+      },
+      "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "source_code_sha": "004fa7ea60c30cdd93a8dd741697934bd23fbb78",
+      "question_coverage_audit": "enabled implicitly in these pre-opt-in code versions; application rollout is now opt-in",
+      "all_returned_quotes_checked_against_original_native_pdf_pages": true,
+      "review": {
+        "run_id": "35778f25-eb52-4a27-8364-c64cf06fd2d4",
+        "cases": 6,
+        "reviewed": 6,
+        "counts": {
+          "fail": 6,
+          "not_reviewed": 0,
+          "partial": 0,
+          "pass": 0
+        },
+        "by_reviewer_type": {
+          "human": {
+            "reviewed": 0,
+            "counts": {
+              "pass": 0,
+              "partial": 0,
+              "fail": 0
+            },
+            "pass_rate": null
+          },
+          "ai_assisted": {
+            "reviewed": 6,
+            "counts": {
+              "pass": 0,
+              "partial": 0,
+              "fail": 6
+            },
+            "pass_rate": 0.0
+          }
+        },
+        "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+      },
+      "records": [
+        {
+          "id": "legal-problem",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Answer does not cover question part item-1 (What evaluation gap does ArabLegalEval address): The claim directly answers the question_part 'What evaluation gap does ArabLegalEval address' and is fully supported by the premises and source metadata provided. The premises explicitly state that ArabLegalEval is introduced to address the evaluation gap in assessing Arabic legal knowledge in Large Language Models, and the source metadata confirms this claim with the document's abstract section.); showing evidence excerpts",
+          "answer": null,
+          "latency_ms": 77242.75972700707
+        },
+        {
+          "id": "legal-retrieval",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Conflicting positive and negative assertions for the same subject/action); showing evidence excerpts",
+          "answer": null,
+          "latency_ms": 47858.62772499968
+        },
+        {
+          "id": "legal-retrieval-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (JSONDecodeError: Unterminated string starting at: line 8 column 17 (char 146)); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 270397.5660049982
+        },
+        {
+          "id": "fresh-physics-classes",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The claim is supported by the premise that a necessary and sufficient condition for the validity of PPT entangled states of complex density matrices is derived. However, the claim is not complete as it does not explicitly state the condition derived. The premise does not provide the actual condition, so the claim is incomplete and cannot be fully verified without additional information. The claim is also not directly stated in the premise, so it is not directly supported by the premises provided.); showing evidence excerpts",
+          "answer": null,
+          "latency_ms": 122854.89052100456
+        },
+        {
+          "id": "fresh-physics-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Answer translation changed round-trip content; source excerpts required); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 148101.3947140018
+        },
+        {
+          "id": "fresh-culture-native-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Output language mismatch: untranslated English answer item); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 104430.34302599699
+        }
+      ]
+    },
+    {
+      "run_id": "2f60f654-cc87-4cee-bc8e-897329a1695d",
+      "created_at_utc": "2026-10-19T06:30:35.887136+00:00",
+      "model": "qwen3-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4
+      },
+      "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "source_code_sha": "6502f4c17491121139664305c2adcda0a471fb61",
+      "question_coverage_audit": "enabled implicitly in these pre-opt-in code versions; application rollout is now opt-in",
+      "all_returned_quotes_checked_against_original_native_pdf_pages": true,
+      "review": {
+        "run_id": "2f60f654-cc87-4cee-bc8e-897329a1695d",
+        "cases": 6,
+        "reviewed": 6,
+        "counts": {
+          "fail": 4,
+          "not_reviewed": 0,
+          "partial": 2,
+          "pass": 0
+        },
+        "by_reviewer_type": {
+          "human": {
+            "reviewed": 0,
+            "counts": {
+              "pass": 0,
+              "partial": 0,
+              "fail": 0
+            },
+            "pass_rate": null
+          },
+          "ai_assisted": {
+            "reviewed": 6,
+            "counts": {
+              "pass": 0,
+              "partial": 2,
+              "fail": 4
+            },
+            "pass_rate": 0.0
+          }
+        },
+        "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+      },
+      "records": [
+        {
+          "id": "legal-problem",
+          "mode": "ollama",
+          "warning": null,
+          "answer": "ArabLegalEval addresses the evaluation gap of assessing Arabic legal knowledge in large language models, particularly in non-English languages such as Arabic [S5] (page 1).\nThe source material used in ArabLegalEval includes legal documents and regulations, as well as data relevant to specific conversations [S7] [S8] [S1] (page 1).",
+          "latency_ms": 101209.27733799999
+        },
+        {
+          "id": "legal-retrieval",
+          "mode": "ollama",
+          "warning": null,
+          "answer": "The initial ArabLegalEval benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases [S2] (page 2).\nThe current scope of ArabLegalEval focuses on evaluating the proficiency of large language models in understanding and processing Arabic legal texts, while future work includes adding more KSA regulatory documents, court cases, and judicial decisions to enhance the benchmark and promote advancements in Arabic legal AI [S4] [S6] (page 9).",
+          "latency_ms": 82683.98220599997
+        },
+        {
+          "id": "legal-retrieval-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and is fully supported by the source metadata.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 240967.89266600006
+        },
+        {
+          "id": "fresh-physics-classes",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The claim mentions 'validity is proved' but the premises only state 'we show the validity for a family' without explicitly confirming the claim's full assertion.); showing evidence excerpts",
+          "answer": null,
+          "latency_ms": 182840.91715
+        },
+        {
+          "id": "fresh-physics-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions Wp detecting an NPT state, but the claim about a non-decomposable entanglement witness detecting an NPT state is not explicitly stated or directly supported by the premise.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 193437.05360800005
+        },
+        {
+          "id": "fresh-culture-native-ar",
+          "mode": "extractive",
+          "warning": "Ollama generation failed (ValueError: Output language mismatch: expected Arabic answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+          "answer": null,
+          "latency_ms": 174169.64300300003
+        }
+      ]
+    }
+  ]
+}
