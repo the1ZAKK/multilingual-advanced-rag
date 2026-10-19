@@ -1,0 +1,89 @@
+{
+  "description": "Additional two-paper checks frozen before candidate predictions. AI-curated expected facts, not independent human review. English-written Arabic benchmark papers; bilingual questions do not make these Arabic-language source papers.",
+  "sources": [
+    {
+      "id": "arabicmmlu",
+      "filename": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "sha256": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5"
+    },
+    {
+      "id": "arabicnumbench",
+      "filename": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "sha256": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b"
+    }
+  ],
+  "cases": [
+    {
+      "id": "mmlu-size-en",
+      "source_id": "arabicmmlu",
+      "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number.",
+      "language": "en",
+      "expected_points": [
+        "40 tasks",
+        "14,575 multiple-choice questions",
+        "35 models evaluated",
+        "Best Arabic-centric model scored 62.3%"
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%."
+        }
+      ]
+    },
+    {
+      "id": "mmlu-size-ar",
+      "source_id": "arabicmmlu",
+      "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم.",
+      "language": "ar",
+      "expected_points": [
+        "40 مهمة",
+        "14,575 سؤال اختيار من متعدد",
+        "تقييم 35 نموذجًا",
+        "أفضل نموذج متمحور حول العربية حقق 62.3%"
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%."
+        }
+      ]
+    },
+    {
+      "id": "numbers-prompt-en",
+      "source_id": "arabicnumbench",
+      "question": "According to the ArabicNumBench abstract, how many models, providers, and individual test cases were evaluated? Compare few-shot chain-of-thought accuracy with zero-shot accuracy, using the reported numbers.",
+      "language": "en",
+      "expected_points": [
+        "71 models from 10 providers",
+        "59,010 individual test cases",
+        "Few-shot CoT: 80.06%; zero-shot: 28.76%",
+        "Reported improvement: 2.8x"
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%)."
+        }
+      ]
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "source_id": "arabicnumbench",
+      "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة.",
+      "language": "ar",
+      "expected_points": [
+        "71 نموذجًا من 10 مقدمي خدمات",
+        "59,010 حالة اختبار فردية",
+        "دقة سلسلة التفكير بأمثلة قليلة 80.06% مقابل 28.76% دون أمثلة",
+        "التحسن المذكور 2.8 ضعف"
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%)."
+        }
+      ]
+    }
+  ]
+}
