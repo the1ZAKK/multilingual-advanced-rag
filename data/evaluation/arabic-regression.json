@@ -1,0 +1,48 @@
+{
+  "description": "Two exposed Arabic failures with unchanged frozen expectations; targeted regression after narrow back-translation normalization. Experimental question-coverage gate explicitly enabled. Development controls, not unseen evaluation; zero human reviews.",
+  "sources": [
+    {
+      "id": "legal",
+      "filename": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "sha256": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd"
+    },
+    {
+      "id": "physics",
+      "filename": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "sha256": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6"
+    }
+  ],
+  "cases": [
+    {
+      "id": "legal-retrieval-ar",
+      "source_id": "legal",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "expected_points": [
+        "الإصدار الأول لا يقيس استرجاع الحقائق والقوانين من قواعد معرفة خارجية.",
+        "تذكر الورقة أن تقييم قدرات الاسترجاع سيأتي في مهام مستقبلية."
+      ],
+      "references": [
+        {
+          "page": 2,
+          "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "fresh-physics-ar",
+      "source_id": "physics",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "expected_points": [
+        "تثبت الورقة الصلاحية لجميع حالات NPT."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. "
+        }
+      ]
+    }
+  ]
+}

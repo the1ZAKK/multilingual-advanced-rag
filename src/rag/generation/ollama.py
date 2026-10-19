@@ -604,7 +604,9 @@ class OllamaGenerator:
                 question,
                 generation_language,
                 reverse_translations=reverse_translations,
-                question_parts=statement_parts if multipart else None,
+                question_parts=(
+                    statement_parts if multipart and self.settings.question_coverage_audit else None
+                ),
             )
             if translate_ordinary:
                 return self.translate_verified_answer(payload, evidence, question)
@@ -1229,8 +1231,8 @@ def numeric_atoms(text):
 def validate_roundtrip_content(original, reverse):
     """Conservative veto independent of a small model's affirmative verdict.
 
-    Apart from data/dataset and simple plurals, added/dropped English content
-    words are not silently treated as synonyms.
+    Apart from data/dataset, simple plurals and two narrow grammatical phrase
+    families, added/dropped English content words are not treated as synonyms.
     This deliberately rejects some faithful paraphrases. It is a necessary
     guard, not a proof: word order, negation and roles still need semantic audit.
     """
@@ -1271,6 +1273,21 @@ def validate_roundtrip_content(original, reverse):
     }
 
     def content(text):
+        # Observed faithful back-translations can vary publication version words
+        # and the assessment verb immediately before "the ability". Keep these
+        # phrase-local; do not conflate arbitrary measurements or scientific terms.
+        text = re.sub(
+            r"\b(?:first|initial)\s+(?:edition|release|version)\b",
+            "initial version",
+            text,
+            flags=re.IGNORECASE,
+        )
+        text = re.sub(
+            r"\b(?:assess|measure|evaluate)\s+(?=the ability\b)",
+            "assess ",
+            text,
+            flags=re.IGNORECASE,
+        )
         return {
             "dataset"
             if word == "data"

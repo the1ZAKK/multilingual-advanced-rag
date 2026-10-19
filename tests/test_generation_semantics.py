@@ -853,3 +853,21 @@ def test_ordinary_reverse_translator_never_receives_original_claim_or_sources(se
     reverse_input = json.loads(calls[1]["messages"][1]["content"])
     assert reverse_input == arabic
     assert "The dataset contains 40 tasks." not in json.dumps(calls[1])
+
+
+def test_faithful_version_and_ability_assessment_phrases_survive_roundtrip():
+    from rag.generation.ollama import validate_roundtrip_content
+
+    a = "The first edition of Oriole does not assess the ability of models to retrieve facts from external knowledge bases."
+    b = "The first version of Oriole does not measure the ability of models to retrieve facts from external knowledge bases."
+    validate_roundtrip_content(a, b)
+    for changed in (
+        b.replace("does not", "does"),
+        b.replace("external ", ""),
+        b.replace("retrieve facts", "memorize facts"),
+    ):
+        with pytest.raises(ValueError, match="round-trip content"):
+            validate_roundtrip_content(a, changed)
+    # Only assessment of "the ability" is canonicalized; not physical measurements.
+    with pytest.raises(ValueError, match="round-trip content"):
+        validate_roundtrip_content("We measure the particle.", "We evaluate the particle.")

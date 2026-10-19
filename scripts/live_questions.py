@@ -80,6 +80,7 @@ def run_questions(service, cases, output: Path, *, use_llm=True):
                         "context_chars": service.settings.max_context_chars,
                         "total_timeout": service.settings.llm_total_timeout,
                         "max_statements": service.settings.max_answer_statements,
+                        "question_coverage_audit": service.settings.question_coverage_audit,
                     },
                     "embedding_model": service.embedder.key,
                     "retrieval": {

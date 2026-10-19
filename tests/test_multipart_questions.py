@@ -34,6 +34,9 @@ def test_multipart_slots_reach_existing_citation_and_semantic_validation(
     service, pdf_bytes, monkeypatch, cover_question
 ):
     service.ingest(pdf_bytes(), "source.pdf")
+    service.generator.settings = service.settings.model_copy(
+        update={"question_coverage_audit": True}
+    )
     real_client = httpx.Client
     calls = []
 
