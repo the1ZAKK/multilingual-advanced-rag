@@ -282,7 +282,7 @@ def overview_question(question: str) -> bool:
     ):
         return False
     if re.search(
-        r"\b(?:summari[sz]e|overview|research problem|research gap)\b|لخص|ملخص|المشكلة البحثية",
+        r"\b(?:summari[sz]e|overview|research problem|research gap|abstract)\b|لخص|ملخص|المشكلة البحثية",
         text,
     ):
         return True

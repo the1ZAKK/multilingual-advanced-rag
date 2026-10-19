@@ -40,8 +40,18 @@ def compact(input_path, runtime_path, output, trace=None):
         report["records"].append(item)
     if trace is not None and trace.exists():
         report["translation_checks"] = []
+        report["generation_attempts"] = []
         for line in trace.read_text().splitlines():
             item = json.loads(line)
+            if item["stage"] == "generation":
+                report["generation_attempts"].append(
+                    {
+                        "question": item["request"].get("question"),
+                        "language": item["request"].get("language"),
+                        "validation_error": item["request"].get("validation_error"),
+                        "result": item["result"],
+                    }
+                )
             if item["stage"] in {"ordinary-translation-ar", "ordinary-translation-en"}:
                 report["translation_checks"].append(
                     {

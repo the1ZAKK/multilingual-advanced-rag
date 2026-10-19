@@ -71,3 +71,29 @@ def test_overview_selects_scoped_abstract_before_appendix_question_examples(serv
     )
     assert evidence[0].chunk.chunk_id == abstract.chunk_id
     assert evidence[0].score == 0  # Source context is not misreported as a retrieval score.
+
+
+def test_explicit_abstract_request_anchors_unheaded_first_page_only_in_scope(service):
+    from rag.models import Chunk, Hit
+
+    front = Chunk(
+        chunk_id="d:p1:0-70",
+        document_id="d",
+        document_name="Novel.pdf",
+        page=1,
+        text="The result applies to all NPT states.",
+        normalized="result all npt",
+        start=0,
+        end=70,
+        section=None,
+    )
+    wrong = front.model_copy(update={"chunk_id": "other:p1:0-70", "document_id": "other"})
+    body = front.model_copy(update={"chunk_id": "d:p6:0-70", "page": 6, "section": "Proof"})
+    service.index.chunks = [wrong, front, body]
+    hits = [Hit(chunk=body, score=1)]
+    for question in ("According to the abstract, which states?", "وفقًا لملخص الورقة، أي حالات؟"):
+        result = service.select_evidence(hits, question, {"d"})
+        assert result[0].chunk == front
+        assert result[0].chunk.section is None  # Never fabricate a structural label.
+        assert all(h.chunk.document_id == "d" for h in result)
+    assert service.select_evidence(hits, "Explain this proof", {"d"})[0].chunk == body

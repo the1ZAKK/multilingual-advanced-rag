@@ -1,0 +1,42 @@
+name: Inspect official 3LM paper identity
+on:
+  push:
+    branches: [completion-acceptance]
+    paths: [.github/workflows/paper-preflight.yml]
+permissions:
+  contents: write
+jobs:
+  inspect-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.19'
+      - run: uv python install 3.12
+      - name: Inspect publisher PDF before freezing new-version references
+        run: |
+          uv run --no-project --with pymupdf==1.28.2 python - <<'PY'
+          import hashlib, json, urllib.request
+          from pathlib import Path
+          import pymupdf
+          url = 'https://aclanthology.org/2025.arabicnlp-main.4.pdf'
+          raw = urllib.request.urlopen(url, timeout=120).read()
+          sha = hashlib.sha256(raw).hexdigest()
+          assert sha == '380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284'
+          with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+              report = dict(url=url, sha256=sha, page_count=len(pdf),
+                            first_pages={str(i+1): pdf[i].get_text() for i in range(2)})
+          path = Path('docs/validation-results/official-3lm-preflight.json')
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+      - name: Preserve public-source inspection separately from application main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c ci-paper-inspection-${{ github.run_id }}
+          git add docs/validation-results/official-3lm-preflight.json
+          git commit -m 'Record hash-verified publisher PDF text for reference preflight'
+          git push origin HEAD

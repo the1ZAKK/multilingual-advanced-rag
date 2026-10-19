@@ -315,6 +315,15 @@ class RAGService:
                     for c in self.index.chunks
                     if c.document_id in scope and c.section == "Abstract"
                 ]
+                if not abstracts and re.search(r"\babstract\b|ملخص", query, re.IGNORECASE):
+                    # Some scientific papers have no printed Abstract heading.
+                    # An explicit abstract request may anchor first-page source
+                    # chunks, but does not relabel them as abstract or rewrite text.
+                    abstracts = [
+                        c
+                        for c in self.index.chunks
+                        if c.document_id in scope and c.page == 1 and c.section is None
+                    ]
                 if abstracts:
                     # The source's abstract is an explicit overview, unlike an
                     # appendix question that merely repeats the query vocabulary.

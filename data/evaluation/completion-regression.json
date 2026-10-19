@@ -1,15 +1,15 @@
 {
-  "description": "Targeted regressions frozen before execution on the coverage-audit changes: two original 3LM questions plus four exposed 4B failures. This is development regression evaluation, not unseen independent validation; human review remains pending.",
+  "description": "Six exposed 4B failures, frozen regression expectations retained from completion-review.json. Development regression evaluation, not an independent unseen benchmark. Original 3LM upload identity is preserved in original-paper-review.json; its publisher edition is separately inspected before new-version evaluation.",
   "sources": [
-    {
-      "id": "3lm",
-      "filename": "3LM-Bridging Arabic, STEM, and Code.pdf",
-      "sha256": "661a0d336318fa5a8d80294b8b2a3bbf0dd79ffa1a0691cd05b54e9f5cdcd254"
-    },
     {
       "id": "legal",
       "filename": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
       "sha256": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd"
+    },
+    {
+      "id": "physics",
+      "filename": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "sha256": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6"
     },
     {
       "id": "culture",
@@ -18,53 +18,6 @@
     }
   ],
   "cases": [
-    {
-      "id": "3lm-problem-contributions",
-      "source_id": "3lm",
-      "question": "According to the 3LM paper, what problem does the work address, and what are its main contributions? Cite supporting passages and page numbers.",
-      "language": "en",
-      "expected_points": [
-        "A gap in Arabic LLM evaluation for STEM and code.",
-        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
-        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
-        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
-      ],
-      "references": [
-        {
-          "page": 1,
-          "text": "Most existing\nArabic benchmarks focus on linguistic, cultural,\nor religious content, leaving a significant gap\nin domains like STEM and code which are in-\ncreasingly relevant for real-world LLM applica-\ntions. "
-        },
-        {
-          "page": 1,
-          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
-        },
-        {
-          "page": 2,
-          "text": "translation with human verification. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientific and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between different cog-\nnitive capabilities in Arabic LLMs."
-        }
-      ]
-    },
-    {
-      "id": "3lm-contributions-ar",
-      "source_id": "3lm",
-      "question": "ما المساهمات الثلاث التي يذكرها مؤلفو ورقة 3LM؟ اذكر كل مساهمة مع الاستشهاد والصفحة.",
-      "language": "ar",
-      "expected_points": [
-        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
-        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
-        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
-      ],
-      "references": [
-        {
-          "page": 1,
-          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
-        },
-        {
-          "page": 2,
-          "text": "translation with human verification. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientific and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between different cog-\nnitive capabilities in Arabic LLMs."
-        }
-      ]
-    },
     {
       "id": "legal-problem",
       "source_id": "legal",
@@ -110,6 +63,37 @@
         {
           "page": 2,
           "text": "does not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks.\nThe primary con"
+        }
+      ]
+    },
+    {
+      "id": "fresh-physics-classes",
+      "source_id": "physics",
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "expected_points": [
+        "The validity is proved for all NPT states.",
+        "The validity is shown for a family of two-qutrit PPT entangled states of rank four, not an unconditional result for every PPT state."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. "
+        }
+      ]
+    },
+    {
+      "id": "fresh-physics-ar",
+      "source_id": "physics",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "expected_points": [
+        "تثبت الورقة الصلاحية لجميع حالات NPT."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. "
         }
       ]
     },
