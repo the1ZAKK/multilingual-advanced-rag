@@ -221,3 +221,21 @@ def test_invalid_language_is_rejected():
         resolve_language("question", "fr")
     with pytest.raises(ValueError):
         validate_output_language("answer", "auto")
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "According to the abstract, which models were evaluated and what accuracy was reported?",
+        "وفقًا لملخص الدراسة، كم عدد النماذج التي جرى تقييمها وما نتيجة أفضل نموذج؟",
+    ],
+)
+def test_explicit_abstract_numbers_use_prose_not_comparative_tables(question):
+    from rag.query import overview_question
+
+    assert not models_results_question(question)
+    assert overview_question(question)
+
+
+def test_numbered_table_request_retains_table_routing_with_abstract_context():
+    assert models_results_question("Compare model accuracy in Table 2 with the abstract results.")

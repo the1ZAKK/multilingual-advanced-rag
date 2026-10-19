@@ -99,6 +99,11 @@ def models_results_question(question: str) -> bool:
         text,
     ):
         return True
+    # An explicitly requested abstract is prose evidence even when it reports
+    # model counts or accuracy. Do not replace it with unrelated result tables.
+    # A numbered-table request above still takes precedence.
+    if re.search(r"\babstract\b|ملخص", text):
+        return False
     # Quantities in an experimental protocol (temperature, examples, decoding)
     # are not automatically comparative model-performance tables.
     protocol = re.search(
