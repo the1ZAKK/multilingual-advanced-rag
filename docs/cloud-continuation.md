@@ -51,3 +51,28 @@ preflight must verify the public PDF hashes before any hosted model evaluation.
 Do not overwrite user indexes, original PDFs, private settings, or earlier
 review artifacts when continuing. Use a new isolated evaluation output directory
 for every model attempt. Keep failed attempts for comparison.
+
+## 2026-10-19 candidate checkpoint
+
+- Candidate commit `1ad5f63`: 407 software tests passed, 4 skipped; Ruff clean.
+- The additional-paper 1.7B baseline completed four attempts. The English
+  ArabicMMLU response omitted the requested 35-model count; both Arabic cases
+  incorrectly entered table routing and fell back to excerpts. The English
+  ArabicNumBench response was rejected by a semantic judge that demanded
+  methodological proof of a result explicitly reported in its premise.
+  These are observed defects, not accepted answers.
+- The routing correction keeps explicit abstract requests on prose evidence
+  in both languages, while retaining explicit numbered-table requests. A
+  learned-retrieval check verified that the ArabicMMLU Arabic request now
+  retains the Abstract and the requested source numbers. That check does not
+  establish generation completeness; the two-case real-model rerun is separate.
+- [Six-case Instruct recording](https://github.com/the1ZAKK/multilingual-advanced-rag/actions/runs/39219159043)
+  uses source commit `6bc903d`, before the routing correction.
+- [Four additional-paper Instruct attempts](https://github.com/the1ZAKK/multilingual-advanced-rag/actions/runs/39219463133)
+  use source commit `d66c62d`, also before that correction. Both hosted Windows
+  jobs passed, but their model jobs were still running at this checkpoint.
+- Local additional-paper baseline: `reports/additional-qwen17-001`;
+  ungraded human packet: `reports/additional-qwen17-human-packet`;
+  routing-only Arabic rerun: `reports/additional-qwen17-routing-fixed-001`.
+  These ignored reports belong to this workspace and are not GitHub artifacts.
+- Independent human reviews remain zero. No stable release was published.
