@@ -1,0 +1,675 @@
+{
+  "run_id": "c5fdf792-ceec-46f4-bb85-e594557628ad",
+  "created_at_utc": "2026-10-19T06:47:32.777032+00:00",
+  "model": "qwen3-hf:4b",
+  "translation_model": "qwen3-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600.0,
+    "max_statements": 4,
+    "question_coverage_audit": true
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "documents": [
+    {
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "pages": 25,
+      "chunks": 108,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    },
+    {
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "pages": 15,
+      "chunks": 104,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    }
+  ],
+  "runtime": {
+    "repository": "Qwen/Qwen3-4B-GGUF",
+    "revision": "bc640142c66e1fdd12af0bd68f40445458f3869b",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "bytes": 2497280256,
+    "installed_model": {
+      "name": "qwen3-hf:4b",
+      "model": "qwen3-hf:4b",
+      "modified_at": "2026-10-19T06:47:03.379059002Z",
+      "size": 2497280403,
+      "digest": "919c0333e0bd6b39bf327cbe00d9275073a446c878674b55d02884c84c7045df",
+      "details": {
+        "parent_model": "Qwen3-4B-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 40960,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "00a15a1271f3b70d74f26289314d4e5be4c3a03c",
+  "independent_human_reviews": 0,
+  "review_status": "unreviewed; provenance/language flags are not semantic grades",
+  "records": [
+    {
+      "id": "legal-retrieval-ar",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nThe first category is the abil-\nity of a model to use specific regulations, facts, and\ndata that are relevant to a particular conversation.\nThis can be achieved by having the LLM memorize\nspecific facts, presumably by finetuning it on partic-\nular legal corpora, or more conveniently by using a\nRetrieval-Augmented Generation (RAG) system to\nretrieve information relevant to the context at hand.\nThe second broad category of assessment criteria\nis related to the model’s ability to exhibit logical\nreasoning, understand relationships between enti-\nties and events, and apply these skills to answer [S1]\n\n1 [S1]\n\nquestions. [S2]\n\nIn this initial release of ArabLegalEval, we in-\nclude tasks to assess the legal reasoning capabilities\nin Arabic as well as tasks to measure the ability to\nrecall and use legal knowledge embedded in the\nfinetuned models. Much like ArabicMMLU (Koto\net al., 2024) was designed to test the general reason-\ning capabilities of Arabic LLMs but includes a mix\nof tasks with some requiring previous knowledge,\nthe ArabLegalEval benchmark seeks to develop\nArabic legal tasks and questions derived from orig-\ninal Arabic legal sources, in consultation with legal\nprofessionals, to test the legal reasoning capabili-\nties of Arabic LLMs. The benchmark also includes\nsome high quality translations, verified by legal\nexperts, of tasks from English legal benchmarks\n(LegalBench) (Guha et al., 2023). [S2]\n\nThe benchmark includes Arabic legal Multiple\nChoice Questions (MCQs), Question & Answer\n(QA) pairs where the relevant Saudi regulations are\nincluded in the question, as well as Arabic transla-\ntions of tasks from LegalBench. The benchmark\ndoes not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks. [S3]\n\n6\nLimitations [S4]\n\nThe ArabLegalEval benchmark currently relies\nheavily on Saudi Arabian legal documents, with\nsome tasks translated from universal benchmarks.\nIncluding documents from more Arabic-speaking\ncountries would improve geographic representa-\ntion. Our study did not evaluate all models, which\nlimits generalizability; future work should include\na broader range of models. Limited access to le-\ngal experts affected validation depth; involving\nmore experts would improve quality control. The\ndataset lacks granular categorization, such as task-\nspecific prior knowledge, document origin, and\nAI-generated content labels. Adding more granular\nmetadata and task categories would aid nuanced\nmodel training and evaluation. [S4]\n\nArabLegalEval: A Multitask Benchmark for Assessing Arabic Legal [S5]\n\nKnowledge in Large Language Models [S5]\n\nFaris Hijazi1, Somayah AlHarbi1, Abdulaziz AlHussein1, Harethah Abu Shairah2, [S5]\n\nReem AlZahrani2, Hebah AlShamlan1, Omar Knio2, George Turkiyyah2 [S5]\n\n1THIQAH, 2KAUST [S5]\n\nThe primary contributions of this paper are: the\ndevelopment of a novel methodology for generat-\ning a legal QA dataset that can be adapted to other\ndomains, such as finance; and ArabLegalEval, an\ninitial dataset specifically designed for assessing\nArabic legal knowledge in large language models. [S6]\n\nAbstract [S7]\n\nThe rapid advancements in Large Language\nModels (LLMs) have led to significant im-\nprovements in various natural language pro-\ncessing tasks.\nHowever, the evaluation of\nLLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim to analyze the capabilities\nrequired to solve legal problems in Arabic\nand benchmark the performance of state-of-\nthe-art LLMs. We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods. [S7]\n\nWe explore the impact of in-\ncontext learning and investigate various eval-\nuation methods.\nAdditionally, we explore\nworkflows for generating questions with auto-\nmatic validation to enhance the dataset’s quality.\nWe benchmark multilingual and Arabic-centric\nLLMs, such as GPT-4 and Jais, respectively.\nWe also share our methodology for creating the\ndataset and validation, which can be general-\nized to other domains. We hope to accelerate\nAI research in the Arabic Legal domain by re-\nleasing the ArabLegalEval dataset and code:\nhttps://github.com/Thiqah/ArabLegalEval [S8]\n\narXiv:2408.07983v1  [cs.CL]  15 Aug 2024 [S8]\n\n1\nIntroduction [S9]\n\nThe development of LLMs has revolutionized var-\nious fields by enhancing natural language under-\nstanding and generation capabilities. However, the\napplicability and performance of these models in\nspecialized domains, such as legal contexts, spe-\ncially in low- and medium-resource languages such\nas Arabic, remain active research areas. In this pa-\nper, we report on ongoing work for evaluating the\nproficiency of large language models in understand-\ning and processing Arabic legal texts. Given the\ncomplexity and richness of legal language, espe-\ncially in Arabic, it is crucial to develop benchmarks [S9]\n\nFigure 1: Tasks included in ArabLegalEval and their\nsource documents. [S9]\n\nthat accurately assess the models’ capabilities in\nthis domain in order to guide model development. [S9]\n\nF\nData statistics\nFigure 24: Source documents used to create ArabLegal-\nEval and their percentages\nSource\nCategory\nValue\nLegalBench\nPrivacy\nPolicy\nEntail-\nment\n4385\nPrivacy Policy QA\n10931\nContracts QA\n88\nConsumer Contracts QA\n400\nBOE\nRules Count\n448\nRules Count - Subject\n14134\nMOJ\nRegulations\n67\nRegulations - Subjects\n5720\nCircular\n388\nFAQ Najiz\nFAQ Najiz\n492\nArabicMMLU ArabicMMLU\n800\nTable 4: Tasks counts in ArabLegalEval and their source\ndocuments.\n17 [S10]\n\n5.3\nArabic LegalBench Evaluation [S11]\n\n10.3\nArabic LegalBench\nFigure 37: Summary Statistics for Arabic LegalBench\n24 [S12]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2821-3423",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The first category is the abil-\nity of a model to use specific regulations, facts, and\ndata that are relevant to a particular conversation.\nThis can be achieved by having the LLM memorize\nspecific facts, presumably by finetuning it on partic-\nular legal corpora, or more conveniently by using a\nRetrieval-Augmented Generation (RAG) system to\nretrieve information relevant to the context at hand.\nThe second broad category of assessment criteria\nis related to the model’s ability to exhibit logical\nreasoning, understand relationships between enti-\nties and events, and apply these skills to answer"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2821-3423",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:0-802",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "questions."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:0-802",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "In this initial release of ArabLegalEval, we in-\nclude tasks to assess the legal reasoning capabilities\nin Arabic as well as tasks to measure the ability to\nrecall and use legal knowledge embedded in the\nfinetuned models. Much like ArabicMMLU (Koto\net al., 2024) was designed to test the general reason-\ning capabilities of Arabic LLMs but includes a mix\nof tasks with some requiring previous knowledge,\nthe ArabLegalEval benchmark seeks to develop\nArabic legal tasks and questions derived from orig-\ninal Arabic legal sources, in consultation with legal\nprofessionals, to test the legal reasoning capabili-\nties of Arabic LLMs. The benchmark also includes\nsome high quality translations, verified by legal\nexperts, of tasks from English legal benchmarks\n(LegalBench) (Guha et al., 2023)."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:800-1304",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "The benchmark includes Arabic legal Multiple\nChoice Questions (MCQs), Question & Answer\n(QA) pairs where the relevant Saudi regulations are\nincluded in the question, as well as Arabic transla-\ntions of tasks from LegalBench. The benchmark\ndoes not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:2349-3076",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "6\nLimitations"
+          },
+          {
+            "label": "S4",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:2349-3076",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "The ArabLegalEval benchmark currently relies\nheavily on Saudi Arabian legal documents, with\nsome tasks translated from universal benchmarks.\nIncluding documents from more Arabic-speaking\ncountries would improve geographic representa-\ntion. Our study did not evaluate all models, which\nlimits generalizability; future work should include\na broader range of models. Limited access to le-\ngal experts affected validation depth; involving\nmore experts would improve quality control. The\ndataset lacks granular categorization, such as task-\nspecific prior knowledge, document origin, and\nAI-generated content labels. Adding more granular\nmetadata and task categories would aid nuanced\nmodel training and evaluation."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "ArabLegalEval: A Multitask Benchmark for Assessing Arabic Legal"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Knowledge in Large Language Models"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Faris Hijazi1, Somayah AlHarbi1, Abdulaziz AlHussein1, Harethah Abu Shairah2,"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Reem AlZahrani2, Hebah AlShamlan1, Omar Knio2, George Turkiyyah2"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1THIQAH, 2KAUST"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:1304-1603",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "The primary contributions of this paper are: the\ndevelopment of a novel methodology for generat-\ning a legal QA dataset that can be adapted to other\ndomains, such as finance; and ArabLegalEval, an\ninitial dataset specifically designed for assessing\nArabic legal knowledge in large language models."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The rapid advancements in Large Language\nModels (LLMs) have led to significant im-\nprovements in various natural language pro-\ncessing tasks.\nHowever, the evaluation of\nLLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim to analyze the capabilities\nrequired to solve legal problems in Arabic\nand benchmark the performance of state-of-\nthe-art LLMs. We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods."
+          },
+          {
+            "label": "S8",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:978-1593",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods.\nAdditionally, we explore\nworkflows for generating questions with auto-\nmatic validation to enhance the dataset’s quality.\nWe benchmark multilingual and Arabic-centric\nLLMs, such as GPT-4 and Jais, respectively.\nWe also share our methodology for creating the\ndataset and validation, which can be general-\nized to other domains. We hope to accelerate\nAI research in the Arabic Legal domain by re-\nleasing the ArabLegalEval dataset and code:\nhttps://github.com/Thiqah/ArabLegalEval"
+          },
+          {
+            "label": "S8",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:978-1593",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "arXiv:2408.07983v1  [cs.CL]  15 Aug 2024"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1\nIntroduction"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The development of LLMs has revolutionized var-\nious fields by enhancing natural language under-\nstanding and generation capabilities. However, the\napplicability and performance of these models in\nspecialized domains, such as legal contexts, spe-\ncially in low- and medium-resource languages such\nas Arabic, remain active research areas. In this pa-\nper, we report on ongoing work for evaluating the\nproficiency of large language models in understand-\ning and processing Arabic legal texts. Given the\ncomplexity and richness of legal language, espe-\ncially in Arabic, it is crucial to develop benchmarks"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Figure 1: Tasks included in ArabLegalEval and their\nsource documents."
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "that accurately assess the models’ capabilities in\nthis domain in order to guide model development."
+          },
+          {
+            "label": "S10",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p17:0-459",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 17,
+            "quote": "F\nData statistics\nFigure 24: Source documents used to create ArabLegal-\nEval and their percentages\nSource\nCategory\nValue\nLegalBench\nPrivacy\nPolicy\nEntail-\nment\n4385\nPrivacy Policy QA\n10931\nContracts QA\n88\nConsumer Contracts QA\n400\nBOE\nRules Count\n448\nRules Count - Subject\n14134\nMOJ\nRegulations\n67\nRegulations - Subjects\n5720\nCircular\n388\nFAQ Najiz\nFAQ Najiz\n492\nArabicMMLU ArabicMMLU\n800\nTable 4: Tasks counts in ArabLegalEval and their source\ndocuments.\n17"
+          },
+          {
+            "label": "S11",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p8:2648-2682",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 8,
+            "quote": "5.3\nArabic LegalBench Evaluation"
+          },
+          {
+            "label": "S12",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p24:0-78",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 24,
+            "quote": "10.3\nArabic LegalBench\nFigure 37: Summary Statistics for Arabic LegalBench\n24"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and the question answer, and it is fully supported by the source metadata.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 466020.6944519999
+      }
+    },
+    {
+      "id": "fresh-physics-ar",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nThe detection power of real entanglement witnesses under local unitary equivalence [S1]\n\nYi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1 [S1]\n\n1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China [S1]\n\n(Dated: August 1, 2025) [S1]\n\nThe imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. [S1]\n\nmust detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. [S2]\n\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors. [S3]\n\narXiv:2408.08574v2  [quant-ph]  31 Jul 2025 [S3]\n\nI.\nINTRODUCTION [S3]\n\nComplex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers. [S3]\n\nmentioning that decomposable EWs detect NPT\nstates only, and any non-decomposable EW detects both\nNPT and PPT entangled states from Lemma 15 (iv).\nIt refines the commonly used statement in literatures\nthat PPT entangled states are detected only by non-\ndecomposable EWs, which does not show the fact clearly\nthat non-decomposable EWs also detect NPT states.\nOne can show that a non-decomposable EW must de-\ntect an NPT state as follows. Suppose that Wp is a non-\ndecomposable EW that detects a PPT entangled state ρ.\nLet ρ = P [S4]\n\nj |ψj⟩⟨ψj|. Due to tr(Wpρ) < 0, there is one\n|ψj⟩such that ⟨ψj| Wp |ψj⟩< 0. It implies that |ψj⟩is an\nentangled state detected by Wp. Thus, Wp also detects\nan NPT state |ψj⟩. We also illustrate the relations given\nin Lemma 15 by Fig. 2. [S4]\n\nFIG. 2. Classification of block-positive matrices: The union\nof the two ovals represents the set of block-positive matrices. [S4]\n\nR(ρ) is not spanned by product vectors, and WP de-\ntects at least one pure entangled state in R(ρ) due to\ntr(WP ρ) < 0. Any pure entangled state is NPT and thus\nW detects both PPT entangled and NPT states. Next,\nwe prove the assertion by contradiction.\nAssume that\nW can only detect NPT states and XWX† detects both\nPPT entangled and NPT states for some product ma-\ntrix X = U ⊗V . Let W = P + QΓ for some positive\nsemidefinite P, Q. Then we obtain [S5]\n\nXWX† = XPX† + XQΓX† [S5]\n\n= XPX† + (U ⊗V )QΓ(U † ⊗V †) [S5]\n\n(C3) [S5]\n\n= XPX† + [(U ∗⊗V †)Q(U T ⊗V )]Γ. [S5]\n\nIt follows that both XPX† and (U ∗⊗V †)Q(U T ⊗V ) are\npositive semidefinite, which implies that XWX† remains\ndecomposable, and thus the projection XWX† can only\ndetect NPT states. Then we obtain a contradiction, and\nconclude that W should be non-decomposable and can\ndetect both PPT entangled and NPT states. [S5]\n\nThis completes the proof. [S5]\n\n15 [S5]\n\nProof of Lemma 17. [S5]\n\ndetects no real and entangled state. To sum up, we obtain\nthe assertion (ii). [S6]\n\n(iii) Under the precondition that W + is a state, W + is\neither a PPT one or an NPT one. Thus, by virtue of the\nassertion (ii), we obtain the assertion (iii). For the last\nstatement, it follows from Lemma 5 (iii) that ρ is detected\nby W Γ if and only if ρΓ is detected by W, for any PPT\nentangled ρ. However, this condition contradicts that W\ndetects no real and entangled state. Therefore, the real\nand entangled states detected by W Γ must be NPT. [S6]\n\nThis completes the proof. [S6]\n\nAppendix B: Proofs of some results in Sec. V [S6]\n\nProof\nof\nLemma\n13.\n(i)\nSince\nρ+ [S6]\n\nA\nis\nof\nrank p, there is a unitary U such that Uρ+ [S6]\n\nAU †\n=\ndiag(a1, · · · , ap, 0, · · · , 0).\nSimilarly, there is a unitary\nV such that V ρ+ [S6]\n\nBV † = diag(b1, · · · , bq, 0, · · · , 0), as ρ+ [S6]\n\nB\nis of rank q. Thus, up to LU equivalence, ρ+ [S6]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The detection power of real entanglement witnesses under local unitary equivalence"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Yi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "(Dated: August 1, 2025)"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:698-1554",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Another way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "arXiv:2408.08574v2  [quant-ph]  31 Jul 2025"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "I.\nINTRODUCTION"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Complex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "mentioning that decomposable EWs detect NPT\nstates only, and any non-decomposable EW detects both\nNPT and PPT entangled states from Lemma 15 (iv).\nIt refines the commonly used statement in literatures\nthat PPT entangled states are detected only by non-\ndecomposable EWs, which does not show the fact clearly\nthat non-decomposable EWs also detect NPT states.\nOne can show that a non-decomposable EW must de-\ntect an NPT state as follows. Suppose that Wp is a non-\ndecomposable EW that detects a PPT entangled state ρ.\nLet ρ = P"
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "j |ψj⟩⟨ψj|. Due to tr(Wpρ) < 0, there is one\n|ψj⟩such that ⟨ψj| Wp |ψj⟩< 0. It implies that |ψj⟩is an\nentangled state detected by Wp. Thus, Wp also detects\nan NPT state |ψj⟩. We also illustrate the relations given\nin Lemma 15 by Fig. 2."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "FIG. 2. Classification of block-positive matrices: The union\nof the two ovals represents the set of block-positive matrices."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "R(ρ) is not spanned by product vectors, and WP de-\ntects at least one pure entangled state in R(ρ) due to\ntr(WP ρ) < 0. Any pure entangled state is NPT and thus\nW detects both PPT entangled and NPT states. Next,\nwe prove the assertion by contradiction.\nAssume that\nW can only detect NPT states and XWX† detects both\nPPT entangled and NPT states for some product ma-\ntrix X = U ⊗V . Let W = P + QΓ for some positive\nsemidefinite P, Q. Then we obtain"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "XWX† = XPX† + XQΓX†"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "= XPX† + (U ⊗V )QΓ(U † ⊗V †)"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "(C3)"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "= XPX† + [(U ∗⊗V †)Q(U T ⊗V )]Γ."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "It follows that both XPX† and (U ∗⊗V †)Q(U T ⊗V ) are\npositive semidefinite, which implies that XWX† remains\ndecomposable, and thus the projection XWX† can only\ndetect NPT states. Then we obtain a contradiction, and\nconclude that W should be non-decomposable and can\ndetect both PPT entangled and NPT states."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "This completes the proof."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "15"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "Proof of Lemma 17."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "detects no real and entangled state. To sum up, we obtain\nthe assertion (ii)."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "(iii) Under the precondition that W + is a state, W + is\neither a PPT one or an NPT one. Thus, by virtue of the\nassertion (ii), we obtain the assertion (iii). For the last\nstatement, it follows from Lemma 5 (iii) that ρ is detected\nby W Γ if and only if ρΓ is detected by W, for any PPT\nentangled ρ. However, this condition contradicts that W\ndetects no real and entangled state. Therefore, the real\nand entangled states detected by W Γ must be NPT."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "This completes the proof."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "Appendix B: Proofs of some results in Sec. V"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "Proof\nof\nLemma\n13.\n(i)\nSince\nρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "A\nis\nof\nrank p, there is a unitary U such that Uρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "AU †\n=\ndiag(a1, · · · , ap, 0, · · · , 0).\nSimilarly, there is a unitary\nV such that V ρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "BV † = diag(b1, · · · , bq, 0, · · · , 0), as ρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "B\nis of rank q. Thus, up to LU equivalence, ρ+"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions decomposable EWs detect NPT states only, but does not explicitly state that the paper 'mentions' this claim.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 244421.96897400005
+      }
+    }
+  ],
+  "translation_checks": [],
+  "generation_attempts": [
+    {
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The first edition of ArabLegalEval does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          }
+        ]
+      }
+    },
+    {
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "en",
+      "validation_error": "Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and the question answer, and it is fully supported by the source metadata.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              }
+            ],
+            "text": "The paper proves the validity for all NPT states."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q1"
+              }
+            ],
+            "text": "The paper mentions that decomposable EWs detect NPT states only."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q9"
+              }
+            ],
+            "text": "The paper implies that non-decomposable EWs also detect NPT states."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "en",
+      "validation_error": "Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions decomposable EWs detect NPT states only, but does not explicitly state that the paper 'mentions' this claim.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              }
+            ],
+            "text": "The paper proves the validity for all NPT states."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q1"
+              }
+            ],
+            "text": "The paper mentions that decomposable EWs detect NPT states only."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q9"
+              }
+            ],
+            "text": "The paper implies that non-decomposable EWs also detect NPT states."
+          }
+        ]
+      }
+    }
+  ],
+  "ci_job_result": "success"
+}

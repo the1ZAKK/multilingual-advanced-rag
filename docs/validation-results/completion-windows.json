@@ -1,0 +1,15 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.12.14",
+  "profile": "sentence-transformer; no model generation",
+  "checks": [
+    "English and native-Arabic PDF upload/index identities",
+    "Scoped dense/BM25/hybrid retrieval",
+    "English/Arabic cited chat with exact original-page quotes",
+    "Real Streamlit AppTest chat against live API",
+    "API/dashboard restart and persisted index/cited chat"
+  ],
+  "passed": true,
+  "actual_user_laptop": false,
+  "ci_job_result": "success"
+}
