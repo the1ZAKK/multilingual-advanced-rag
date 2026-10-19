@@ -1,5 +1,8 @@
 name: Record model tests and Windows acceptance
 on:
+  push:
+    branches: [arabic-quality-candidate]
+    paths: [scripts/prepare_model.py, .github/workflows/completion.yml]
   workflow_dispatch:
     inputs:
       suite:
@@ -8,6 +11,17 @@ on:
         default: regression
         type: choice
         options: [regression, publisher, full, arabic]
+      model_profile:
+        description: Pinned model profile (community Instruct or official base)
+        required: true
+        default: instruct
+        type: choice
+        options: [base, instruct]
+      coverage_audit:
+        description: Experimental question coverage audit; keep explicit for comparisons
+        required: true
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -38,8 +52,9 @@ jobs:
       HF_HOME: ${{ github.workspace }}/.cache/huggingface
       HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
       EVAL_DATASET: ${{ inputs.suite == 'arabic' && 'data/evaluation/arabic-regression.json' || inputs.suite == 'publisher' && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
-      RAG_QUESTION_COVERAGE_AUDIT: 'true'
-      RAG_OLLAMA_MODEL: qwen3-hf:4b
+      RAG_QUESTION_COVERAGE_AUDIT: ${{ inputs.coverage_audit && 'true' || 'false' }}
+      MODEL_PROFILE: ${{ inputs.model_profile || 'instruct' }}
+      RAG_OLLAMA_MODEL: ${{ inputs.model_profile == 'base' && 'qwen3-hf:4b' || 'qwen3-instruct-hf:4b' }}
       RAG_LLM_TIMEOUT: '300'
       RAG_LLM_TOTAL_TIMEOUT: '600'
       RAG_GENERATION_TRACE_DIR: reports/translation-trace
@@ -61,8 +76,8 @@ jobs:
             sleep 1
           done
           exit 1
-      - name: Verify official GGUF before import
-        run: uv run --no-sync python -m scripts.prepare_model --cache .cache/quality-models --output reports/model-runtime.json
+      - name: Verify selected pinned GGUF before import
+        run: uv run --no-sync python -m scripts.prepare_model --cache .cache/quality-models --output reports/model-runtime.json --profile ${{ env.MODEL_PROFILE }}
       - name: Run real 4B learned-model evaluation
         run: uv run --no-sync python -m scripts.validate_workflow --dataset ${{ env.EVAL_DATASET }} --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs

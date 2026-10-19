@@ -64,3 +64,26 @@ def test_verified_blob_upload_and_report(tmp_path, monkeypatch):
     assert imported == ["qwen3-hf:4b"]
     assert result["sha256"] == digest
     assert json.loads((tmp_path / "report.json").read_text())["bytes"] == len(data)
+
+
+def test_instruct_profile_pins_download_and_rejects_other_model_bytes(tmp_path, monkeypatch):
+    path = tmp_path / "wrong-model.gguf"
+    path.write_bytes(b"different model")
+    calls = []
+
+    def download(repository, filename, **kwargs):
+        calls.append((repository, filename, kwargs["revision"]))
+        return str(path)
+
+    monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(hf_hub_download=download))
+    monkeypatch.setattr(httpx, "Client", lambda **kwargs: pytest.fail("Wrong model reached import"))
+    with pytest.raises(ValueError, match="checksum verification failed"):
+        prepare_model.prepare(tmp_path / "cache", tmp_path / "report.json", profile="instruct")
+    assert calls == [
+        (
+            "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+            "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "a06e946bb6b655725eafa393f4a9745d460374c9",
+        )
+    ]
+    assert not (tmp_path / "report.json").exists()
