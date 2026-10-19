@@ -1,0 +1,1774 @@
+{
+  "run_id": "2f60f654-cc87-4cee-bc8e-897329a1695d",
+  "created_at_utc": "2026-10-19T06:30:35.887136+00:00",
+  "model": "qwen3-hf:4b",
+  "translation_model": "qwen3-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600.0,
+    "max_statements": 4
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "documents": [
+    {
+      "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+      "name": "15-Commonsense Reasoning in Arab Culture.pdf",
+      "pages": 16,
+      "chunks": 107,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    },
+    {
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "pages": 25,
+      "chunks": 108,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    },
+    {
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "pages": 15,
+      "chunks": 104,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v4"
+    }
+  ],
+  "runtime": {
+    "repository": "Qwen/Qwen3-4B-GGUF",
+    "revision": "bc640142c66e1fdd12af0bd68f40445458f3869b",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "bytes": 2497280256,
+    "installed_model": {
+      "name": "qwen3-hf:4b",
+      "model": "qwen3-hf:4b",
+      "modified_at": "2026-10-19T06:30:06.686600308Z",
+      "size": 2497280403,
+      "digest": "919c0333e0bd6b39bf327cbe00d9275073a446c878674b55d02884c84c7045df",
+      "details": {
+        "parent_model": "Qwen3-4B-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 40960,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "6502f4c17491121139664305c2adcda0a471fb61",
+  "independent_human_reviews": 0,
+  "review_status": "unreviewed; provenance/language flags are not semantic grades",
+  "records": [
+    {
+      "id": "legal-problem",
+      "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+      "language": "en",
+      "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "ArabLegalEval addresses the evaluation gap of assessing Arabic legal knowledge in large language models, particularly in non-English languages such as Arabic [S5] (page 1).\nThe source material used in ArabLegalEval includes legal documents and regulations, as well as data relevant to specific conversations [S7] [S8] [S1] (page 1).",
+        "citations": [
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "However, the evaluation of\nLLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Figure 1: Tasks included in ArabLegalEval and their\nsource documents."
+          },
+          {
+            "label": "S8",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2283-2961",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Thus, we benchmark\na wide range of LLMs from proprietary multilin-\ngual LLMs, such as GPT-4 (OpenAI, 2024a), to\nopen-source Arabic-centric LLMs, such as Jais\n(Sengupta et al., 2023)."
+          },
+          {
+            "label": "S1",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2821-3423",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The first category is the abil-\nity of a model to use specific regulations, facts, and\ndata that are relevant to a particular conversation."
+          }
+        ],
+        "generation_mode": "ollama",
+        "warning": null,
+        "latency_ms": 101209.27733799999
+      }
+    },
+    {
+      "id": "legal-retrieval",
+      "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+      "language": "en",
+      "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "The initial ArabLegalEval benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases [S2] (page 2).\nThe current scope of ArabLegalEval focuses on evaluating the proficiency of large language models in understanding and processing Arabic legal texts, while future work includes adding more KSA regulatory documents, court cases, and judicial decisions to enhance the benchmark and promote advancements in Arabic legal AI [S4] [S6] (page 9).",
+        "citations": [
+          {
+            "label": "S2",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:800-1304",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "The benchmark\ndoes not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:2349-3076",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "Our study did not evaluate all models, which\nlimits generalizability; future work should include\na broader range of models."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:3076-3687",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "Future plans\ninclude adding more KSA regulatory documents,\ncourt cases, and judicial decisions to enhance this\nbenchmark and promote advancements in Arabic\nlegal AI."
+          }
+        ],
+        "generation_mode": "ollama",
+        "warning": null,
+        "latency_ms": 82683.98220599997
+      }
+    },
+    {
+      "id": "legal-retrieval-ar",
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "ar",
+      "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+      "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nThe first category is the abil-\nity of a model to use specific regulations, facts, and\ndata that are relevant to a particular conversation.\nThis can be achieved by having the LLM memorize\nspecific facts, presumably by finetuning it on partic-\nular legal corpora, or more conveniently by using a\nRetrieval-Augmented Generation (RAG) system to\nretrieve information relevant to the context at hand.\nThe second broad category of assessment criteria\nis related to the model’s ability to exhibit logical\nreasoning, understand relationships between enti-\nties and events, and apply these skills to answer [S1]\n\n1 [S1]\n\nquestions. [S2]\n\nIn this initial release of ArabLegalEval, we in-\nclude tasks to assess the legal reasoning capabilities\nin Arabic as well as tasks to measure the ability to\nrecall and use legal knowledge embedded in the\nfinetuned models. Much like ArabicMMLU (Koto\net al., 2024) was designed to test the general reason-\ning capabilities of Arabic LLMs but includes a mix\nof tasks with some requiring previous knowledge,\nthe ArabLegalEval benchmark seeks to develop\nArabic legal tasks and questions derived from orig-\ninal Arabic legal sources, in consultation with legal\nprofessionals, to test the legal reasoning capabili-\nties of Arabic LLMs. The benchmark also includes\nsome high quality translations, verified by legal\nexperts, of tasks from English legal benchmarks\n(LegalBench) (Guha et al., 2023). [S2]\n\nThe benchmark includes Arabic legal Multiple\nChoice Questions (MCQs), Question & Answer\n(QA) pairs where the relevant Saudi regulations are\nincluded in the question, as well as Arabic transla-\ntions of tasks from LegalBench. The benchmark\ndoes not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks. [S3]\n\n6\nLimitations [S4]\n\nThe ArabLegalEval benchmark currently relies\nheavily on Saudi Arabian legal documents, with\nsome tasks translated from universal benchmarks.\nIncluding documents from more Arabic-speaking\ncountries would improve geographic representa-\ntion. Our study did not evaluate all models, which\nlimits generalizability; future work should include\na broader range of models. Limited access to le-\ngal experts affected validation depth; involving\nmore experts would improve quality control. The\ndataset lacks granular categorization, such as task-\nspecific prior knowledge, document origin, and\nAI-generated content labels. Adding more granular\nmetadata and task categories would aid nuanced\nmodel training and evaluation. [S4]\n\nArabLegalEval: A Multitask Benchmark for Assessing Arabic Legal [S5]\n\nKnowledge in Large Language Models [S5]\n\nFaris Hijazi1, Somayah AlHarbi1, Abdulaziz AlHussein1, Harethah Abu Shairah2, [S5]\n\nReem AlZahrani2, Hebah AlShamlan1, Omar Knio2, George Turkiyyah2 [S5]\n\n1THIQAH, 2KAUST [S5]\n\nThe primary contributions of this paper are: the\ndevelopment of a novel methodology for generat-\ning a legal QA dataset that can be adapted to other\ndomains, such as finance; and ArabLegalEval, an\ninitial dataset specifically designed for assessing\nArabic legal knowledge in large language models. [S6]\n\nAbstract [S7]\n\nThe rapid advancements in Large Language\nModels (LLMs) have led to significant im-\nprovements in various natural language pro-\ncessing tasks.\nHowever, the evaluation of\nLLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim to analyze the capabilities\nrequired to solve legal problems in Arabic\nand benchmark the performance of state-of-\nthe-art LLMs. We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods. [S7]\n\nWe explore the impact of in-\ncontext learning and investigate various eval-\nuation methods.\nAdditionally, we explore\nworkflows for generating questions with auto-\nmatic validation to enhance the dataset’s quality.\nWe benchmark multilingual and Arabic-centric\nLLMs, such as GPT-4 and Jais, respectively.\nWe also share our methodology for creating the\ndataset and validation, which can be general-\nized to other domains. We hope to accelerate\nAI research in the Arabic Legal domain by re-\nleasing the ArabLegalEval dataset and code:\nhttps://github.com/Thiqah/ArabLegalEval [S8]\n\narXiv:2408.07983v1  [cs.CL]  15 Aug 2024 [S8]\n\n1\nIntroduction [S9]\n\nThe development of LLMs has revolutionized var-\nious fields by enhancing natural language under-\nstanding and generation capabilities. However, the\napplicability and performance of these models in\nspecialized domains, such as legal contexts, spe-\ncially in low- and medium-resource languages such\nas Arabic, remain active research areas. In this pa-\nper, we report on ongoing work for evaluating the\nproficiency of large language models in understand-\ning and processing Arabic legal texts. Given the\ncomplexity and richness of legal language, espe-\ncially in Arabic, it is crucial to develop benchmarks [S9]\n\nFigure 1: Tasks included in ArabLegalEval and their\nsource documents. [S9]\n\nthat accurately assess the models’ capabilities in\nthis domain in order to guide model development. [S9]\n\nF\nData statistics\nFigure 24: Source documents used to create ArabLegal-\nEval and their percentages\nSource\nCategory\nValue\nLegalBench\nPrivacy\nPolicy\nEntail-\nment\n4385\nPrivacy Policy QA\n10931\nContracts QA\n88\nConsumer Contracts QA\n400\nBOE\nRules Count\n448\nRules Count - Subject\n14134\nMOJ\nRegulations\n67\nRegulations - Subjects\n5720\nCircular\n388\nFAQ Najiz\nFAQ Najiz\n492\nArabicMMLU ArabicMMLU\n800\nTable 4: Tasks counts in ArabLegalEval and their source\ndocuments.\n17 [S10]\n\n5.3\nArabic LegalBench Evaluation [S11]\n\n10.3\nArabic LegalBench\nFigure 37: Summary Statistics for Arabic LegalBench\n24 [S12]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2821-3423",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The first category is the abil-\nity of a model to use specific regulations, facts, and\ndata that are relevant to a particular conversation.\nThis can be achieved by having the LLM memorize\nspecific facts, presumably by finetuning it on partic-\nular legal corpora, or more conveniently by using a\nRetrieval-Augmented Generation (RAG) system to\nretrieve information relevant to the context at hand.\nThe second broad category of assessment criteria\nis related to the model’s ability to exhibit logical\nreasoning, understand relationships between enti-\nties and events, and apply these skills to answer"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:2821-3423",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:0-802",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "questions."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:0-802",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "In this initial release of ArabLegalEval, we in-\nclude tasks to assess the legal reasoning capabilities\nin Arabic as well as tasks to measure the ability to\nrecall and use legal knowledge embedded in the\nfinetuned models. Much like ArabicMMLU (Koto\net al., 2024) was designed to test the general reason-\ning capabilities of Arabic LLMs but includes a mix\nof tasks with some requiring previous knowledge,\nthe ArabLegalEval benchmark seeks to develop\nArabic legal tasks and questions derived from orig-\ninal Arabic legal sources, in consultation with legal\nprofessionals, to test the legal reasoning capabili-\nties of Arabic LLMs. The benchmark also includes\nsome high quality translations, verified by legal\nexperts, of tasks from English legal benchmarks\n(LegalBench) (Guha et al., 2023)."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:800-1304",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "The benchmark includes Arabic legal Multiple\nChoice Questions (MCQs), Question & Answer\n(QA) pairs where the relevant Saudi regulations are\nincluded in the question, as well as Arabic transla-\ntions of tasks from LegalBench. The benchmark\ndoes not assess the ability of models to retrieve spe-\ncific facts and laws relevant to a particular context\nfrom external knowledge bases. While important\nfor the successful deployment of a legal LLM, these\nretrieval abilities will be assessed in future tasks."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:2349-3076",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "6\nLimitations"
+          },
+          {
+            "label": "S4",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p9:2349-3076",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 9,
+            "quote": "The ArabLegalEval benchmark currently relies\nheavily on Saudi Arabian legal documents, with\nsome tasks translated from universal benchmarks.\nIncluding documents from more Arabic-speaking\ncountries would improve geographic representa-\ntion. Our study did not evaluate all models, which\nlimits generalizability; future work should include\na broader range of models. Limited access to le-\ngal experts affected validation depth; involving\nmore experts would improve quality control. The\ndataset lacks granular categorization, such as task-\nspecific prior knowledge, document origin, and\nAI-generated content labels. Adding more granular\nmetadata and task categories would aid nuanced\nmodel training and evaluation."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "ArabLegalEval: A Multitask Benchmark for Assessing Arabic Legal"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Knowledge in Large Language Models"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Faris Hijazi1, Somayah AlHarbi1, Abdulaziz AlHussein1, Harethah Abu Shairah2,"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Reem AlZahrani2, Hebah AlShamlan1, Omar Knio2, George Turkiyyah2"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:0-263",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1THIQAH, 2KAUST"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p2:1304-1603",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 2,
+            "quote": "The primary contributions of this paper are: the\ndevelopment of a novel methodology for generat-\ning a legal QA dataset that can be adapted to other\ndomains, such as finance; and ArabLegalEval, an\ninitial dataset specifically designed for assessing\nArabic legal knowledge in large language models."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:263-1070",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The rapid advancements in Large Language\nModels (LLMs) have led to significant im-\nprovements in various natural language pro-\ncessing tasks.\nHowever, the evaluation of\nLLMs’ legal knowledge, particularly in non-\nEnglish languages such as Arabic, remains\nunder-explored. To address this gap, we in-\ntroduce ArabLegalEval, a multitask bench-\nmark dataset for assessing the Arabic legal\nknowledge of LLMs. Inspired by the MMLU and\nLegalBench datasets, ArabLegalEval con-\nsists of multiple tasks sourced from Saudi le-\ngal documents and synthesized questions. In\nthis work, we aim to analyze the capabilities\nrequired to solve legal problems in Arabic\nand benchmark the performance of state-of-\nthe-art LLMs. We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods."
+          },
+          {
+            "label": "S8",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:978-1593",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "We explore the impact of in-\ncontext learning and investigate various eval-\nuation methods.\nAdditionally, we explore\nworkflows for generating questions with auto-\nmatic validation to enhance the dataset’s quality.\nWe benchmark multilingual and Arabic-centric\nLLMs, such as GPT-4 and Jais, respectively.\nWe also share our methodology for creating the\ndataset and validation, which can be general-\nized to other domains. We hope to accelerate\nAI research in the Arabic Legal domain by re-\nleasing the ArabLegalEval dataset and code:\nhttps://github.com/Thiqah/ArabLegalEval"
+          },
+          {
+            "label": "S8",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:978-1593",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "arXiv:2408.07983v1  [cs.CL]  15 Aug 2024"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "1\nIntroduction"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "The development of LLMs has revolutionized var-\nious fields by enhancing natural language under-\nstanding and generation capabilities. However, the\napplicability and performance of these models in\nspecialized domains, such as legal contexts, spe-\ncially in low- and medium-resource languages such\nas Arabic, remain active research areas. In this pa-\nper, we report on ongoing work for evaluating the\nproficiency of large language models in understand-\ning and processing Arabic legal texts. Given the\ncomplexity and richness of legal language, espe-\ncially in Arabic, it is crucial to develop benchmarks"
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Figure 1: Tasks included in ArabLegalEval and their\nsource documents."
+          },
+          {
+            "label": "S9",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p1:1593-2384",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 1,
+            "quote": "that accurately assess the models’ capabilities in\nthis domain in order to guide model development."
+          },
+          {
+            "label": "S10",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p17:0-459",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 17,
+            "quote": "F\nData statistics\nFigure 24: Source documents used to create ArabLegal-\nEval and their percentages\nSource\nCategory\nValue\nLegalBench\nPrivacy\nPolicy\nEntail-\nment\n4385\nPrivacy Policy QA\n10931\nContracts QA\n88\nConsumer Contracts QA\n400\nBOE\nRules Count\n448\nRules Count - Subject\n14134\nMOJ\nRegulations\n67\nRegulations - Subjects\n5720\nCircular\n388\nFAQ Najiz\nFAQ Najiz\n492\nArabicMMLU ArabicMMLU\n800\nTable 4: Tasks counts in ArabLegalEval and their source\ndocuments.\n17"
+          },
+          {
+            "label": "S11",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p8:2648-2682",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 8,
+            "quote": "5.3\nArabic LegalBench Evaluation"
+          },
+          {
+            "label": "S12",
+            "chunk_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd:p24:0-78",
+            "document_id": "9ed2869470edb91777d7c35826e0171f9a7a78da1450a2542557d2c18ddf1ddd",
+            "document_name": "11-ArabLegalEval -- A Multitask Benchmark for Assessing Arabic Legalal knowledge in Large Language Models.pdf",
+            "page": 24,
+            "quote": "10.3\nArabic LegalBench\nFigure 37: Summary Statistics for Arabic LegalBench\n24"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and is fully supported by the source metadata.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 240967.89266600006
+      }
+    },
+    {
+      "id": "fresh-physics-classes",
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "Source excerpts (not a generated answer):\n\nThe detection power of real entanglement witnesses under local unitary equivalence [S1]\n\nYi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1 [S1]\n\n1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China [S1]\n\n(Dated: August 1, 2025) [S1]\n\nThe imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. [S1]\n\nmust detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. [S2]\n\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors. [S3]\n\narXiv:2408.08574v2  [quant-ph]  31 Jul 2025 [S3]\n\nI.\nINTRODUCTION [S3]\n\nComplex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers. [S3]\n\nThe PPT and NPT states are classi-\nfied by whether their partial transposes are still positive\nsemidefinite. Note that in Ref. [27] the authors consid-\nered the so-called “real entanglement” defined in vector\nspaces over the real numbers, which is different from the\nstandard quantum entanglement. In this paper we con-\nsider entanglement in standard quantum mechanics over\nthe complex numbers. To make it clear, a real (complex)\nand entangled (separable) state, in what follows, accu-\nrately means a bipartite state whose density matrix is both\nreal (complex) and entangled (separable) by standard def-\ninition over the complex Hilbert space. [S4]\n\nNext, we introduce some sets of EWs which are fre-\nquently used in the following sections. Note that here\nwe shall omit “bipartite” before EWs, unless otherwise\nnoted. [S4]\n\nESLOCC. In Theorem 11 we show the validity of Conjec-\nture 9 for a family of two-qutrit PPT entangled states of\nrank four. Finally, in Example 12 we construct a 4 × 4\nPPT entangled state which cannot be detected by any\nREW but can be detected by some EW in ELU. [S5]\n\nBy virtue of the PPT criterion, we may reduce the\nstudy of Conjecture 9 to a subset of PPT states which\nare complex and entangled by the following lemma. [S5]\n\nLemma 10. (i) Each NPT state is detected by an EW\nin ELU. [S5]\n\n(ii) A complex and PPT entangled state ρ is detected\nby an EW in ELU (ELOCC) if and only if there exists a\nstate σ LU (SLOCC) equivalent to ρ such that the real\npart of σ, i.e. σ+, is an entangled state. [S5]\n\ncomplex and PPT entangled states that can be detected\nby the EWs in ELU. We further proved Conjecture 9 for\na family of two-qutrit PPT entangled states, and con-\nstructed a 4 × 4 PPT entangled state of a complex den-\nsity matrix satisfying the criterion above. Another way\nto attack Conjecture 9 is to examine the existence of a\ncounterexample. We proposed an equivalent method to\nexamine the existence from a set-theoretic perspective.\nUsing this method, the results do not suggest the ex-\nistence of a counterexample. Based on the supporting\nevidence, we believe that Conjecture 9 may hold at least\nfor low-dimensional states. To lower the local dimensions\nof the systems, we finally investigated if it is possible to\nlocally project an EW to another supported on the lower-\ndimensional space. [S6]\n\nbetween two parties guarantees stronger entanglement\nwith a third party,” Phys. Rev. A 84, 012325 (2011).\n[27] Carlton M. Caves, Christopher A. Fuchs,\nand Pranaw\nRungta, “Entanglement of formation of an arbitrary state\nof two rebits,” Found. Phys. Lett. 14, 199–212 (2001).\n[28] Roger A. Horn and Charles R. Johnson, Matrix Analysis, [S7]\n\n2nd ed. (Cambridge University Press, USA, 2012).\n[29] G. Sarbicki, “Spectral properties of entanglement wit- [S7]\n\nnesses,” J. Phys. A: Math. Theor. 41, 375303 (2008).\n[30] David P. DiVincenzo, Tal Mor, Peter W. Shor, John A. [S7]\n\nSmolin, and Barbara M. Terhal, “Unextendible product\nbases, uncompletable product bases and bound entangle-\nment,” Commun. Math. Phys. 238, 379–410 (2003).\n[31] Lin Chen and Dragomir Z. Dokovic, “Equivalence classes [S7]\n\nand canonical forms for two-qutrit entangled states of\nrank four having positive partial transpose,” J. Math.\nPhys. [S7]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The detection power of real entanglement witnesses under local unitary equivalence"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Yi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "(Dated: August 1, 2025)"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:698-1554",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Another way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "arXiv:2408.08574v2  [quant-ph]  31 Jul 2025"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "I.\nINTRODUCTION"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Complex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p3:685-1498",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 3,
+            "quote": "The PPT and NPT states are classi-\nfied by whether their partial transposes are still positive\nsemidefinite. Note that in Ref. [27] the authors consid-\nered the so-called “real entanglement” defined in vector\nspaces over the real numbers, which is different from the\nstandard quantum entanglement. In this paper we con-\nsider entanglement in standard quantum mechanics over\nthe complex numbers. To make it clear, a real (complex)\nand entangled (separable) state, in what follows, accu-\nrately means a bipartite state whose density matrix is both\nreal (complex) and entangled (separable) by standard def-\ninition over the complex Hilbert space."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p3:685-1498",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 3,
+            "quote": "Next, we introduce some sets of EWs which are fre-\nquently used in the following sections. Note that here\nwe shall omit “bipartite” before EWs, unless otherwise\nnoted."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p6:0-682",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 6,
+            "quote": "ESLOCC. In Theorem 11 we show the validity of Conjec-\nture 9 for a family of two-qutrit PPT entangled states of\nrank four. Finally, in Example 12 we construct a 4 × 4\nPPT entangled state which cannot be detected by any\nREW but can be detected by some EW in ELU."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p6:0-682",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 6,
+            "quote": "By virtue of the PPT criterion, we may reduce the\nstudy of Conjecture 9 to a subset of PPT states which\nare complex and entangled by the following lemma."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p6:0-682",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 6,
+            "quote": "Lemma 10. (i) Each NPT state is detected by an EW\nin ELU."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p6:0-682",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 6,
+            "quote": "(ii) A complex and PPT entangled state ρ is detected\nby an EW in ELU (ELOCC) if and only if there exists a\nstate σ LU (SLOCC) equivalent to ρ such that the real\npart of σ, i.e. σ+, is an entangled state."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p11:0-797",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 11,
+            "quote": "complex and PPT entangled states that can be detected\nby the EWs in ELU. We further proved Conjecture 9 for\na family of two-qutrit PPT entangled states, and con-\nstructed a 4 × 4 PPT entangled state of a complex den-\nsity matrix satisfying the criterion above. Another way\nto attack Conjecture 9 is to examine the existence of a\ncounterexample. We proposed an equivalent method to\nexamine the existence from a set-theoretic perspective.\nUsing this method, the results do not suggest the ex-\nistence of a counterexample. Based on the supporting\nevidence, we believe that Conjecture 9 may hold at least\nfor low-dimensional states. To lower the local dimensions\nof the systems, we finally investigated if it is possible to\nlocally project an EW to another supported on the lower-\ndimensional space."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p12:1474-2363",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 12,
+            "quote": "between two parties guarantees stronger entanglement\nwith a third party,” Phys. Rev. A 84, 012325 (2011).\n[27] Carlton M. Caves, Christopher A. Fuchs,\nand Pranaw\nRungta, “Entanglement of formation of an arbitrary state\nof two rebits,” Found. Phys. Lett. 14, 199–212 (2001).\n[28] Roger A. Horn and Charles R. Johnson, Matrix Analysis,"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p12:1474-2363",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 12,
+            "quote": "2nd ed. (Cambridge University Press, USA, 2012).\n[29] G. Sarbicki, “Spectral properties of entanglement wit-"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p12:1474-2363",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 12,
+            "quote": "nesses,” J. Phys. A: Math. Theor. 41, 375303 (2008).\n[30] David P. DiVincenzo, Tal Mor, Peter W. Shor, John A."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p12:1474-2363",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 12,
+            "quote": "Smolin, and Barbara M. Terhal, “Unextendible product\nbases, uncompletable product bases and bound entangle-\nment,” Commun. Math. Phys. 238, 379–410 (2003).\n[31] Lin Chen and Dragomir Z. Dokovic, “Equivalence classes"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p12:1474-2363",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 12,
+            "quote": "and canonical forms for two-qutrit entangled states of\nrank four having positive partial transpose,” J. Math.\nPhys."
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The claim mentions 'validity is proved' but the premises only state 'we show the validity for a family' without explicitly confirming the claim's full assertion.); showing evidence excerpts",
+        "latency_ms": 182840.91715
+      }
+    },
+    {
+      "id": "fresh-physics-ar",
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "ar",
+      "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+      "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nThe detection power of real entanglement witnesses under local unitary equivalence [S1]\n\nYi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1 [S1]\n\n1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China [S1]\n\n(Dated: August 1, 2025) [S1]\n\nThe imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. [S1]\n\nmust detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. [S2]\n\nAnother way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors. [S3]\n\narXiv:2408.08574v2  [quant-ph]  31 Jul 2025 [S3]\n\nI.\nINTRODUCTION [S3]\n\nComplex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers. [S3]\n\nmentioning that decomposable EWs detect NPT\nstates only, and any non-decomposable EW detects both\nNPT and PPT entangled states from Lemma 15 (iv).\nIt refines the commonly used statement in literatures\nthat PPT entangled states are detected only by non-\ndecomposable EWs, which does not show the fact clearly\nthat non-decomposable EWs also detect NPT states.\nOne can show that a non-decomposable EW must de-\ntect an NPT state as follows. Suppose that Wp is a non-\ndecomposable EW that detects a PPT entangled state ρ.\nLet ρ = P [S4]\n\nj |ψj⟩⟨ψj|. Due to tr(Wpρ) < 0, there is one\n|ψj⟩such that ⟨ψj| Wp |ψj⟩< 0. It implies that |ψj⟩is an\nentangled state detected by Wp. Thus, Wp also detects\nan NPT state |ψj⟩. We also illustrate the relations given\nin Lemma 15 by Fig. 2. [S4]\n\nFIG. 2. Classification of block-positive matrices: The union\nof the two ovals represents the set of block-positive matrices. [S4]\n\nR(ρ) is not spanned by product vectors, and WP de-\ntects at least one pure entangled state in R(ρ) due to\ntr(WP ρ) < 0. Any pure entangled state is NPT and thus\nW detects both PPT entangled and NPT states. Next,\nwe prove the assertion by contradiction.\nAssume that\nW can only detect NPT states and XWX† detects both\nPPT entangled and NPT states for some product ma-\ntrix X = U ⊗V . Let W = P + QΓ for some positive\nsemidefinite P, Q. Then we obtain [S5]\n\nXWX† = XPX† + XQΓX† [S5]\n\n= XPX† + (U ⊗V )QΓ(U † ⊗V †) [S5]\n\n(C3) [S5]\n\n= XPX† + [(U ∗⊗V †)Q(U T ⊗V )]Γ. [S5]\n\nIt follows that both XPX† and (U ∗⊗V †)Q(U T ⊗V ) are\npositive semidefinite, which implies that XWX† remains\ndecomposable, and thus the projection XWX† can only\ndetect NPT states. Then we obtain a contradiction, and\nconclude that W should be non-decomposable and can\ndetect both PPT entangled and NPT states. [S5]\n\nThis completes the proof. [S5]\n\n15 [S5]\n\nProof of Lemma 17. [S5]\n\ndetects no real and entangled state. To sum up, we obtain\nthe assertion (ii). [S6]\n\n(iii) Under the precondition that W + is a state, W + is\neither a PPT one or an NPT one. Thus, by virtue of the\nassertion (ii), we obtain the assertion (iii). For the last\nstatement, it follows from Lemma 5 (iii) that ρ is detected\nby W Γ if and only if ρΓ is detected by W, for any PPT\nentangled ρ. However, this condition contradicts that W\ndetects no real and entangled state. Therefore, the real\nand entangled states detected by W Γ must be NPT. [S6]\n\nThis completes the proof. [S6]\n\nAppendix B: Proofs of some results in Sec. V [S6]\n\nProof\nof\nLemma\n13.\n(i)\nSince\nρ+ [S6]\n\nA\nis\nof\nrank p, there is a unitary U such that Uρ+ [S6]\n\nAU †\n=\ndiag(a1, · · · , ap, 0, · · · , 0).\nSimilarly, there is a unitary\nV such that V ρ+ [S6]\n\nBV † = diag(b1, · · · , bq, 0, · · · , 0), as ρ+ [S6]\n\nB\nis of rank q. Thus, up to LU equivalence, ρ+ [S6]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The detection power of real entanglement witnesses under local unitary equivalence"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Yi Shen,1, ∗Lin Chen,2, † and Zhihao Bian1"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "1School of Science, Jiangnan University, Wuxi Jiangsu 214122, China\n2LMIB(Beihang University), Ministry of Education,\nand School of Mathematical Sciences, Beihang University, Beijing 100191, China"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "(Dated: August 1, 2025)"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:0-843",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "The imaginary unit i has recently been experimentally proven to be indispensable for quantum\nmechanics. We study the differences in detection power between real and complex entanglement\nwitnesses (EWs) distinguished by whether their matrix expressions incorporate imaginary parts. We\nshow that a real EW (REW), denoted by a real Hermitian matrix, must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:698-1554",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "must detect one entangled state\nof a real density matrix, and conversely an entangled state of a real density matrix must be detected\nby one REW. We present a necessary and sufficient condition for the entangled states detected by\nREWs, and give a specific example implying the detection limitations of REWs. From an operational\nperspective, we investigate whether all entangled states are detected by the EWs locally equivalent\nto some REWs. We prove the validity for all NPT (non-positive partial transpose) states. We also\nderive a necessary and sufficient condition of the validity for the PPT (positive partial transpose)\nentangled states of complex density matrices. By this condition we show the validity for a family\nof two-qutrit PPT entangled states of rank four.\nAnother way to figure out the problem is to\ncheck whether a counterexample exists."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Another way to figure out the problem is to\ncheck whether a counterexample exists. We propose a method to examine the existence from a\nset-theoretic perspective, and provide some supporting evidence of non-existence. Finally, we derive\nsome results on local projections of EWs with product projectors."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "arXiv:2408.08574v2  [quant-ph]  31 Jul 2025"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "I.\nINTRODUCTION"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p1:1471-2307",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 1,
+            "quote": "Complex numbers featured by the imaginary unit i not\nonly play an essential role in mathematics, but have been\ntaken as effective tools widely used in physics, engineer-\ning and other fields. In most theories of physics, e.g. elec-\ntromagnetism and signal-processing theories, introducing\ni only brings mathematical advantages, while the roots\nare actually formulated by real numbers, as physics ex-\nperiments are expressed in terms of probabilities, hence\nreal numbers."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "mentioning that decomposable EWs detect NPT\nstates only, and any non-decomposable EW detects both\nNPT and PPT entangled states from Lemma 15 (iv).\nIt refines the commonly used statement in literatures\nthat PPT entangled states are detected only by non-\ndecomposable EWs, which does not show the fact clearly\nthat non-decomposable EWs also detect NPT states.\nOne can show that a non-decomposable EW must de-\ntect an NPT state as follows. Suppose that Wp is a non-\ndecomposable EW that detects a PPT entangled state ρ.\nLet ρ = P"
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "j |ψj⟩⟨ψj|. Due to tr(Wpρ) < 0, there is one\n|ψj⟩such that ⟨ψj| Wp |ψj⟩< 0. It implies that |ψj⟩is an\nentangled state detected by Wp. Thus, Wp also detects\nan NPT state |ψj⟩. We also illustrate the relations given\nin Lemma 15 by Fig. 2."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p10:612-1502",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 10,
+            "quote": "FIG. 2. Classification of block-positive matrices: The union\nof the two ovals represents the set of block-positive matrices."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "R(ρ) is not spanned by product vectors, and WP de-\ntects at least one pure entangled state in R(ρ) due to\ntr(WP ρ) < 0. Any pure entangled state is NPT and thus\nW detects both PPT entangled and NPT states. Next,\nwe prove the assertion by contradiction.\nAssume that\nW can only detect NPT states and XWX† detects both\nPPT entangled and NPT states for some product ma-\ntrix X = U ⊗V . Let W = P + QΓ for some positive\nsemidefinite P, Q. Then we obtain"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "XWX† = XPX† + XQΓX†"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "= XPX† + (U ⊗V )QΓ(U † ⊗V †)"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "(C3)"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "= XPX† + [(U ∗⊗V †)Q(U T ⊗V )]Γ."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "It follows that both XPX† and (U ∗⊗V †)Q(U T ⊗V ) are\npositive semidefinite, which implies that XWX† remains\ndecomposable, and thus the projection XWX† can only\ndetect NPT states. Then we obtain a contradiction, and\nconclude that W should be non-decomposable and can\ndetect both PPT entangled and NPT states."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "This completes the proof."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "15"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p15:0-900",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 15,
+            "quote": "Proof of Lemma 17."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "detects no real and entangled state. To sum up, we obtain\nthe assertion (ii)."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "(iii) Under the precondition that W + is a state, W + is\neither a PPT one or an NPT one. Thus, by virtue of the\nassertion (ii), we obtain the assertion (iii). For the last\nstatement, it follows from Lemma 5 (iii) that ρ is detected\nby W Γ if and only if ρΓ is detected by W, for any PPT\nentangled ρ. However, this condition contradicts that W\ndetects no real and entangled state. Therefore, the real\nand entangled states detected by W Γ must be NPT."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "This completes the proof."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "Appendix B: Proofs of some results in Sec. V"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "Proof\nof\nLemma\n13.\n(i)\nSince\nρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "A\nis\nof\nrank p, there is a unitary U such that Uρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "AU †\n=\ndiag(a1, · · · , ap, 0, · · · , 0).\nSimilarly, there is a unitary\nV such that V ρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "BV † = diag(b1, · · · , bq, 0, · · · , 0), as ρ+"
+          },
+          {
+            "label": "S6",
+            "chunk_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6:p13:1435-2312",
+            "document_id": "f6f615842ac8bccd1b5c088885d4012f9b1d47413f1280a11b3e697064f80ab6",
+            "document_name": "35-The detection power of real entanglement witnesses under local unitary equivalence.pdf",
+            "page": 13,
+            "quote": "B\nis of rank q. Thus, up to LU equivalence, ρ+"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions Wp detecting an NPT state, but the claim about a non-decomposable entanglement witness detecting an NPT state is not explicitly stated or directly supported by the premise.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 193437.05360800005
+      }
+    },
+    {
+      "id": "fresh-culture-native-ar",
+      "question": "في المثال العربي عن كريم الذي يتناول الكسكسي في الشكل الأول، ما البلد والمنطقة المكتوبان في المصدر؟",
+      "language": "ar",
+      "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+      "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+      "extraction_version": "columns-sentences-v4",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\n1\nIntroduction [S1]\n\nCommonsense reasoning is the ability to make\njudgments and inferences based on everyday hu-\nman knowledge and experiences (Sap et al., 2020).\nIt is a fundamental aspect of human cognition and\nhas been extensively studied in the context of large\nlanguage models (LLMs) (OpenAI et al., 2024b;\nGrattafiori et al., 2024; Liu et al., 2023). How-\never, commonsense reasoning is not universal—it\nis shaped by culture, which encompasses the shared\nknowledge, values, customs, and behaviors that de-\nfine a society (Macionis, 2012; Giddens and Sutton,\n2014). [S1]\n\n1ArabCulture can be accessed at https://huggingface.\nco/datasets/MBZUAI/ArabCulture [S1]\n\nTunisia [S1]\n\nPalestine\nJordan\nSyria\nLebanon [S1]\n\nMorocco [S1]\n\nAlgeria [S1]\n\nEgypt [S1]\n\nEgypt\nLibya [S1]\n\nUAE [S1]\n\nKSA [S1]\n\nYemen [S1]\n\nSudan [S1]\n\nLocation: Algeria, North Africa [S1]\n\nالجزائر, شمال أفريقيا  :الموقع [S1]\n\nKarim eats a dish of couscous for lunch [S1]\n\nيتناول كريم على الغداء طبق الكسكسي [S1]\n\nA. [S1]\n\nLocation: Algeria, North Africa [S2]\n\nالجزائر, شمال أفريقيا  :الموقع [S2]\n\nKarim eats a dish of couscous for lunch [S2]\n\nيتناول كريم على الغداء طبق الكسكسي [S2]\n\nA. Karim eats couscous with kesra \nB. Karim eats couscous with meat sauce\nC. Karim eats couscous with soup [S2]\n\nأ.يتناول كريم الكسكسي مع الكسرة\nب. يتناول كريم الكسكسي مع صلصة باللحم [S2]\n\nج. يتناول كريم الكسكسي مع الشربة [S2]\n\nLocation: Egypt, Nile Valley [S2]\n\nمصر, وادي النيل :الموقع [S2]\n\nتعد أسماء الكرش ي للغذاء [S2]\n\nAsmaa prepares koshari for lunch [S2]\n\nأ.تضاف الشطة والصلصة إيل الكرش ي [S2]\n\nA. Hot sauce and tomato sauce are added\nto the koshari\nB. Taro is added to the koshari\nC. Peas are added to the koshari [S2]\n\nب. يتم إضافة القلقاس إيل الكرش ي [S2]\n\nج. يتم إضافة البازالء إيل الكرش ي [S2]\n\nLocation: Syria, the Levant [S2]\n\nسوريا, الشام :الموقع [S2]\n\nMohammad eats fried kibbeh for lunch [S2]\n\nياكل محمد الكبة المقلية عىل الغداء [S2]\n\nA. The kibbeh is stuffed with a cheese filling\nB. [S2]\n\nسوريا, الشام :الموقع [S3]\n\nMohammad eats fried kibbeh for lunch [S3]\n\nياكل محمد الكبة المقلية عىل الغداء [S3]\n\nA. The kibbeh is stuffed with a cheese filling\nB. The kibbeh is stuffed with a filling of\nmeat and onions\nC. The kibbeh is stuffed with a variety of\nvegetables [S3]\n\nأ.يتم مئل الكبة بحشوة من األجبان\nب. يتم مئل الكبة بحشوة من اللحم و البصل\nج. يتم مئل الكبة بحشوة من الخضار المتنوعة [S3]\n\nLocation: KSA, the Gulf [S3]\n\nالسعودية, الخليج :الموقع [S3]\n\nالجريش من الوجبات ال ي ت تقدم ي [S3]\n\nف فصل الشتاء [S3]\n\nJareesh is one of the meals served in winter [S3]\n\nلأ. الجريش يقدم مع الثوم المقي [S3]\n\nA. Jareesh is served with fried garlic\nB. Jareesh is served with bread\nC. Jareesh is served with fried onions [S3]\n\nب زب. الجريش يقدم مع الخ [S3]\n\nليج. الجريش يقدم مع البصل المق [S3]\n\nFigure 1: ArabCulture covers four regions across the\nMiddle East and North Africa, spanning 13 countries. [S3]\n\nليج. الجريش يقدم مع البصل المق [S4]\n\nFigure 1: ArabCulture covers four regions across the\nMiddle East and North Africa, spanning 13 countries.\nThe highlighted areas on the map represent the regions\nincluded in ArabCulture. We present example ques-\ntions for the Lunch category from Algeria, Egypt, Syria,\nand KSA, each with three answer choices, with the cor-\nrect answer marked in bold. English translations are\nprovided for illustration. [S4]\n\nThe Arab world, home to approximately 456\nmillion people (Diab et al., 2017; Shoufan and\nAlameri, 2015), is characterized by its linguis-\ntic unity through Modern Standard Arabic (MSA)\nwhile encompassing diverse traditions, religions,\nand customs (Mirkin, 2010). This cultural diver- [S4]\n\nsity influences not only social interactions but also\nreasoning patterns, making it crucial to develop\nevaluation benchmarks that reflect these variations.\nHowever, most existing commonsense reasoning\ndatasets are developed with Western-centric as-\nsumptions, limiting their applicability to Arabic-\nspeaking societies. [S5]\n\nDespite recent advancements in Arabic LLMs\n(Sengupta et al., 2023; Huang et al., 2024; Team,\n2024; Bari et al., 2024b), their evaluation has\nlargely relied on machine-translated datasets origi-\nnally created in English. Many commonsense rea-\nsoning benchmarks (Bisk et al., 2019; Sap et al.,\n2019a) fail to capture Arab cultural perspectives,\nas simple translations do not account for region-\nspecific knowledge, potentially introducing bias. [S5]\n\nThe topic selection is based on Koto\net al. (2024b) and adapted to reflect Arab regional\nculture. Native Arabic speakers from nine countries\ncontributed to determining these topics, ensuring\ncultural relevance, diversity, and regional repre-\nsentation (e.g., Ramadan traditions). Additionally,\nwe carefully balanced the dataset by assigning an\nappropriate number of examples to each topic. Ta-\nble 8 in the Appendix provides an overview of\nthe topics and their subtopics, which include food,\nweddings, holiday activities, daily activities, habits,\ntraditional games, death, art, parenting, agriculture,\nfamily relationships, and idioms. [S6]\n\nInstance Writing\nIn the first stage, each worker\nwas tasked with writing short two-sentence sto-\nries. [S6]\n\nConsider the cultural nuances of the specified location and choose\nthe most suitable response from the options provided. [S7]\n\nOptions:\n[OPTIONS] [S7]\n\nFigure 5:\nTemplates for multiple-choice question\nprompts.\nSentence completion prompt template is\nthe same but without the options section. Location\nℓ∈{none, region, region + country}. [S7]\n\nARABIC PROMPT [S7]\n\nجمل عربية واقعية حول الفرضية و الموضوعين التاليين5 قم بانشاء: [S7]\n\nالفرضية: [premise] [S7]\n\nالموضوع: [topic] [S7]\n\n.[country]:يجب أن تكون هذه الجمل خاصة بسياق البلد التالي [S7]\n\nتأكد من أن المعلومات ذا صلة و واقعية و مناسبة ثقافيا، مع الحفاظ على اليجاز. [S7]\n\nتجنب وضع افتراضات غير مدعومة بحقائق ثابتة. [S7]\n\nENGLISH PROMPT [S7]\n\nGenerate 5 factual Arabic sentences about the following premise\nand topic: [S7]\n\nPremise: [premise] [S7]\n\nTopic: [topic]. [S7]\n\nThese sentences should be specific to the context of the following\ncountry: [country]. [S7]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "1\nIntroduction"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Commonsense reasoning is the ability to make\njudgments and inferences based on everyday hu-\nman knowledge and experiences (Sap et al., 2020).\nIt is a fundamental aspect of human cognition and\nhas been extensively studied in the context of large\nlanguage models (LLMs) (OpenAI et al., 2024b;\nGrattafiori et al., 2024; Liu et al., 2023). How-\never, commonsense reasoning is not universal—it\nis shaped by culture, which encompasses the shared\nknowledge, values, customs, and behaviors that de-\nfine a society (Macionis, 2012; Giddens and Sutton,\n2014)."
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "1ArabCulture can be accessed at https://huggingface.\nco/datasets/MBZUAI/ArabCulture"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Tunisia"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Palestine\nJordan\nSyria\nLebanon"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Morocco"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Algeria"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Egypt"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Egypt\nLibya"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "UAE"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "KSA"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Yemen"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Sudan"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Location: Algeria, North Africa"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "الجزائر, شمال أفريقيا  :الموقع"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Karim eats a dish of couscous for lunch"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "يتناول كريم على الغداء طبق الكسكسي"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:1645-2544",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Location: Algeria, North Africa"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "الجزائر, شمال أفريقيا  :الموقع"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Karim eats a dish of couscous for lunch"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "يتناول كريم على الغداء طبق الكسكسي"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A. Karim eats couscous with kesra \nB. Karim eats couscous with meat sauce\nC. Karim eats couscous with soup"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "أ.يتناول كريم الكسكسي مع الكسرة\nب. يتناول كريم الكسكسي مع صلصة باللحم"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ج. يتناول كريم الكسكسي مع الشربة"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Location: Egypt, Nile Valley"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "مصر, وادي النيل :الموقع"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "تعد أسماء الكرش ي للغذاء"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Asmaa prepares koshari for lunch"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "أ.تضاف الشطة والصلصة إيل الكرش ي"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A. Hot sauce and tomato sauce are added\nto the koshari\nB. Taro is added to the koshari\nC. Peas are added to the koshari"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ب. يتم إضافة القلقاس إيل الكرش ي"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ج. يتم إضافة البازالء إيل الكرش ي"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Location: Syria, the Levant"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "سوريا, الشام :الموقع"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Mohammad eats fried kibbeh for lunch"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ياكل محمد الكبة المقلية عىل الغداء"
+          },
+          {
+            "label": "S2",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:2400-3268",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A. The kibbeh is stuffed with a cheese filling\nB."
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "سوريا, الشام :الموقع"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Mohammad eats fried kibbeh for lunch"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ياكل محمد الكبة المقلية عىل الغداء"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A. The kibbeh is stuffed with a cheese filling\nB. The kibbeh is stuffed with a filling of\nmeat and onions\nC. The kibbeh is stuffed with a variety of\nvegetables"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "أ.يتم مئل الكبة بحشوة من األجبان\nب. يتم مئل الكبة بحشوة من اللحم و البصل\nج. يتم مئل الكبة بحشوة من الخضار المتنوعة"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Location: KSA, the Gulf"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "السعودية, الخليج :الموقع"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "الجريش من الوجبات ال ي ت تقدم ي"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ف فصل الشتاء"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Jareesh is one of the meals served in winter"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "لأ. الجريش يقدم مع الثوم المقي"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "A. Jareesh is served with fried garlic\nB. Jareesh is served with bread\nC. Jareesh is served with fried onions"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ب زب. الجريش يقدم مع الخ"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ليج. الجريش يقدم مع البصل المق"
+          },
+          {
+            "label": "S3",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3123-3946",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Figure 1: ArabCulture covers four regions across the\nMiddle East and North Africa, spanning 13 countries."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3809-4529",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "ليج. الجريش يقدم مع البصل المق"
+          },
+          {
+            "label": "S4",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3809-4529",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "Figure 1: ArabCulture covers four regions across the\nMiddle East and North Africa, spanning 13 countries.\nThe highlighted areas on the map represent the regions\nincluded in ArabCulture. We present example ques-\ntions for the Lunch category from Algeria, Egypt, Syria,\nand KSA, each with three answer choices, with the cor-\nrect answer marked in bold. English translations are\nprovided for illustration."
+          },
+          {
+            "label": "S4",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p1:3809-4529",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 1,
+            "quote": "The Arab world, home to approximately 456\nmillion people (Diab et al., 2017; Shoufan and\nAlameri, 2015), is characterized by its linguis-\ntic unity through Modern Standard Arabic (MSA)\nwhile encompassing diverse traditions, religions,\nand customs (Mirkin, 2010). This cultural diver-"
+          },
+          {
+            "label": "S5",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p2:0-763",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 2,
+            "quote": "sity influences not only social interactions but also\nreasoning patterns, making it crucial to develop\nevaluation benchmarks that reflect these variations.\nHowever, most existing commonsense reasoning\ndatasets are developed with Western-centric as-\nsumptions, limiting their applicability to Arabic-\nspeaking societies."
+          },
+          {
+            "label": "S5",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p2:0-763",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 2,
+            "quote": "Despite recent advancements in Arabic LLMs\n(Sengupta et al., 2023; Huang et al., 2024; Team,\n2024; Bari et al., 2024b), their evaluation has\nlargely relied on machine-translated datasets origi-\nnally created in English. Many commonsense rea-\nsoning benchmarks (Bisk et al., 2019; Sap et al.,\n2019a) fail to capture Arab cultural perspectives,\nas simple translations do not account for region-\nspecific knowledge, potentially introducing bias."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p4:1444-2185",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 4,
+            "quote": "The topic selection is based on Koto\net al. (2024b) and adapted to reflect Arab regional\nculture. Native Arabic speakers from nine countries\ncontributed to determining these topics, ensuring\ncultural relevance, diversity, and regional repre-\nsentation (e.g., Ramadan traditions). Additionally,\nwe carefully balanced the dataset by assigning an\nappropriate number of examples to each topic. Ta-\nble 8 in the Appendix provides an overview of\nthe topics and their subtopics, which include food,\nweddings, holiday activities, daily activities, habits,\ntraditional games, death, art, parenting, agriculture,\nfamily relationships, and idioms."
+          },
+          {
+            "label": "S6",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p4:1444-2185",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 4,
+            "quote": "Instance Writing\nIn the first stage, each worker\nwas tasked with writing short two-sentence sto-\nries."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Consider the cultural nuances of the specified location and choose\nthe most suitable response from the options provided."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Options:\n[OPTIONS]"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Figure 5:\nTemplates for multiple-choice question\nprompts.\nSentence completion prompt template is\nthe same but without the options section. Location\nℓ∈{none, region, region + country}."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "ARABIC PROMPT"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "جمل عربية واقعية حول الفرضية و الموضوعين التاليين5 قم بانشاء:"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "الفرضية: [premise]"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "الموضوع: [topic]"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": ".[country]:يجب أن تكون هذه الجمل خاصة بسياق البلد التالي"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "تأكد من أن المعلومات ذا صلة و واقعية و مناسبة ثقافيا، مع الحفاظ على اليجاز."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "تجنب وضع افتراضات غير مدعومة بحقائق ثابتة."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "ENGLISH PROMPT"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Generate 5 factual Arabic sentences about the following premise\nand topic:"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Premise: [premise]"
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "Topic: [topic]."
+          },
+          {
+            "label": "S7",
+            "chunk_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad:p13:2288-3130",
+            "document_id": "855bc37cbbacc6def7c300a31064c7e8c1d76befc44f6824ee135bafaf641dad",
+            "document_name": "15-Commonsense Reasoning in Arab Culture.pdf",
+            "page": 13,
+            "quote": "These sentences should be specific to the context of the following\ncountry: [country]."
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Output language mismatch: expected Arabic answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 174169.64300300003
+      }
+    }
+  ],
+  "translation_checks": [],
+  "generation_attempts": [
+    {
+      "question": "What evaluation gap does ArabLegalEval address, and what source material does it use?",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S5:Q4"
+              },
+              {
+                "ref_id": "S5:Q3"
+              }
+            ],
+            "text": "ArabLegalEval addresses the evaluation gap of assessing Arabic legal knowledge in large language models, particularly in non-English languages such as Arabic."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S7:Q6"
+              },
+              {
+                "ref_id": "S8:Q3"
+              },
+              {
+                "ref_id": "S1:Q1"
+              }
+            ],
+            "text": "The source material used in ArabLegalEval includes legal documents and regulations, as well as data relevant to specific conversations."
+          }
+        ]
+      }
+    },
+    {
+      "question": "Does the initial ArabLegalEval benchmark assess retrieval of facts and laws from external knowledge bases? Distinguish current scope from future work.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q2"
+              }
+            ],
+            "text": "The initial ArabLegalEval benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q4"
+              },
+              {
+                "ref_id": "S6:Q4"
+              }
+            ],
+            "text": "The current scope of ArabLegalEval focuses on evaluating the proficiency of large language models in understanding and processing Arabic legal texts, while future work includes adding more KSA regulatory documents, court cases, and judicial decisions to enhance the benchmark and promote advancements in Arabic legal AI."
+          }
+        ]
+      }
+    },
+    {
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          }
+        ]
+      }
+    },
+    {
+      "question": "هل يقيس الإصدار الأول من ArabLegalEval استرجاع الحقائق والقوانين من قواعد معرفة خارجية؟ ميّز بين النطاق الحالي والعمل المستقبلي.",
+      "language": "en",
+      "validation_error": "Answer does not cover question part item-2 (ميّز بين النطاق الحالي والعمل المستقبلي.): The claim directly matches the premise and is fully supported by the source metadata.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S3:Q2"
+              }
+            ],
+            "text": "The benchmark does not assess the ability of models to retrieve specific facts and laws relevant to a particular context from external knowledge bases."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              },
+              {
+                "ref_id": "S5:Q6"
+              }
+            ],
+            "text": "The validity for all NPT (non-positive partial transpose) states is proved."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q6"
+              },
+              {
+                "ref_id": "S5:Q6"
+              }
+            ],
+            "text": "The validity for the rank-four two-qutrit PPT family is proved."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the abstract of the real entanglement witness paper, what validity results are proved for NPT states and for the rank-four two-qutrit PPT family?",
+      "language": "en",
+      "validation_error": "Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premises mention 'validity for a family of two-qutrit PPT entangled states of rank four' but do not explicitly state 'validity for the rank-four two-qutrit PPT family' as a separate claim.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              }
+            ],
+            "text": "The validity is proved for all NPT (non-positive partial transpose) states."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q6"
+              }
+            ],
+            "text": "The validity is proved for the rank-four two-qutrit PPT family."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              }
+            ],
+            "text": "The paper proves the validity for all NPT states."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q1"
+              }
+            ],
+            "text": "The paper mentions that decomposable EWs detect NPT states only."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q9"
+              }
+            ],
+            "text": "The paper implies that non-decomposable EWs also detect NPT states."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ورقة شهود التشابك الحقيقية، لأي حالات NPT تثبت الورقة صلاحية الكشف؟",
+      "language": "en",
+      "validation_error": "Semantic grounding failed for item-2: supported=False, complete=False, direct=False; The premise mentions decomposable EWs detect NPT states only, but does not explicitly state that the paper 'mentions' this claim.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q4"
+              }
+            ],
+            "text": "The paper proves the validity for all NPT states."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S4:Q9"
+              }
+            ],
+            "text": "A non-decomposable entanglement witness detects an NPT state."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S5:Q2"
+              }
+            ],
+            "text": "Any pure entangled state is NPT and thus detected by both PPT and NPT entangled states."
+          }
+        ]
+      }
+    },
+    {
+      "question": "في المثال العربي عن كريم الذي يتناول الكسكسي في الشكل الأول، ما البلد والمنطقة المكتوبان في المصدر؟",
+      "language": "ar",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q17"
+              },
+              {
+                "ref_id": "S1:Q18"
+              }
+            ],
+            "text": "البلد والمنطقة المكتوبان في المصدر هي Algeria, North Africa."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q21"
+              }
+            ],
+            "text": "البلد والمنطقة المكتوبان في المصدر هي Algeria, North Africa."
+          }
+        ]
+      }
+    },
+    {
+      "question": "في المثال العربي عن كريم الذي يتناول الكسكسي في الشكل الأول، ما البلد والمنطقة المكتوبان في المصدر؟",
+      "language": "ar",
+      "validation_error": "Output language mismatch: expected Arabic answer prose",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q19"
+              }
+            ],
+            "text": "البلد والمنطقة المكتوبان في المصدر هي Algeria, North Africa"
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q17"
+              }
+            ],
+            "text": "البلد والمنطقة المكتوبان في المصدر هي Algeria, North Africa"
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q18"
+              }
+            ],
+            "text": "البلد والمنطقة المكتوبان في المصدر هي Algeria, North Africa"
+          }
+        ]
+      }
+    }
+  ],
+  "ci_job_result": "success"
+}
