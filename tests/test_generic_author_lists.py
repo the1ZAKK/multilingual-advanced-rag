@@ -87,3 +87,64 @@ def test_overlap_does_not_begin_or_end_inside_ordinary_words():
         assert start == 0 or not (text[start - 1].isalnum() and text[start].isalnum())
         assert end == len(text) or not (text[end - 1].isalnum() and text[end].isalnum())
     assert spans[-1][1] == len(text)
+
+
+def test_publisher_metadata_does_not_enter_cross_page_contribution_or_weaken_refs():
+    from copy import deepcopy
+
+    from rag.generation.ollama import quote_catalog, validate_answer
+    from rag.models import Chunk
+
+    heading = "Proceedings of The Research Conference, pages 42–63\nNovember 8-9, 2025 ©2025 Research Association"
+    start = (
+        "The contributions of this paper are threefold:\nFirst, we release a corpus with careful"
+    )
+    p1 = start + "\n\n42\n\n" + heading
+    p2 = "translation with human verification. Second, we evaluate forty models. Third, we analyze robustness."
+    evidence = []
+    for page, text, native in ((1, p1, heading + "\n" + start + "\n42"), (2, p2, p2)):
+        c = Chunk(
+            chunk_id=f"doc:p{page}:0",
+            document_id="doc",
+            document_name="Study.pdf",
+            page=page,
+            start=0,
+            end=len(text),
+            text=text,
+            normalized=text,
+            section="Contributions",
+        )
+        evidence.append(Hit(chunk=c, score=1, native_page_text=native))
+    catalog = quote_catalog(evidence)
+    units = authored_contributions(evidence)
+    assert (
+        units["First"]["text"]
+        == "First, we release a corpus with careful translation with human verification."
+    )
+    assert all(
+        "Proceedings" not in catalog[tuple(ref.split(":"))]
+        for unit in units.values()
+        for ref in unit["refs"]
+    )
+    payload = {
+        "statements": [
+            dict(text=u["text"], citations=[dict(ref_id=r) for r in u["refs"]])
+            for u in units.values()
+        ]
+    }
+    answer, citations = validate_answer(
+        payload, evidence, question="List all contributions", language="en"
+    )
+    assert "forty models" in answer and "Proceedings" not in answer
+    assert all(c.quote in evidence[int(c.label[1:]) - 1].native_page_text for c in citations)
+    bad = deepcopy(payload)
+    bad["statements"][0]["citations"].pop()
+    with pytest.raises(ValueError, match="Incomplete supporting references"):
+        validate_answer(bad, evidence, question="List all contributions", language="en")
+
+
+def test_unknown_edge_text_and_standalone_numbers_are_not_discarded():
+    from rag.generation.ollama import mask_publication_furniture
+
+    text = "First, we evaluate\n42\nwith a caveat in this study."
+    assert mask_publication_furniture(text, [(0, len(text), 1, 0)]) == text

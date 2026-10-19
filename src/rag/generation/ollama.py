@@ -1973,6 +1973,32 @@ def _legacy_authored_contributions(evidence: list[Hit]) -> dict[str, dict]:
     return result
 
 
+def mask_publication_furniture(text, regions):
+    """Mask paired proceedings/copyright metadata at page edges, preserving offsets.
+
+    This is display assembly only: the quote catalog and native source bytes are
+    unchanged. A bare number or an unknown intervening sentence is never removed.
+    """
+    chars = list(text)
+    for lo, hi, _, _ in regions:
+        part = text[lo:hi]
+        pattern = (
+            r"(?m)^[ \t]*Proceedings of [^\n]*, pages \d+[–—-]\d+[^\n]*\n"
+            r"[^\n]*(?:©|Copyright)[^\n]*"
+        )
+        for match in re.finditer(pattern, part):
+            if match.start() > 600 and len(part) - match.end() > 600:
+                continue
+            start, end = match.span()
+            folio = re.search(r"(?m)^[ \t]*\d{1,4}[ \t\n]*\Z", part[:start])
+            if folio:
+                start = folio.start()
+            for i in range(lo + start, lo + end):
+                if chars[i] != "\n":
+                    chars[i] = " "
+    return "".join(chars)
+
+
 def authored_contributions(evidence: list[Hit]) -> dict[str, dict]:
     """Source-counted author lists, with character coverage and provenance checks.
 
@@ -2058,6 +2084,7 @@ def authored_contributions(evidence: list[Hit]) -> dict[str, dict]:
                 if local >= 0 and text[begin : begin + len(quote)] == quote:
                     quote_ranges.append((begin, begin + len(quote), f"{label}:{key}"))
                     break
+    display_text = mask_publication_furniture(text, regions)
     result = {}
     ordinals = (
         "First",
@@ -2087,16 +2114,20 @@ def authored_contributions(evidence: list[Hit]) -> dict[str, dict]:
         covered, refs = set(), []
         for lo, hi, ref in quote_ranges:
             if lo < end and begin < hi:
-                material = set(range(max(lo, begin), min(hi, end)))
+                material = {
+                    pos
+                    for pos in range(max(lo, begin), min(hi, end))
+                    if not display_text[pos].isspace()
+                }
                 if material - covered:
                     covered.update(material)
                     refs.append(ref)
-        if any(not text[pos].isspace() and pos not in covered for pos in range(begin, end)):
+        if any(not display_text[pos].isspace() and pos not in covered for pos in range(begin, end)):
             raise ValueError(f"Incomplete supporting source coverage: contribution {index + 1}")
         name = (
             ordinals[index] if family == "ordinal" and index < len(ordinals) else f"Item{index + 1}"
         )
-        result[name] = {"text": readable_source(unit), "refs": refs}
+        result[name] = {"text": readable_source(display_text[begin:end]), "refs": refs}
     return result
 
 
@@ -2220,26 +2251,24 @@ def validate_answer(
             if not clean.rstrip().endswith(":"):
                 raise ValueError("Uncited factual sentence or list item")
     if contribution_question(question):
-        explicit = [h for h in evidence if h.chunk.section == "Contributions"]
         missing = missing_contributions(evidence)
         if missing:
             raise ValueError("Incomplete contribution evidence: missing " + ", ".join(missing))
-        for ordinal in ("First", "Second", "Third"):
-            spans = [
-                (h.chunk.chunk_id, h.chunk.text[a:b])
-                for h in explicit
-                for a, b in sentence_spans(h.chunk.text)
-                if ordinal_match(ordinal, h.chunk.text[a:b])
-            ]
-            if spans and not any(
-                c.chunk_id == cid and normalize(span) in normalize(c.quote)
-                for cid, span in spans
-                for c in citations
-            ):
-                raise ValueError(
-                    f"Incomplete contribution coverage: {ordinal} is present "
-                    "in evidence but has no verified supporting quote"
-                )
+        # Validate every source-bound fragment, not a synthetic page-spanning
+        # sentence that may have been split around native headers/columns.
+        # Character coverage and per-item required refs were already checked by
+        # validate_statement_coverage; this also checks their rendered citations.
+        for ordinal, unit in authored.items():
+            for ref in unit["refs"]:
+                label, key = ref.split(":", 1)
+                chunk_id = sources[label].chunk_id
+                if not any(
+                    c.chunk_id == chunk_id and c.label == label and c.quote == catalog[(label, key)]
+                    for c in citations
+                ):
+                    raise ValueError(
+                        f"Incomplete contribution coverage: {ordinal} has no verified supporting quote {ref}"
+                    )
     if language:
         validate_output_language(answer, language)
     return answer, citations

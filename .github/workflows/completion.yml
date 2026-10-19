@@ -1,8 +1,16 @@
-name: Completion acceptance
+name: Record model tests and Windows acceptance
 on:
   push:
-    branches: [completion-acceptance, completion-original]
+    branches: [completion-original]
+    paths: [src/rag/generation/ollama.py]
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Frozen source-review suite (records attempts; does not grade accuracy)
+        required: true
+        default: regression
+        type: choice
+        options: [regression, publisher, full]
 permissions:
   contents: read
 jobs:
@@ -32,7 +40,7 @@ jobs:
     env:
       HF_HOME: ${{ github.workspace }}/.cache/huggingface
       HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
-      EVAL_DATASET: ${{ github.ref_name == 'completion-original' && 'data/evaluation/publisher-paper-review.json' || 'data/evaluation/completion-regression.json' }}
+      EVAL_DATASET: ${{ (inputs.suite == 'publisher' || github.ref_name == 'completion-original') && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
       RAG_OLLAMA_MODEL: qwen3-hf:4b
       RAG_LLM_TIMEOUT: '300'
       RAG_LLM_TOTAL_TIMEOUT: '600'
@@ -61,6 +69,24 @@ jobs:
         run: uv run --no-sync python -m scripts.validate_workflow --dataset ${{ env.EVAL_DATASET }} --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs
         run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
+      - name: Explain recorded outcomes without assigning semantic grades
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from collections import Counter
+          from pathlib import Path
+          path = Path('reports/model-review.json')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as out:
+              out.write('## Model recording, not answer-quality acceptance\n\n')
+              if path.exists():
+                  data = json.loads(path.read_text())
+                  modes = Counter(r.get('response', {}).get('generation_mode', 'error') for r in data['records'])
+                  out.write(f"Recorded {len(data['records'])} attempts: `{dict(modes)}`.\n\n")
+              else:
+                  out.write('No complete compact model report; inspect the failed step and preserved artifacts.\n\n')
+              out.write('Independent human reviews: **0**. Generated mode and exact quotes do not establish correctness or completeness.\n')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
