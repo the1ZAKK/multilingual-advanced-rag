@@ -1913,7 +1913,20 @@ def ordinal_match(ordinal: str, text: str):
 
 
 def readable_source(text: str) -> str:
-    """Remove PDF wrapping for display only. Citation substrings stay untouched."""
+    """Unwrap display prose and Latin print ligatures; quotes stay untouched."""
+    text = text.translate(
+        str.maketrans(
+            {
+                "ﬀ": "ff",
+                "ﬁ": "fi",
+                "ﬂ": "fl",
+                "ﬃ": "ffi",
+                "ﬄ": "ffl",
+                "ﬅ": "st",
+                "ﬆ": "st",
+            }
+        )
+    )
     text = re.sub(
         r"([\w-]+)-[ \t]*\n[ \t]*(?=\w)",
         lambda match: match[1] + ("-" if "-" in match[1] else ""),
@@ -2001,7 +2014,7 @@ def mask_publication_furniture(text, regions):
         part = text[lo:hi]
         pattern = (
             r"(?m)^[ \t]*Proceedings of [^\n]*, pages \d+[–—-]\d+[^\n]*\n"
-            r"[^\n]*(?:©|Copyright)[^\n]*"
+            r"[ \t\n]*[^\n]*(?:©|Copyright)[^\n]*"
         )
         for match in re.finditer(pattern, part):
             if match.start() > 600 and len(part) - match.end() > 600:

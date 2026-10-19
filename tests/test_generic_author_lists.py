@@ -89,13 +89,18 @@ def test_overlap_does_not_begin_or_end_inside_ordinary_words():
     assert spans[-1][1] == len(text)
 
 
-def test_publisher_metadata_does_not_enter_cross_page_contribution_or_weaken_refs():
+@pytest.mark.parametrize("block_gap", ["\n", "\n\n"])
+def test_publisher_metadata_does_not_enter_cross_page_contribution_or_weaken_refs(block_gap):
     from copy import deepcopy
 
     from rag.generation.ollama import quote_catalog, validate_answer
     from rag.models import Chunk
 
-    heading = "Proceedings of The Research Conference, pages 42–63\nNovember 8-9, 2025 ©2025 Research Association"
+    heading = (
+        "Proceedings of The Research Conference, pages 42–63"
+        + block_gap
+        + "November 8-9, 2025 ©2025 Research Association"
+    )
     start = (
         "The contributions of this paper are threefold:\nFirst, we release a corpus with careful"
     )
@@ -148,3 +153,21 @@ def test_unknown_edge_text_and_standalone_numbers_are_not_discarded():
 
     text = "First, we evaluate\n42\nwith a caveat in this study."
     assert mask_publication_furniture(text, [(0, len(text), 1, 0)]) == text
+
+
+def test_display_ligatures_activate_terminology_without_rewriting_native_quotes():
+    from rag.generation.ollama import (
+        expand_scientific_terms,
+        protect_scientific_terms,
+        readable_source,
+    )
+
+    native = "scientiﬁc and programming domains; diﬀerent cognitive capabilities; X₂"
+    display = readable_source(native)
+    assert display == "scientific and programming domains; different cognitive capabilities; X₂"
+    template, bindings = protect_scientific_terms(display)
+    translated = expand_scientific_terms(template, bindings)
+    assert "المجالات العلمية والبرمجية" in translated
+    assert "قدرات معرفية مختلفة" in translated
+    assert "X₂" in translated
+    assert "ﬁ" in native and "ﬀ" in native
