@@ -22,8 +22,13 @@ def fetch(dataset: Path, output: Path):
     output.mkdir(parents=True)
     for source in suite.sources:
         url = origins[source.sha256]
-        if urlparse(url).scheme != "https" or urlparse(url).hostname != "arxiv.org":
-            raise ValueError("Evaluation source must be a pinned official HTTPS arXiv URL")
+        if urlparse(url).scheme != "https" or urlparse(url).hostname not in {
+            "arxiv.org",
+            "aclanthology.org",
+        }:
+            raise ValueError(
+                "Evaluation source must be a pinned official HTTPS arXiv or ACL Anthology URL"
+            )
         with urlopen(url, timeout=120) as response:
             data = response.read(26 * 1024 * 1024)
         actual = hashlib.sha256(data).hexdigest()

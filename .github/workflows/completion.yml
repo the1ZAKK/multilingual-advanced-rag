@@ -34,7 +34,7 @@ jobs:
       HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
       RAG_OLLAMA_MODEL: qwen3-hf:4b
       RAG_LLM_TIMEOUT: '300'
-      RAG_LLM_TOTAL_TIMEOUT: '450'
+      RAG_LLM_TOTAL_TIMEOUT: '600'
       RAG_GENERATION_TRACE_DIR: reports/translation-trace
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
       - run: uv python install 3.12
       - run: uv sync --locked --extra dev --extra models --python 3.12
       - name: Verify frozen public paper sources
-        run: uv run --no-sync python -m scripts.fetch_review_sources --dataset data/evaluation/completion-review.json --output reports/papers
+        run: uv run --no-sync python -m scripts.fetch_review_sources --dataset data/evaluation/completion-regression.json --output reports/papers
       - name: Start official pinned Ollama runtime
         run: |
           docker run -d --name rag-model-${{ github.run_id }} -p 127.0.0.1:11434:11434 ollama/ollama@sha256:0e8ff22ff86b4718cfa886844062117af13b50eb5689cca78279778e15744980
@@ -57,7 +57,7 @@ jobs:
       - name: Verify official GGUF before import
         run: uv run --no-sync python -m scripts.prepare_model --cache .cache/quality-models --output reports/model-runtime.json
       - name: Run real 4B learned-model evaluation
-        run: uv run --no-sync python -m scripts.validate_workflow --dataset data/evaluation/completion-review.json --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
+        run: uv run --no-sync python -m scripts.validate_workflow --dataset data/evaluation/completion-regression.json --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs
         run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,59 @@
+{
+  "description": "Original-paper regression controls, not new independent paper evidence. Frozen from original native PDF pages before 4B execution on these questions. All human reviews remain pending.",
+  "sources": [
+    {
+      "id": "3lm",
+      "filename": "3LM-Bridging Arabic, STEM, and Code.pdf",
+      "sha256": "661a0d336318fa5a8d80294b8b2a3bbf0dd79ffa1a0691cd05b54e9f5cdcd254"
+    }
+  ],
+  "cases": [
+    {
+      "id": "3lm-problem-contributions",
+      "source_id": "3lm",
+      "question": "According to the 3LM paper, what problem does the work address, and what are its main contributions? Cite supporting passages and page numbers.",
+      "language": "en",
+      "expected_points": [
+        "A gap in Arabic LLM evaluation for STEM and code.",
+        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
+        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
+        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Most existing\nArabic benchmarks focus on linguistic, cultural,\nor religious content, leaving a significant gap\nin domains like STEM and code which are in-\ncreasingly relevant for real-world LLM applica-\ntions. "
+        },
+        {
+          "page": 1,
+          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+        },
+        {
+          "page": 2,
+          "text": "translation with human verification. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientific and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between different cog-\nnitive capabilities in Arabic LLMs."
+        }
+      ]
+    },
+    {
+      "id": "3lm-contributions-ar",
+      "source_id": "3lm",
+      "question": "ما المساهمات الثلاث التي يذكرها مؤلفو ورقة 3LM؟ اذكر كل مساهمة مع الاستشهاد والصفحة.",
+      "language": "ar",
+      "expected_points": [
+        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
+        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
+        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+        },
+        {
+          "page": 2,
+          "text": "translation with human verification. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientific and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between different cog-\nnitive capabilities in Arabic LLMs."
+        }
+      ]
+    }
+  ]
+}
