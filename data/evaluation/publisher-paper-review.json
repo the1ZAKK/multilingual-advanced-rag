@@ -1,0 +1,59 @@
+{
+  "description": "Publisher-edition original-question regressions. Source version independently inspected before model execution using official ACL PDF SHA and native text. Original uploaded-paper references are preserved separately. PDF page indices 1-2 correspond to printed proceedings pages 42-43. AI-curated references, zero human reviews.",
+  "sources": [
+    {
+      "id": "3lm-publisher",
+      "filename": "3LM-publisher-2025.pdf",
+      "sha256": "380f4f636c530e91ffa6f304a4e5e0640ef305b8389b1be4213307f06a98c284"
+    }
+  ],
+  "cases": [
+    {
+      "id": "publisher-3lm-problem-contributions",
+      "source_id": "3lm-publisher",
+      "question": "According to the 3LM paper, what problem does the work address, and what are its main contributions? Cite supporting passages and page numbers.",
+      "language": "en",
+      "expected_points": [
+        "A gap in Arabic LLM evaluation for STEM and code.",
+        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
+        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
+        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "Most existing\nArabic benchmarks focus on linguistic, cultural,\nor religious content, leaving a signiﬁcant gap\nin domains like STEM and code which are in-\ncreasingly relevant for real-world LLM applica-\ntions. "
+        },
+        {
+          "page": 1,
+          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+        },
+        {
+          "page": 2,
+          "text": "translation with human veriﬁcation. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientiﬁc and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between diﬀerent cog-\nnitive capabilities in Arabic LLMs."
+        }
+      ]
+    },
+    {
+      "id": "publisher-3lm-contributions-ar",
+      "source_id": "3lm-publisher",
+      "question": "ما المساهمات الثلاث التي يذكرها مؤلفو ورقة 3LM؟ اذكر كل مساهمة مع الاستشهاد والصفحة.",
+      "language": "ar",
+      "expected_points": [
+        "Three comprehensive STEM/code benchmarks: authentic native Arabic content curation, synthetic generation, and careful translation with human verification.",
+        "Extensive evaluation of over 40 state-of-the-art Arabic and multilingual LLMs in scientific and programming domains.",
+        "Cross-task correlations and robustness testing, with insights into model behavior and relationships between cognitive capabilities."
+      ],
+      "references": [
+        {
+          "page": 1,
+          "text": "The contributions of this paper are threefold:\nFirst, we present three comprehensive benchmarks\nspanning STEM domains and code generation, con-\nstructed through rigorous methodologies that en-\nsure authenticity and quality from native Arabic\ncontent curation to synthetic generation and careful"
+        },
+        {
+          "page": 2,
+          "text": "translation with human veriﬁcation. Second, we\nconduct an extensive evaluation of over 40 state-of-\nthe-art Arabic and multilingual LLMs, providing\nthe most comprehensive assessment of Arabic lan-\nguage model capabilities in scientiﬁc and program-\nming domains to date. Third, we perform thorough\nanalysis including cross-task correlations and ro-\nbustness testing, revealing insights into model be-\nhavior and the relationship between diﬀerent cog-\nnitive capabilities in Arabic LLMs."
+        }
+      ]
+    }
+  ]
+}
