@@ -1,0 +1,38 @@
+{
+  "run_id": "dba1bd17-00ce-4591-91e9-a8e2c85d338b",
+  "cases": 4,
+  "reviewed": 4,
+  "counts": {
+    "fail": 1,
+    "not_reviewed": 0,
+    "partial": 3,
+    "pass": 0
+  },
+  "by_reviewer_type": {
+    "human": {
+      "reviewed": 0,
+      "counts": {
+        "pass": 0,
+        "partial": 0,
+        "fail": 0
+      },
+      "pass_rate": null
+    },
+    "ai_assisted": {
+      "reviewed": 4,
+      "counts": {
+        "pass": 0,
+        "partial": 3,
+        "fail": 1
+      },
+      "pass_rate": 0.0
+    }
+  },
+  "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score.",
+  "submitted_review_sha256": "00823989160cedd5aee3e7507cc268d6539f6fc1ff9cda43211d7c5d2e306129",
+  "review_received_date": "2026-10-31",
+  "immutable_fields_verified": true,
+  "recorded_source_commit": "d66c62d",
+  "github_model_run": "39219463133",
+  "external_independent_human_review_completed": false
+}
