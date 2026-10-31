@@ -186,9 +186,15 @@ jobs:
                   data['ci_diagnostics'] = json.loads(Path('reports/ci-failure.json').read_text())
               Path(f'docs/validation-results/{name}.json').write_text(json.dumps(data, ensure_ascii=False, indent=2))
           PY
-          git switch -c "$RESULT_BRANCH"
+          mkdir -p reports/publish
+          cp docs/validation-results/completion-model.json docs/validation-results/completion-windows.json reports/publish/
+          # A data-only root has no workflow files. The ordinary contents token
+          # can publish it without requesting the broader workflows permission.
+          git switch --orphan "$RESULT_BRANCH"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p docs/validation-results
+          cp reports/publish/completion-model.json reports/publish/completion-windows.json docs/validation-results/
           git add docs/validation-results/completion-model.json docs/validation-results/completion-windows.json
           for packet in reports/download/model/RAG-PDF-Review-Kit-*.zip; do
             if [ -f "$packet" ]; then

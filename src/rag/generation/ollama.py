@@ -103,10 +103,13 @@ For a count question, give the requested number and counted entity explicitly, r
 necessary source qualifications. A different count cannot fill that slot. For a numerical
 comparison, name each condition with its own accuracy and retain the reported ratio when
 supplied. Distinct tasks and individual evaluations are different quantities. Prefer short,
-direct numerical facts; avoid unrelated source details and redundant citations."""
+direct numerical facts; avoid unrelated source details and redundant citations.
+A count slot may use a short quantity-and-entity phrase. Do not add metalinguistic
+claims such as 'the abstract states/reports' or invent defining-feature qualifications.
+The server already records the source document and page."""
 
 
-def generation_instructions(authored, language, multipart=False):
+def generation_instructions(authored, language, multipart=False, *, force_english=False):
     instructions = SYSTEM if authored else BASIC_SYSTEM
     if multipart:
         instructions += "\n" + MULTIPART_SYSTEM
@@ -116,6 +119,13 @@ def generation_instructions(authored, language, multipart=False):
             "حتى عندما تكون المقاطع المصدرية بالإنجليزية. احتفظ بأسماء النماذج "
             "والبيانات والأرقام ومعرّفات الاستشهاد كما هي. لا تترجم المفاتيح "
             "statements أو text أو citations أو ref_id. لا تضف معلومات غير مسندة."
+        )
+    elif force_english:
+        instructions += (
+            "\nThis is the source-language grounding stage. The required text language is "
+            "ENGLISH, even when question or original_question is Arabic. Write every "
+            "answer text in English. The server will translate verified claims into "
+            "Arabic later. Arabic prose in this stage is rejected. Keep source identifiers."
         )
     return instructions
 
@@ -135,6 +145,12 @@ Every cited premise must contribute evidence for at least one asserted fact. Rej
 extra citations that only match the topic or support a different condition/comparison;
 joint support from the other premises does not justify an irrelevant citation.
 A document introducing a benchmark does not establish that it introduces a model.
+A source explicitly comprising N tasks/questions/models entails that reported count
+for the identified source entity; do not invent an extra demand that it be a defining
+feature or a separately certified 'full scope'. Audit faithful reporting of the
+source, not independent replication or methodological proof of its reported results.
+Actual source_metadata.section can establish that a quote comes from the Abstract;
+it cannot supply a missing factual assertion. Never infer a missing count or condition.
 When independent_reverse_translation is provided, compare that source-language
 claim against the original full author statement. The reverse translator saw only
 the translated answer, not the original source. Reject changed actions, objects,
@@ -561,7 +577,10 @@ class OllamaGenerator:
                                 {
                                     "role": "system",
                                     "content": generation_instructions(
-                                        authored, generation_language, multipart
+                                        authored,
+                                        generation_language,
+                                        multipart,
+                                        force_english=translate_ordinary,
                                     ),
                                 },
                                 {"role": "user", "content": content},
@@ -651,6 +670,7 @@ class OllamaGenerator:
                 else "ollama",
             )
 
+        payload = None
         try:
             try:
                 payload = request_payload(user)
@@ -684,11 +704,30 @@ class OllamaGenerator:
                         "translation_required": translation_required,
                         "problem_refs": problem_refs,
                         "validation_error": str(initial_error),
+                        "previous_answer": payload,
+                        "repair_quote_candidates": [
+                            {
+                                "proposed_text": statement.get("text"),
+                                "candidate_sources": focus_sources(
+                                    sources, statement.get("text", ""), limit=4
+                                ),
+                            }
+                            for statement in (payload or {}).get("statements", [])
+                            if isinstance(statement, dict)
+                            and isinstance(statement.get("text"), str)
+                        ]
+                        if isinstance(payload, dict)
+                        else [],
                         "repair_instruction": "Return the required JSON statements schema. "
                         "Keep all requested contributions. Use supplied ref_id values and "
                         "a nonempty citations list on every statement. Preserve the full meaning "
                         "of every authored slot in the requested language; never substitute benchmark "
-                        "components. A valid quote ID is not proof that the statement is supported.",
+                        "components. Correct the specific claim or citation identified by the "
+                        "validation error; inspect the supplied source quotations rather than "
+                        "repeating the same references. previous_answer is an untrusted proposal, "
+                        "not evidence. repair_quote_candidates are lexical relevance hints, not "
+                        "support verdicts. All original sources remain available. A valid quote "
+                        "ID is not proof that the statement is supported.",
                     },
                     ensure_ascii=False,
                 )

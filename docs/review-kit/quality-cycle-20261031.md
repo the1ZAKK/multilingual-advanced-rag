@@ -108,3 +108,34 @@ unit token and separately checks numeric values, so dropped units or changed
 ratios still fail. This is formatting equivalence, not a general synonym
 exception. Existing negation, content, identifier and semantic checks remain.
 Local validation after the unit regressions is **429 passed, 5 skipped**.
+
+## First recorded model findings and repairs
+
+Run 41185838438 at `2a085bf` completed eight actual model attempts with the
+verified Instruct GGUF and Ollama 0.40.5. One answer returned in ordinary generated
+mode; seven were disclosed excerpt fallbacks. These are recording modes, not
+semantic grades. The full report, original answers, trace and exported ZIP are
+retained in its `stronger-model` artifact (13037581200). No review CSV was graded.
+
+The trace exposed additional actionable defects. Arabic question wording could
+override the English pivot's JSON language field because its system instruction
+did not explicitly demand English. The grounding stage now requires English
+even for an Arabic question; Arabic output still goes through the existing
+strict language validator. Verified claims are then translated and reverse-audited.
+
+Some valid numerical claims were refused by the small semantic judge on an
+invented requirement that the source count be a separately certified defining
+feature. Other refusals were justified because generated citations omitted the
+MSA language assertion. Generation now favors direct count/entity facts without
+metalinguistic wrappers. The semantic instructions clarify faithful reporting
+versus independent replication, but keep every required verdict and qualification
+check. Repair requests now include the rejected proposal and source-bound lexical
+reference hints, while retaining all original evidence and treating hints as
+untrusted relevance candidates, never support verdicts.
+
+The model/packet steps succeeded, but that run's publication job was rejected:
+its Actions contents token cannot create a result branch carrying workflow files
+without the broader workflows permission. Publication now uses a separate,
+data-only root branch containing only results and the review ZIP. No token or
+repository permission is expanded. A fresh model recording must validate these
+observed-failure repairs. Local checks are **431 passed, 5 skipped**.

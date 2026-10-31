@@ -256,3 +256,108 @@ def test_untranslated_english_is_not_an_arabic_generated_answer():
             "كم عدد النماذج؟",
             "ar",
         )
+
+
+def test_arabic_question_pivot_explicitly_requests_english_before_guarded_translation(
+    service, monkeypatch
+):
+    hits = [evidence("24 models were evaluated.")]
+    client = httpx.Client
+    seen = []
+
+    def respond(request):
+        wire = json.loads(request.content)
+        user = json.loads(wire["messages"][-1]["content"])
+        if user.get("task") == "semantic-grounding-audit":
+            result = {
+                "verdicts": [
+                    dict(
+                        item_id=user["items"][0]["item_id"],
+                        supported=True,
+                        complete=True,
+                        direct=True,
+                        reason="The exact count is supplied.",
+                    )
+                ]
+            }
+        else:
+            seen.append(wire)
+            assert user["language"] == "en"
+            assert "required text language is ENGLISH" in wire["messages"][0]["content"]
+            assert (
+                "even when question or original_question is Arabic"
+                in wire["messages"][0]["content"]
+            )
+            result = {
+                "statements": [
+                    {"text": "24 models were evaluated.", "citations": [{"ref_id": "S1:Q1"}]}
+                ]
+            }
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kw: client(transport=httpx.MockTransport(respond))
+    )
+    monkeypatch.setattr(
+        service.generator,
+        "translate_ordinary_text",
+        lambda text, language: (
+            "تم تقييم 24 نموذجًا." if language == "ar" else "24 models were evaluated."
+        ),
+    )
+    result = service.generator.generate("كم عدد النماذج؟", "ar", hits)
+    assert len(seen) == 1 and result.mode == "translated-answer"
+    assert "تم تقييم 24" in result.answer
+    assert result.citations[0].quote == hits[0].chunk.text
+
+
+def test_citation_repair_receives_failed_answer_and_relevant_original_refs(service, monkeypatch):
+    hits = [
+        evidence("The study is a benchmark for Arabic NLP."),
+        evidence("The study uses Modern Standard Arabic.", page=2),
+    ]
+    client = httpx.Client
+    generated = 0
+
+    def respond(request):
+        nonlocal generated
+        user = json.loads(json.loads(request.content)["messages"][-1]["content"])
+        if user.get("task") == "semantic-grounding-audit":
+            supported = "Modern Standard Arabic" in " ".join(user["items"][0]["premises"])
+            result = {
+                "verdicts": [
+                    dict(
+                        item_id=user["items"][0]["item_id"],
+                        supported=supported,
+                        complete=supported,
+                        direct=supported,
+                        reason="Require the actual language passage.",
+                    )
+                ]
+            }
+        else:
+            generated += 1
+            if generated == 2:
+                assert user["previous_answer"]["statements"][0]["citations"] == [
+                    {"ref_id": "S1:Q1"}
+                ]
+                hints = user["repair_quote_candidates"][0]["candidate_sources"]
+                assert hints[0]["label"] == "S2"
+                assert {s["label"] for s in user["evidence"]} == {"S1", "S2"}
+            result = {
+                "statements": [
+                    {
+                        "text": "The study uses Modern Standard Arabic.",
+                        "citations": [{"ref_id": "S1:Q1" if generated == 1 else "S2:Q1"}],
+                    }
+                ]
+            }
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kw: client(transport=httpx.MockTransport(respond))
+    )
+    result = service.generator.generate("In what language is the study written?", "en", hits)
+    assert generated == 2
+    assert result.citations[0].page == 2
+    assert result.citations[0].quote == hits[1].chunk.text
