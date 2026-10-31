@@ -83,3 +83,8 @@ model-strategy counts are also excluded from bare model counts.
 After these fixes, local validation is **424 passed, 5 skipped**; Ruff lint and
 format checks pass. A new hosted run is required for the corrected commit;
 the earlier model run cannot validate the parser or Windows follow-up changes.
+
+The final pre-recording pass also rejects qualitative prose in a requested
+numerical score slot, and makes compact-report/trace reads explicitly UTF-8 on
+Windows. Its local checks are **427 passed, 5 skipped**, with clean Ruff lint,
+format and diff checks. No previously failed CI result has been discarded.

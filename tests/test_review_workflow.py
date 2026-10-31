@@ -251,3 +251,42 @@ def test_portable_packet_never_substitutes_a_wrong_pdf_or_overwrites_archive(tmp
     with pytest.raises(ValueError, match="Wrong PDF bytes"):
         packet(dataset, run_path, output, sources=tmp_path, archive=tmp_path / "new.zip")
     assert not output.exists() and not (tmp_path / "new.zip").exists()
+
+
+def test_compact_report_preserves_utf8_answers_rejections_and_source_commit(tmp_path):
+    import json
+
+    from scripts.compact_run import compact
+
+    run = {key: {} for key in ("generation_limits", "retrieval")}
+    run.update(
+        run_id="synthetic-run",
+        created_at_utc="synthetic-time",
+        model="fixture-model",
+        translation_model="fixture-model",
+        embedding_model="fixture-embedding",
+        documents=[],
+        source_code_sha="a" * 40,
+        records=[{"id": "fixture", "response": {"answer": "إجابة عربية محفوظة."}}],
+    )
+    paths = [
+        tmp_path / name for name in ("input.json", "runtime.json", "trace.jsonl", "compact.json")
+    ]
+    paths[0].write_text(json.dumps(run, ensure_ascii=False), encoding="utf-8-sig")
+    paths[1].write_text(
+        json.dumps({"installed_model": {"name": "fixture-model"}}), encoding="utf-8"
+    )
+    paths[2].write_text(
+        json.dumps(
+            {"stage": "validation-rejection", "result": {"error": "فشل الترجمة"}},
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    compact(paths[0], paths[1], paths[3], paths[2])
+    result = json.loads(paths[3].read_text(encoding="utf-8"))
+    assert result["records"] == run["records"]
+    assert result["source_code_sha"] == "a" * 40
+    assert result["rejected_attempts"][0]["result"]["error"] == "فشل الترجمة"
+    assert result["independent_human_reviews"] == 0

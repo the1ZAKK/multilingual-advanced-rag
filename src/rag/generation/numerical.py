@@ -140,3 +140,13 @@ def validate_comparison_slot(question, answer, premises):
     )
     if len(ratios) == 1 and not ratios <= atoms(answer):
         raise ValueError("Incomplete quantitative comparison: missing source-reported ratio")
+
+
+def validate_score_slot(question, answer, premises):
+    """Explicit numerical score requests cannot be filled by qualitative praise."""
+    question = clean_numbers(question)
+    if not re.search(r"\bwhat\s+score\b|(?:ما|وما)\s+(?:نتيجة|درجة|دقة)\b", question):
+        return
+    scores = {m[1] for p in premises for m in re.finditer(rf"({NUMBER})\s*%", clean_numbers(p))}
+    if scores and not scores & atoms(answer):
+        raise ValueError("Incomplete quantitative answer: missing requested score")

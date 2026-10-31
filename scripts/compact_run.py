@@ -9,8 +9,8 @@ from pathlib import Path
 def compact(input_path, runtime_path, output, trace=None):
     if output.exists():
         raise ValueError("Refusing to overwrite prior published evaluation output")
-    run = json.loads(input_path.read_text())
-    runtime = json.loads(runtime_path.read_text())
+    run = json.loads(input_path.read_text(encoding="utf-8-sig"))
+    runtime = json.loads(runtime_path.read_text(encoding="utf-8-sig"))
     if run["model"] != runtime["installed_model"]["name"]:
         raise ValueError("Run/model verification metadata disagree")
     report = {
@@ -41,7 +41,7 @@ def compact(input_path, runtime_path, output, trace=None):
     if trace is not None and trace.exists():
         report["translation_checks"] = []
         report["generation_attempts"] = []
-        for line in trace.read_text().splitlines():
+        for line in trace.read_text(encoding="utf-8-sig").splitlines():
             item = json.loads(line)
             if item["stage"] == "generation":
                 report["generation_attempts"].append(
@@ -62,7 +62,7 @@ def compact(input_path, runtime_path, output, trace=None):
                 )
         report["rejected_attempts"] = [
             json.loads(line)
-            for line in trace.read_text().splitlines()
+            for line in trace.read_text(encoding="utf-8-sig").splitlines()
             if json.loads(line)["stage"] == "validation-rejection"
         ]
     output.parent.mkdir(parents=True, exist_ok=True)

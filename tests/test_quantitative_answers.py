@@ -10,6 +10,7 @@ from rag.generation.numerical import (
     validate_comparison_slot,
     validate_count_slot,
     validate_numeric_support,
+    validate_score_slot,
 )
 from rag.generation.ollama import GenerationUnavailable, semantic_items
 from rag.generation.questions import question_parts
@@ -134,6 +135,17 @@ def test_comparison_cannot_omit_source_reported_ratio():
             "Few-shot CoT achieves 87.5% versus zero-shot 31.25%.",
             [premise],
         )
+
+
+@pytest.mark.parametrize(
+    "question", ["What score did the best model achieve?", "ما نتيجة أفضل نموذج؟"]
+)
+def test_a_supported_but_nonnumeric_score_answer_is_still_incomplete(question):
+    with pytest.raises(ValueError, match="missing requested score"):
+        validate_score_slot(
+            question, "The top model performed well.", ["The top model scored 61.4%."]
+        )
+    validate_score_slot(question, "The top model scored 61.4%.", ["The top model scored 61.4%."])
 
 
 def test_explicit_abstract_selection_excludes_later_conflicting_aggregates(service):
