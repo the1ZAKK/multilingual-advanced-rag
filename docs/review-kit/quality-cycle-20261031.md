@@ -1,0 +1,65 @@
+# Numerical completeness and Arabic quality cycle — 2026-10-31
+
+The starting candidate is `4e7aa6a43dedba2b63807b3531bfc9e6bdd22143`.
+Its Quality run 41184110709 passed all four Windows/Linux Python jobs and the
+Docker build. A clean local baseline reproduced 406 passed and 5 skipped.
+No repository AGENTS.md exists in this checkout. TASKS.md, the current
+architecture, cloud continuation and submitted-review follow-up were read.
+
+The submitted 3 partial / 1 fail AI-assisted verdicts still describe recording
+39219463133 at d66c62d only. They are not independent human review and do not
+grade the changes or new outputs in this cycle. Prior PDFs, indexes, settings,
+review artifacts and the checked-in old ZIP remain untouched.
+
+## Implementation
+
+- Reuse the existing abstract/prose routing correction. Explicit abstract
+  requests now select that document's abstract evidence without appending
+  competing result-table or appendix passages. Ordinary overview and numbered
+  table behavior remain available. Anchors retain real page/chunk identities.
+- Expand explicit coordinated count nouns into separately required answer
+  slots in English and Arabic. Values are generated from source evidence;
+  no paper identifiers, expected values or review guides enter production code.
+  Over-budget requirements are disclosed, never collapsed to conceal omissions.
+- Reject missing source-expressed count roles, changed count/entity bindings,
+  changed prompting-condition/percentage bindings, omitted reported comparison
+  ratios and numerical citations that contribute only a different comparison.
+  These limited deterministic checks supplement the unchanged quote, native-PDF,
+  output-language, reverse-translation and semantic validation requirements.
+- Verify numerical relationships in forward Arabic and reverse English claims.
+  Preserve the strict round-trip content guard: faithful paraphrases can still
+  be refused; that limitation has not been hidden or relaxed.
+- Retain raw generation/translation responses and explicit validation rejections
+  when tracing is enabled. Record exact source commit and context/token/timeout
+  settings in new run reports.
+- Export an ungraded portable review packet with START_HERE.html, the exact new
+  answers, byte-verified original PDFs, frozen review expectations, UTF-8 CSV and
+  a per-file SHA-256 manifest. Refuse existing packet/archive paths.
+
+## Real-model recording
+
+`data/evaluation/quality-cycle-20261031.json` retains the four exact submitted
+questions unchanged and adds four English/Arabic source-review controls about
+question language/format and distinct tasks versus individual evaluations.
+All are development controls, not unseen evaluation. Expected points are never
+passed to generation. Both PDFs are English-language papers about Arabic NLP;
+this run does not establish native Arabic source-prose performance.
+
+The hosted recording workflow keeps the existing checksum-pinned Instruct GGUF
+and pinned Ollama container. It records all eight cases through RAGService,
+learned multilingual embeddings, native source verification and the ordinary
+generation/translation pipeline. Experimental question-coverage judging stays
+explicitly disabled, matching the reviewed profile; structural count slots and
+the new numerical guards are enforced regardless of that optional switch.
+
+The workflow exports the full trace and a portable ZIP, and publishes outputs
+to its isolated `ci-evaluation-RUN_ID` branch. Exact runtime, model revision,
+GGUF checksum, source commit, settings, modes, warnings, source checks and new
+answers must be inspected in that recording. Successful software tests or a
+completed recording job do not establish answer-quality acceptance.
+
+The current cloud checkout has no local Ollama executable or running model
+service. Hosted verified execution is used rather than substituting mock model
+answers. Model and CI outcomes will be recorded after the pushed run completes.
+Independent human source review and actual laptop acceptance remain pending;
+no stable release is authorized or published.

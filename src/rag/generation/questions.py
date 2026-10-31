@@ -12,11 +12,40 @@ def question_parts(question: str) -> list[str]:
     parts = re.split(
         r"\s*,?\s+and\s+(?=(?:what|which|how|why|where|when|who|does|do|is|are)\b)"
         r"|[،,]?\s+و(?=(?:ما\s|ماذا\s|كيف\s|هل\s|لماذا\s|أي\s))"
-        r"|(?<=[?؟])\s+(?=Distinguish\b|Explain\b|مي[ّ]?ز\b|اشرح\b)",
+        r"|(?<=[?؟])\s+(?=Distinguish\b|Explain\b|Compare\b|مي[ّ]?ز\b|اشرح\b|قارن\b)",
         question.strip(),
         flags=re.IGNORECASE,
     )
-    return parts if 1 < len(parts) <= 4 and all(p.strip() for p in parts) else [question]
+    parts = [facet for part in parts for facet in count_parts(part)]
+    # The caller enforces its statement budget. Never hide excess requirements
+    # by collapsing them back into a single slot.
+    return parts if all(p.strip() for p in parts) else [question]
+
+
+def count_parts(question: str) -> list[str]:
+    """Expand explicit coordinated counts without inventing expected values.
+
+    This is syntax, not a paper-specific checklist or a semantic parser. It also
+    works for sensors, sites, patients, etc. Non-enumerations stay untouched.
+    Original wording remains available as original_question to the model.
+    """
+    english = re.search(r"\bhow many\s+", question, re.IGNORECASE)
+    arabic = re.search(r"كم\s+(?:عدد\s+)?", question)
+    match = english or arabic
+    if match is None:
+        return [question]
+    prefix, tail = question[: match.start()], question[match.end() :]
+    if english:
+        body = re.split(r"\b(?:are|were|is|was|have|has|do|does|did)\b|[?؟]", tail, 1)[0]
+        nouns = re.split(r",\s*(?:and\s+)?|\s+and\s+", body.strip(), flags=re.IGNORECASE)
+    else:
+        body = re.split(r"\s+(?:التي|الذي|الذين|تم|جرى)\b|[?؟،]", tail, 1)[0]
+        nouns = re.split(r"\s+و(?=\S)|،\s*(?:و)?", body.strip())
+    nouns = [noun.strip(" ,،") for noun in nouns if noun.strip(" ,،")]
+    # Avoid treating a long predicate or a mechanism as a list of count nouns.
+    if len(nouns) < 2 or any(len(noun.split()) > 6 for noun in nouns):
+        return [question]
+    return [f"{prefix}how many {noun}?" if english else f"{prefix}كم عدد {noun}؟" for noun in nouns]
 
 
 def flatten_parts(payload, parts):

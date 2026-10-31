@@ -1,0 +1,182 @@
+"""Development regressions with independent values and adversarial relationships."""
+
+import json
+
+import httpx
+import pytest
+
+from rag.generation.numerical import (
+    atoms,
+    validate_comparison_slot,
+    validate_count_slot,
+    validate_numeric_support,
+)
+from rag.generation.ollama import GenerationUnavailable, semantic_items
+from rag.generation.questions import question_parts
+from rag.models import Chunk, Hit
+
+
+def evidence(text, *, section="Abstract", page=1):
+    return Hit(
+        chunk=Chunk(
+            chunk_id=f"source:p{page}:0",
+            document_id="source",
+            document_name="Independent.pdf",
+            page=page,
+            text=text,
+            normalized=text,
+            start=0,
+            end=len(text),
+            section=section,
+        ),
+        score=1,
+    )
+
+
+def test_exact_development_questions_have_four_required_slots():
+    from pathlib import Path
+
+    suite = json.loads(Path("data/evaluation/additional-paper-review.json").read_text())
+    for case in suite["cases"]:
+        parts = question_parts(case["question"])
+        assert len(parts) == 4, (case["id"], parts)
+    assert len(question_parts("How many sensors, sites, and patients were studied?")) == 3
+    assert len(question_parts("كم عدد المستشعرات والمواقع والمرضى؟")) == 3
+    assert len(question_parts("How do sensors and sites interact?")) == 1
+    assert (
+        len(question_parts("How many sensors, sites, patients, visits, and devices were used?"))
+        == 5
+    )
+
+
+@pytest.mark.parametrize(
+    "claim", ["9 models from 23 providers.", "تقييم 9 نماذج من 23 مقدمي خدمات."]
+)
+def test_swapped_counts_fail_even_when_all_numbers_are_in_one_real_quote(claim):
+    with pytest.raises(ValueError, match="swapped counted entity"):
+        validate_numeric_support(claim, ["We evaluated 23 models from 9 providers."])
+
+
+def test_distinct_tasks_do_not_become_individual_evaluations():
+    with pytest.raises(ValueError, match="swapped counted entity"):
+        validate_numeric_support(
+            "The evaluation comprises 180 individual test cases.",
+            ["We used 180 tasks for 45,360 individual test cases."],
+        )
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "Few-shot CoT achieves 31.25% versus zero-shot at 87.5%, a 2.8x ratio.",
+        "تبلغ دقة سلسلة التفكير بأمثلة قليلة 31.25% مقابل 87.5% دون أمثلة، بنسبة 2.8 ضعف.",
+    ],
+)
+def test_swapped_condition_to_accuracy_mapping_is_rejected(claim):
+    with pytest.raises(ValueError, match="swapped condition"):
+        validate_numeric_support(
+            claim, ["Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."]
+        )
+
+
+def test_faithful_comparison_may_reverse_mention_order():
+    validate_numeric_support(
+        "Zero-shot achieves 31.25% versus few-shot CoT at 87.5%, a 2.8x ratio.",
+        ["Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."],
+    )
+
+
+def test_every_numeric_citation_must_contribute_not_only_the_union():
+    good = "Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."
+    extra = "Few-shot methods overall achieve 2.4x (75% vs 31%)."
+    claim = "Few-shot CoT achieves 87.5% versus zero-shot 31.25%, reported as 2.8x."
+    validate_numeric_support(claim, [good])
+    with pytest.raises(ValueError, match="Irrelevant numerical citation"):
+        validate_numeric_support(claim, [good, extra])
+    assert atoms("2.8x and ٢٫٤ ضعف") == {"2.8", "2.4"}
+
+
+@pytest.mark.parametrize("answer", ["The models were evaluated.", "The study has 48 tasks."])
+def test_omitted_requested_count_cannot_be_replaced_by_supported_background(answer):
+    with pytest.raises(ValueError, match="missing requested model count"):
+        validate_count_slot("How many models?", answer, ["48 tasks and 23 models were evaluated."])
+
+
+def test_comparison_cannot_omit_source_reported_ratio():
+    premise = "Few-\nshot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."
+    with pytest.raises(ValueError, match="missing source-reported ratio"):
+        validate_comparison_slot(
+            "Compare the reported prompting accuracies.",
+            "Few-shot CoT achieves 87.5% versus zero-shot 31.25%.",
+            [premise],
+        )
+
+
+def test_explicit_abstract_selection_excludes_later_conflicting_aggregates(service):
+    abstract = evidence("Abstract\nThe study evaluated 23 models.")
+    later = evidence("The table compares 9 models and scores.", section="Results", page=3)
+    service.index.chunks = [abstract.chunk, later.chunk]
+    for question in ("According to the abstract, how many models?", "وفقا للملخص، كم عدد النماذج؟"):
+        selected = service.select_evidence([later], question, {"source"})
+        assert [h.chunk.chunk_id for h in selected] == [abstract.chunk.chunk_id]
+
+
+def test_omission_is_retried_then_disclosed_even_with_positive_semantic_judge(
+    service, monkeypatch, tmp_path
+):
+    hits = [evidence("We evaluated 23 models on 48 tasks.")]
+    client = httpx.Client
+    calls = []
+    monkeypatch.setenv("RAG_GENERATION_TRACE_DIR", str(tmp_path))
+
+    def respond(request):
+        data = json.loads(request.content)
+        user = json.loads(data["messages"][-1]["content"])
+        calls.append(user)
+        if user.get("task") == "semantic-grounding-audit":
+            result = {
+                "verdicts": [
+                    dict(
+                        item_id=user["items"][0]["item_id"],
+                        supported=True,
+                        complete=True,
+                        direct=True,
+                        reason="The task count is sourced.",
+                    )
+                ]
+            }
+        else:
+            key = next(iter(user["question_parts"]))
+            result = {key: {"text": "There are 48 tasks.", "citations": [{"ref_id": "S1:Q1"}]}}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kw: client(transport=httpx.MockTransport(respond))
+    )
+    with pytest.raises(GenerationUnavailable, match="missing requested model count"):
+        service.generator.generate("How many tasks and models were evaluated?", "en", hits)
+    assert len([c for c in calls if "validation_error" in c]) == 2
+    trace = [
+        json.loads(line) for line in (tmp_path / "generation-wire.jsonl").read_text().splitlines()
+    ]
+    assert len([r for r in trace if r["stage"] == "generation-raw"]) == 4
+    assert len([r for r in trace if r["stage"] == "validation-rejection"]) == 2
+
+
+def test_untranslated_english_is_not_an_arabic_generated_answer():
+    hits = [evidence("The study evaluated 23 models.")]
+    with pytest.raises(ValueError, match="Output language mismatch"):
+        semantic_items(
+            {
+                "statements": [
+                    {
+                        "text": "The study evaluated 23 models.",
+                        "citations": [{"ref_id": "S1:Q1"}],
+                    }
+                ]
+            },
+            hits,
+            {},
+            "كم عدد النماذج؟",
+            "ar",
+        )

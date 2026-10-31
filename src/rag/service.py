@@ -329,10 +329,18 @@ class RAGService:
                     # appendix question that merely repeats the query vocabulary.
                     anchors = [
                         Hit(chunk=c, score=0)
-                        for c in sorted(abstracts, key=lambda c: (c.page, c.start))[:3]
+                        for c in sorted(abstracts, key=lambda c: (c.page, c.start))
                     ]
                     anchor_ids = {h.chunk.chunk_id for h in anchors}
-                    hits = anchors + [h for h in hits if h.chunk.chunk_id not in anchor_ids]
+                    explicit_abstract = re.search(r"\babstract\b|ملخص", query, re.IGNORECASE)
+                    explicit_table = re.search(
+                        r"\btable\s+\d+\b|الجدول\s+\d+", query, re.IGNORECASE
+                    )
+                    hits = (
+                        anchors
+                        if explicit_abstract and not explicit_table
+                        else anchors + [h for h in hits if h.chunk.chunk_id not in anchor_ids]
+                    )
             if contribution_question(query):
                 anchors = [h for h in hits if h.chunk.section == "Contributions"]
                 named = document_ids or self.named_documents(query)

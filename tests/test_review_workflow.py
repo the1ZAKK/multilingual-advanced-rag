@@ -200,3 +200,54 @@ def test_human_packet_binds_sources_and_leaves_human_verdicts_blank(tmp_path, pd
     with pytest.raises(ValueError, match="Source identity mismatch"):
         packet(dataset, answers, other)
     assert not other.exists()
+
+
+def test_portable_packet_binds_exact_answers_and_originals_with_ungraded_sheet(tmp_path, pdf_bytes):
+    import json
+    import zipfile
+
+    from scripts.review_packet import packet
+
+    suite, result = fixture(tmp_path, pdf_bytes)
+    result["source_code_sha"] = "f" * 40
+    dataset, run_path = tmp_path / "suite.json", tmp_path / "answers.json"
+    dataset.write_text(suite.model_dump_json())
+    run_path.write_text(json.dumps(result))
+    output, archive = tmp_path / "packet", tmp_path / "packet.zip"
+    packet(dataset, run_path, output, sources=tmp_path, archive=archive)
+    with zipfile.ZipFile(archive) as bundle:
+        assert bundle.read("PDFs/paper.pdf") == (tmp_path / "paper.pdf").read_bytes()
+        assert json.loads(bundle.read("answers.json"))["records"] == result["records"]
+        assert "START_HERE.html" in bundle.namelist()
+        assert result["source_code_sha"] in bundle.read("START_HERE.html").decode()
+        manifest = json.loads(bundle.read("manifest.json"))
+        assert manifest["verdicts"] == "ungraded"
+        for name, sha in manifest["files"].items():
+            assert hashlib.sha256(bundle.read(name)).hexdigest() == sha
+    with (output / "review.csv").open(encoding="utf-8-sig", newline="") as handle:
+        row = next(csv.DictReader(handle))
+    assert row["reviewer"] == row["reviewer_type"] == row["notes"] == ""
+    assert row["verdict"] == "not_reviewed"
+    assert summarize_reviews(suite, result, output / "review.csv")["reviewed"] == 0
+    with pytest.raises(ValueError, match="already exists"):
+        packet(dataset, run_path, output, sources=tmp_path, archive=archive)
+
+
+def test_portable_packet_never_substitutes_a_wrong_pdf_or_overwrites_archive(tmp_path, pdf_bytes):
+    import json
+
+    from scripts.review_packet import packet
+
+    suite, result = fixture(tmp_path, pdf_bytes)
+    dataset, run_path = tmp_path / "suite.json", tmp_path / "answers.json"
+    dataset.write_text(suite.model_dump_json())
+    run_path.write_text(json.dumps(result))
+    output, archive = tmp_path / "packet", tmp_path / "packet.zip"
+    archive.write_bytes(b"earlier review archive")
+    with pytest.raises(ValueError, match="new path"):
+        packet(dataset, run_path, output, sources=tmp_path, archive=archive)
+    assert archive.read_bytes() == b"earlier review archive" and not output.exists()
+    (tmp_path / "paper.pdf").write_bytes(pdf_bytes("Changed source"))
+    with pytest.raises(ValueError, match="Wrong PDF bytes"):
+        packet(dataset, run_path, output, sources=tmp_path, archive=tmp_path / "new.zip")
+    assert not output.exists() and not (tmp_path / "new.zip").exists()

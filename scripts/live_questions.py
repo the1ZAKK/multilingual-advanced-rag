@@ -7,6 +7,8 @@ It reads an existing corpus and never uploads, deletes or reindexes documents.
 
 import argparse
 import json
+import os
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -23,6 +25,12 @@ def run_questions(service, cases, output: Path, *, use_llm=True):
     run_id = str(uuid4())
     created_at = datetime.now(timezone.utc).isoformat()
     records = []
+    revision = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False
+    )
+    source_sha = os.environ.get("GITHUB_SHA") or (
+        revision.stdout.strip() if revision.returncode == 0 else None
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     for case in cases:
         record = {
@@ -72,6 +80,7 @@ def run_questions(service, cases, output: Path, *, use_llm=True):
                 {
                     "run_id": run_id,
                     "created_at_utc": created_at,
+                    "source_code_sha": source_sha,
                     "use_llm": use_llm,
                     "model": service.settings.ollama_model,
                     "translation_model": service.settings.translation_model
@@ -81,6 +90,9 @@ def run_questions(service, cases, output: Path, *, use_llm=True):
                         "total_timeout": service.settings.llm_total_timeout,
                         "max_statements": service.settings.max_answer_statements,
                         "question_coverage_audit": service.settings.question_coverage_audit,
+                        "context_tokens": service.settings.llm_context_tokens,
+                        "request_timeout": service.settings.llm_timeout,
+                        "temperature": 0,
                     },
                     "embedding_model": service.embedder.key,
                     "retrieval": {

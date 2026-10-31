@@ -15,6 +15,11 @@ import httpx
 
 from rag.config import Settings
 from rag.generation.contradictions import reject_polarity_conflicts
+from rag.generation.numerical import (
+    validate_comparison_slot,
+    validate_count_slot,
+    validate_numeric_support,
+)
 from rag.generation.questions import flatten_parts, focus_sources, question_parts
 from rag.ingestion.structure import contribution_declarations, contribution_markers, sentence_spans
 from rag.ingestion.text import is_arabic, normalize, tokenize
@@ -89,7 +94,12 @@ requested relation rather than substituting background or another part's answer.
 Do not append performance comparisons, benefits, purposes, or other facts not requested by
 that part. In particular a mechanism question needs the mechanism, not its reported results. Each field
 contains text and citations, not a statements array. If a part lacks evidence, say so in
-that field without inventing an answer. Do not add an overview that consumes another slot."""
+that field without inventing an answer. Do not add an overview that consumes another slot.
+For a count question, give the requested number and counted entity explicitly, retaining
+necessary source qualifications. A different count cannot fill that slot. For a numerical
+comparison, name each condition with its own accuracy and retain the reported ratio when
+supplied. Distinct tasks and individual evaluations are different quantities. Prefer short,
+direct numerical facts; avoid unrelated source details and redundant citations."""
 
 
 def generation_instructions(authored, language, multipart=False):
@@ -117,6 +127,9 @@ paraphrases may be supported when they preserve the actual relations and qualifi
 For supported=true, every factual assertion must follow directly from the premises,
 including subject/object roles, model versus benchmark/dataset versus method distinctions,
 numbers, units, evaluation conditions, and causal/introduction/training relations.
+Every cited premise must contribute evidence for at least one asserted fact. Reject
+extra citations that only match the topic or support a different condition/comparison;
+joint support from the other premises does not justify an irrelevant citation.
 A document introducing a benchmark does not establish that it introduces a model.
 When independent_reverse_translation is provided, compare that source-language
 claim against the original full author statement. The reverse translator saw only
@@ -557,7 +570,10 @@ class OllamaGenerator:
                         },
                     )
                     response.raise_for_status()
-                item = json.loads(response.json()["message"]["content"])
+                raw_content = response.json()["message"]["content"]
+                trace_generation("generation-wire-response", json.loads(content), raw_content)
+                item = json.loads(raw_content)
+                trace_generation("generation-raw", json.loads(content), item)
                 if multipart and (
                     not isinstance(item, dict) or set(item) != set(schema["required"])
                 ):
@@ -608,6 +624,17 @@ class OllamaGenerator:
                     statement_parts if multipart and self.settings.question_coverage_audit else None
                 ),
             )
+            if not authored:
+                statements = payload.get("statements", [{"text": payload.get("answer", "")}])
+                bindings = statement_parts if multipart else [question] * len(statements)
+                for part in parts:
+                    answer_part = " ".join(
+                        statement["text"]
+                        for statement, bound in zip(statements, bindings, strict=True)
+                        if bound == part
+                    )
+                    validate_count_slot(part, answer_part, list(catalog.values()))
+                    validate_comparison_slot(part, answer_part, list(catalog.values()))
             if translate_ordinary:
                 return self.translate_verified_answer(payload, evidence, question)
             return GeneratedAnswer(
@@ -624,6 +651,9 @@ class OllamaGenerator:
                 payload = request_payload(user)
                 return finalize(payload)
             except (ValueError, KeyError, TypeError) as initial_error:
+                trace_generation(
+                    "validation-rejection", {"question": question}, {"error": str(initial_error)}
+                )
                 logger.info(
                     "ollama_initial_validation_failed: %s: %s",
                     type(initial_error).__name__,
@@ -661,6 +691,9 @@ class OllamaGenerator:
                 try:
                     result = finalize(focused_payload)
                 except (ValueError, KeyError, TypeError) as retry_error:
+                    trace_generation(
+                        "validation-rejection", {"question": question}, {"error": str(retry_error)}
+                    )
                     logger.warning(
                         "ollama_retry_validation_failed: %s: %s",
                         type(retry_error).__name__,
@@ -695,6 +728,7 @@ class OllamaGenerator:
                 raise ValueError("Answer translation changed a source-grounded identifier")
             if numeric_atoms(text) != numeric_atoms(original["text"]):
                 raise ValueError("Answer translation changed a source-grounded number")
+            validate_numeric_support(text, [original["text"]])
             reverse = self.translate_ordinary_text(text, "en")
             if numeric_atoms(reverse) != numeric_atoms(original["text"]):
                 raise ValueError("Reverse answer translation changed a source-grounded number")
@@ -707,6 +741,7 @@ class OllamaGenerator:
             if not names <= reverse_words:
                 raise ValueError("Reverse answer translation lost a source-grounded name")
             validate_roundtrip_content(original["text"], reverse)
+            validate_numeric_support(reverse, [original["text"]])
             candidate = {"text": text, "citations": original["citations"]}
             item = semantic_items({"statements": [candidate]}, evidence, {}, question, "ar")[0]
             item.update(
@@ -759,7 +794,17 @@ class OllamaGenerator:
                 },
             )
             response.raise_for_status()
-        result = json.loads(response.json()["message"]["content"])
+        raw_content = response.json()["message"]["content"]
+        trace_generation(
+            "ordinary-translation-wire-response",
+            {
+                "text": text,
+                "language": language,
+                "model": self.settings.translation_model or self.settings.ollama_model,
+            },
+            raw_content,
+        )
+        result = json.loads(raw_content)
         if not isinstance(result, dict) or set(result) != {"text"}:
             raise ValueError("Invalid ordinary answer translation schema")
         candidate = result["text"]
@@ -1711,6 +1756,7 @@ def semantic_items(
         ]
         proposed = statement["text"]
         validate_output_language(proposed, language)
+        validate_numeric_support(proposed, premises)
         numeric = numeric_atoms(proposed)
         premise_numbers = {number for premise in premises for number in numeric_atoms(premise)}
         if not set(numeric) <= premise_numbers:

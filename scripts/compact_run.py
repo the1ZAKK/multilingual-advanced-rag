@@ -28,7 +28,7 @@ def compact(input_path, runtime_path, output, trace=None):
     }
     report.update(
         runtime=runtime,
-        source_code_sha=os.environ.get("GITHUB_SHA"),
+        source_code_sha=run.get("source_code_sha") or os.environ.get("GITHUB_SHA"),
         independent_human_reviews=0,
         review_status="unreviewed; provenance/language flags are not semantic grades",
     )
@@ -60,6 +60,11 @@ def compact(input_path, runtime_path, output, trace=None):
                         "output": item["result"].get("text"),
                     }
                 )
+        report["rejected_attempts"] = [
+            json.loads(line)
+            for line in trace.read_text().splitlines()
+            if json.loads(line)["stage"] == "validation-rejection"
+        ]
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("x", encoding="utf-8") as file:
         json.dump(report, file, ensure_ascii=False, indent=2)

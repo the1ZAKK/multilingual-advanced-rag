@@ -10,7 +10,7 @@ on:
         required: true
         default: regression
         type: choice
-        options: [regression, publisher, full, arabic, additional]
+        options: [regression, publisher, full, arabic, additional, qualitycycle]
       model_profile:
         description: Pinned model profile (community Instruct or official base)
         required: true
@@ -51,7 +51,7 @@ jobs:
     env:
       HF_HOME: ${{ github.workspace }}/.cache/huggingface
       HF_XET_CACHE: ${{ github.workspace }}/.cache/xet
-      EVAL_DATASET: ${{ (inputs.suite == 'additional' || github.event_name == 'push') && 'data/evaluation/additional-paper-review.json' || inputs.suite == 'arabic' && 'data/evaluation/arabic-regression.json' || inputs.suite == 'publisher' && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
+      EVAL_DATASET: ${{ (inputs.suite == 'qualitycycle' || github.event_name == 'push') && 'data/evaluation/quality-cycle-20261031.json' || inputs.suite == 'additional' && 'data/evaluation/additional-paper-review.json' || inputs.suite == 'arabic' && 'data/evaluation/arabic-regression.json' || inputs.suite == 'publisher' && 'data/evaluation/publisher-paper-review.json' || inputs.suite == 'full' && 'data/evaluation/completion-review.json' || 'data/evaluation/completion-regression.json' }}
       RAG_QUESTION_COVERAGE_AUDIT: ${{ inputs.coverage_audit && 'true' || 'false' }}
       MODEL_PROFILE: ${{ inputs.model_profile || 'instruct' }}
       RAG_OLLAMA_MODEL: ${{ inputs.model_profile == 'base' && 'qwen3-hf:4b' || 'qwen3-instruct-hf:4b' }}
@@ -82,6 +82,8 @@ jobs:
         run: uv run --no-sync python -m scripts.validate_workflow --dataset ${{ env.EVAL_DATASET }} --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs
         run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
+      - name: Export portable ungraded packet with verified original PDFs
+        run: uv run --no-sync python -m scripts.review_packet --dataset ${{ env.EVAL_DATASET }} --run reports/model-review.json --sources reports/papers --output reports/review-packet --zip reports/RAG-PDF-Review-Kit-${{ github.run_id }}.zip
       - name: Explain recorded outcomes without assigning semantic grades
         if: always()
         run: |
@@ -110,6 +112,8 @@ jobs:
             reports/model-review.json
             reports/completion-model/answers.json
             reports/completion-model/review.csv
+            reports/translation-trace/generation-wire.jsonl
+            reports/RAG-PDF-Review-Kit-*.zip
       - name: Clean up owned model runtime
         if: always()
         run: docker rm -f rag-model-${{ github.run_id }} || true
@@ -186,5 +190,12 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/validation-results/completion-model.json docs/validation-results/completion-windows.json
+          for packet in reports/download/model/RAG-PDF-Review-Kit-*.zip; do
+            if [ -f "$packet" ]; then
+              mkdir -p docs/review-kit
+              cp "$packet" docs/review-kit/
+              git add -f "docs/review-kit/$(basename "$packet")"
+            fi
+          done
           git commit -m 'Record ungraded model outputs and hosted Windows acceptance'
           git push origin "$RESULT_BRANCH"
