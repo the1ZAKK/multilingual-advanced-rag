@@ -1282,6 +1282,8 @@ def validate_roundtrip_content(original, reverse):
     This deliberately rejects some faithful paraphrases. It is a necessary
     guard, not a proof: word order, negation and roles still need semantic audit.
     """
+    if numeric_atoms(original) != numeric_atoms(reverse):
+        raise ValueError("Answer translation changed round-trip numerical values")
     function_words = {
         "a",
         "an",
@@ -1319,6 +1321,16 @@ def validate_roundtrip_content(original, reverse):
     }
 
     def content(text):
+        # Equivalent written units are not changed quantities. Retain a unit
+        # token on both sides, so dropping percent/multiplier still fails.
+        text = re.sub(
+            r"(\d+(?:\.\d+)?)\s*(?:[x×]\b|[- ]?fold\b|times\b)",
+            r"\1 multiplier",
+            text,
+            flags=re.IGNORECASE,
+        )
+        text = re.sub(r"(\d+(?:\.\d+)?)\s*%", r"\1 percent", text)
+        text = re.sub(r"(\d+(?:\.\d+)?)\s+per\s+cent\b", r"\1 percent", text, flags=re.IGNORECASE)
         # Observed faithful back-translations can vary publication version words
         # and the assessment verb immediately before "the ability". Keep these
         # phrase-local; do not conflate arbitrary measurements or scientific terms.

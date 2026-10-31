@@ -143,6 +143,24 @@ def test_multiplier_suffixes_preserve_decimal_values_through_arabic_translation(
         )
 
 
+def test_roundtrip_unit_spelling_is_equivalent_but_values_and_units_cannot_disappear():
+    from rag.generation.ollama import validate_roundtrip_content
+
+    source = "Accuracy is 87.5%, a 2.8x increase."
+    for reverse in (
+        "Accuracy is 87.5 percent, a 2.8-fold increase.",
+        "Accuracy is 87.5 per cent, a 2.8 times increase.",
+    ):
+        validate_roundtrip_content(source, reverse)
+    for reverse in (
+        "Accuracy is 87.5 percent, a 2.7-fold increase.",
+        "Accuracy is 87.5, a 2.8-fold increase.",
+        "Accuracy is 87.5 percent, a 2.8 increase.",
+    ):
+        with pytest.raises(ValueError, match="round-trip"):
+            validate_roundtrip_content(source, reverse)
+
+
 @pytest.mark.parametrize("answer", ["The models were evaluated.", "The study has 48 tasks."])
 def test_omitted_requested_count_cannot_be_replaced_by_supported_background(answer):
     with pytest.raises(ValueError, match="missing requested model count"):

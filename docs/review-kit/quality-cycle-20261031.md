@@ -101,3 +101,10 @@ Arabic digits and grouping marks. A regression also rejects claiming `2x`
 from a premise reporting `2.8x`. Local validation is **428 passed, 5 skipped**.
 Earlier recordings remain associated with their own code; the final recording
 must use the commit containing this correction.
+
+The round-trip content check also canonicalizes exact numeric unit spellings
+(`x`, `times`, `-fold`; `%`, `percent`, `per cent`). It preserves an explicit
+unit token and separately checks numeric values, so dropped units or changed
+ratios still fail. This is formatting equivalence, not a general synonym
+exception. Existing negation, content, identifier and semantic checks remain.
+Local validation after the unit regressions is **429 passed, 5 skipped**.
