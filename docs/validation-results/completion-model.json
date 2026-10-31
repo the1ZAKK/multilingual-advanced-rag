@@ -1,0 +1,1064 @@
+{
+  "run_id": "dc577dab-1dda-408c-8fe0-04592cc3f6ef",
+  "created_at_utc": "2026-10-31T09:00:25.311420+00:00",
+  "model": "qwen3-instruct-hf:4b",
+  "translation_model": "qwen3-instruct-hf:4b",
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600.0,
+    "max_statements": 4,
+    "question_coverage_audit": false,
+    "context_tokens": 8192,
+    "request_timeout": 300.0,
+    "temperature": 0
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "documents": [
+    {
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "pages": 19,
+      "chunks": 102,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v5"
+    },
+    {
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "pages": 4,
+      "chunks": 30,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v5"
+    }
+  ],
+  "runtime": {
+    "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+    "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+    "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "bytes": 2497281120,
+    "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+    "profile": "instruct",
+    "installed_model": {
+      "name": "qwen3-instruct-hf:4b",
+      "model": "qwen3-instruct-hf:4b",
+      "modified_at": "2026-10-31T09:00:01.295072616Z",
+      "size": 2497281267,
+      "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+      "details": {
+        "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 262144,
+        "embedding_length": 2560,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "source_code_sha": "893675f39c234a4fd352708b3deb42c523578811",
+  "independent_human_reviews": 0,
+  "review_status": "unreviewed; provenance/language flags are not semantic grades",
+  "records": [
+    {
+      "id": "mmlu-size-en",
+      "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number.",
+      "language": "en",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "Source excerpts (not a generated answer):\n\nAbstract [S1]\n\narXiv:2402.12840v2  [cs.CL]  30 Jul 2024 [S1]\n\nThe focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. [S1]\n\n14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "arXiv:2402.12840v2  [cs.CL]  30 Jul 2024"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "The focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:1294-1741",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise states that the data comprises 40 tasks, but does not explicitly confirm that the ArabicMMLU benchmark itself comprises 40 tasks. The claim about the benchmark's structure is not directly stated or fully supported by the premise, which only describes the data composition.); showing evidence excerpts",
+        "latency_ms": 169274.25733300005
+      }
+    },
+    {
+      "id": "mmlu-size-ar",
+      "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم.",
+      "language": "ar",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nAbstract [S1]\n\narXiv:2402.12840v2  [cs.CL]  30 Jul 2024 [S1]\n\nThe focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. [S1]\n\n14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "arXiv:2402.12840v2  [cs.CL]  30 Jul 2024"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "The focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:1294-1741",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Output language mismatch: expected English answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 127729.23414000002
+      }
+    },
+    {
+      "id": "numbers-prompt-en",
+      "question": "According to the ArabicNumBench abstract, how many models, providers, and individual test cases were evaluated? Compare few-shot chain-of-thought accuracy with zero-shot accuracy, using the reported numbers.",
+      "language": "en",
+      "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "Source excerpts (not a generated answer):\n\nAbstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). [S1]\n\nFew-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems. [S2]\n\narXiv:2602.18776v1  [cs.CL]  21 Feb 2026 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Abstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%)."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "arXiv:2602.18776v1  [cs.CL]  21 Feb 2026"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Generated statement budget exceeded); showing evidence excerpts",
+        "latency_ms": 141889.60459600002
+      }
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة.",
+      "language": "ar",
+      "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nAbstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). [S1]\n\nFew-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems. [S2]\n\narXiv:2602.18776v1  [cs.CL]  21 Feb 2026 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Abstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%)."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "arXiv:2602.18776v1  [cs.CL]  21 Feb 2026"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Output language mismatch: expected English answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 157470.05556499993
+      }
+    },
+    {
+      "id": "mmlu-format-en",
+      "question": "According to the ArabicMMLU abstract, in what language and question format is the dataset written?",
+      "language": "en",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "Source excerpts (not a generated answer):\n\nAbstract [S1]\n\narXiv:2402.12840v2  [cs.CL]  30 Jul 2024 [S1]\n\nThe focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. [S1]\n\n14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "arXiv:2402.12840v2  [cs.CL]  30 Jul 2024"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "The focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:1294-1741",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises state that ArabicMMLU is a multi-task language understanding benchmark sourced from school exams, but do not specify that the questions are in Modern Standard Arabic (MSA). The claim about MSA is not explicitly supported.); showing evidence excerpts",
+        "latency_ms": 61500.66027200001
+      }
+    },
+    {
+      "id": "mmlu-format-ar",
+      "question": "وفقا لملخص ArabicMMLU، ما لغة الأسئلة وما صيغة الأسئلة في مجموعة البيانات؟",
+      "language": "ar",
+      "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nAbstract [S1]\n\narXiv:2402.12840v2  [cs.CL]  30 Jul 2024 [S1]\n\nThe focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. [S1]\n\n14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "Abstract"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "arXiv:2402.12840v2  [cs.CL]  30 Jul 2024"
+          },
+          {
+            "label": "S1",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:594-1444",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "The focus of language model evaluation has\ntransitioned towards reasoning and knowledge-\nintensive tasks, driven by advancements in pre-\ntraining large models. While state-of-the-art\nmodels are partially trained on large Arabic\ntexts, evaluating their performance in Arabic\nremains challenging due to the limited avail-\nability of relevant datasets. To bridge this gap,\nwe present ArabicMMLU, the first multi-task lan-\nguage understanding benchmark for the Arabic\nlanguage, sourced from school exams across\ndiverse educational levels in different coun-\ntries spanning North Africa, the Levant, and\nthe Gulf regions. Our data comprises 40 tasks\nand 14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5:p1:1294-1741",
+            "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+            "document_name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+            "page": 1,
+            "quote": "14,575 multiple-choice questions in Mod-\nern Standard Arabic (MSA) and is carefully\nconstructed by collaborating with native speak-\ners in the region. Our comprehensive evalu-\nations of 35 models reveal substantial room\nfor improvement, particularly among the best\nopen-source models. Notably, BLOOMZ, mT0,\nLLaMA2, and Falcon struggle to achieve a\nscore of 50%, while even the top-performing\nArabic-centric model only achieves a score of\n62.3%.1"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Output language mismatch: expected English answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 63290.28908700002
+      }
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "question": "According to the ArabicNumBench abstract, how many distinct number-reading tasks are used, and how many individual test cases are evaluated? Distinguish the two quantities.",
+      "language": "en",
+      "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": true,
+      "response": {
+        "answer": "210 number reading tasks are used [S1] (page 1).\n59,010 individual test cases are evaluated [S1] (page 1).\nThe two quantities are the number of number-reading tasks (210 individual test cases) and the number of models evaluated (71 models) [S1] (page 1).",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices."
+          },
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation."
+          },
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices."
+          }
+        ],
+        "generation_mode": "ollama",
+        "warning": null,
+        "latency_ms": 64900.38457899993
+      }
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "question": "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟ ميّز بين الكميتين.",
+      "language": "ar",
+      "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "extraction_version": "columns-sentences-v5",
+      "citation_provenance_valid": true,
+      "language_matches": false,
+      "response": {
+        "answer": "مقتطفات من المصادر (ليست إجابة مولّدة):\n\nAbstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). [S1]\n\nFew-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems. [S2]\n\narXiv:2602.18776v1  [cs.CL]  21 Feb 2026 [S2]",
+        "citations": [
+          {
+            "label": "S1",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:381-1217",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Abstract—We present ArabicNumBench, a comprehensive\nbenchmark for evaluating large language models on Arabic\nnumber reading tasks across Eastern Arabic-Indic numerals (0-9\nin Arabic script) and Western Arabic numerals (0-9). We evaluate\n71 models from 10 providers using four prompting strategies\n(zero-shot, zero-shot CoT, few-shot, few-shot CoT) on 210 number\nreading tasks spanning six contextual categories: pure numer-\nals, addresses, dates, quantities, and prices. Our evaluation\ncomprises 59,010 individual test cases and tracks extraction\nmethods to measure structured output generation. Evaluation\nreveals substantial performance variation, with accuracy ranging\nfrom 14.29% to 99.05% across models and strategies. Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%)."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "Few-\nshot Chain-of-Thought prompting achieves 2.8x higher accuracy\nthan zero-shot approaches (80.06% vs 28.76%). A striking\nfinding emerges: models achieving elite accuracy (98-99%) often\nproduce predominantly unstructured output, with most responses\nlacking Arabic CoT markers. Only 6 models consistently generate\nstructured output across all test cases, while the majority require\nfallback extraction methods despite high numerical accuracy.\nComprehensive evaluation of 281 model-strategy combinations\ndemonstrates that numerical accuracy and instruction-following\nrepresent distinct capabilities, establishing baselines for Arabic\nnumber comprehension and providing actionable guidance for\nmodel selection in production Arabic NLP systems."
+          },
+          {
+            "label": "S2",
+            "chunk_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b:p1:1104-1891",
+            "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+            "document_name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+            "page": 1,
+            "quote": "arXiv:2602.18776v1  [cs.CL]  21 Feb 2026"
+          }
+        ],
+        "generation_mode": "extractive",
+        "warning": "Ollama generation failed (ValueError: Output language mismatch: expected English answer prose); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "latency_ms": 79295.3701209999
+      }
+    }
+  ],
+  "translation_checks": [],
+  "generation_attempts": [
+    {
+      "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The ArabicMMLU benchmark comprises 40 tasks."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The ArabicMMLU dataset comprises 14,575 multiple-choice questions."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q2"
+              }
+            ],
+            "text": "35 evaluated models are reported in the ArabicMMLU abstract."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q3"
+              }
+            ],
+            "text": "The best Arabic-centric model achieved a score of 62.3%."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number.",
+      "language": "en",
+      "validation_error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise states the benchmark comprises 40 tasks and 14,575 questions, but does not explicitly confirm that the 40 tasks are the full scope of the ArabicMMLU benchmark. The claim is partially supported but lacks explicit confirmation of the task count as the defining feature of the benchmark.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The ArabicMMLU benchmark comprises 40 tasks."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The ArabicMMLU benchmark comprises 14,575 multiple-choice questions in Modern Standard Arabic."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q2"
+              }
+            ],
+            "text": "The ArabicMMLU abstract reports that 35 models were evaluated."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q3"
+              }
+            ],
+            "text": "The best Arabic-centric model achieved a score of 62.3%."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "عدد المهام هو 40."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "عدد الأسئلة في ArabicMMLU هو 14,575."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q2"
+              }
+            ],
+            "text": "تم تقييم 35 نموذجًا في ملخص ArabicMMLU."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q3"
+              }
+            ],
+            "text": "الناتج الأفضل لنموذج متمحور حول العربية هو 62.3%."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم.",
+      "language": "en",
+      "validation_error": "Output language mismatch: expected English answer prose",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "عدد المهام في ArabicMMLU هو 40."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "عدد الأسئلة في ArabicMMLU هو 14,575."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S2:Q2"
+              }
+            ],
+            "text": "تم تقييم 35 نموذجًا في ملخص ArabicMMLU."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "أفضل نموذج متمحور حول العربية يحقق نتيجة 62.3%."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the ArabicNumBench abstract, how many models, providers, and individual test cases were evaluated? Compare few-shot chain-of-thought accuracy with zero-shot accuracy, using the reported numbers.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "71 models are evaluated."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "10 providers"
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q3"
+              }
+            ],
+            "text": "59,010 individual test cases"
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              },
+              {
+                "ref_id": "S2:Q1"
+              }
+            ],
+            "text": "Few-shot Chain-of-Thought prompting achieves 2.8x higher accuracy than zero-shot approaches, with an accuracy of 80.06% for few-shot CoT compared to 28.76% for zero-shot."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد النماذج هو 71."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد مقدمي النماذج هو 10."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q3"
+              }
+            ],
+            "text": "عدد حالات الاختبار الفردية هو 59,010."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "الدقة في سلسلة التفكير بأمثلة قليلة (few-shot CoT) تُعد 80.06%، بينما الدقة دون أمثلة (zero-shot) تبلغ 28.76%، مما يُظهر تحسنًا بنسبة 2.8 مرة في الدقة عند استخدام سلسلة التفكير بأمثلة قليلة مقارنة بالدقة دون أمثلة."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة.",
+      "language": "en",
+      "validation_error": "Output language mismatch: expected English answer prose",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد النماذج هو 71."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد مقدمي النماذج هو 10."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q3"
+              }
+            ],
+            "text": "عدد حالات الاختبار الفردية في ملخص ArabicNumBench هو 59,010."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "الدقة في سلسلة التفكير بأمثلة قليلة (few-shot CoT) تُعد 80.06%، بينما تبلغ الدقة دون أمثلة (zero-shot) 28.76%، مما يُظهر تحسنًا بنسبة 2.8 مرة في الدقة عند استخدام سلسلة التفكير بأمثلة قليلة مقارنة بالدقة دون أمثلة."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the ArabicMMLU abstract, in what language and question format is the dataset written?",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "The dataset is written in Modern Standard Arabic (MSA)."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The dataset uses a multiple-choice question format."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the ArabicMMLU abstract, in what language and question format is the dataset written?",
+      "language": "en",
+      "validation_error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises do not mention anything about the language of the dataset, only that it is sourced from school exams in various regions. No information is provided about whether the dataset is written in Modern Standard Arabic (MSA) or otherwise.",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "The ArabicMMLU dataset consists of multiple-choice questions in Modern Standard Arabic (MSA)."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q6"
+              }
+            ],
+            "text": "The dataset includes 40 tasks and 14,575 multiple-choice questions in Modern Standard Arabic (MSA)."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقا لملخص ArabicMMLU، ما لغة الأسئلة وما صيغة الأسئلة في مجموعة البيانات؟",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "لغة الأسئلة هي اللغة المعاصرة (Modern Standard Arabic, MSA)."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "صيغة الأسئلة في مجموعة البيانات هي أسئلة اختيار من متعدد (multiple-choice questions) مكتوبة باللغة المعيارية للعربية (MSA)."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقا لملخص ArabicMMLU، ما لغة الأسئلة وما صيغة الأسئلة في مجموعة البيانات؟",
+      "language": "en",
+      "validation_error": "Output language mismatch: expected English answer prose",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "لغة الأسئلة هي اللغة المعيارية الحديثة (MSA)."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q5"
+              }
+            ],
+            "text": "The questions in the dataset are formulated as multiple-choice questions in Modern Standard Arabic (MSA)."
+          }
+        ]
+      }
+    },
+    {
+      "question": "According to the ArabicNumBench abstract, how many distinct number-reading tasks are used, and how many individual test cases are evaluated? Distinguish the two quantities.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "210 number reading tasks are used."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q3"
+              }
+            ],
+            "text": "59,010 individual test cases are evaluated."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "The two quantities are the number of number-reading tasks (210 individual test cases) and the number of models evaluated (71 models)."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟ ميّز بين الكميتين.",
+      "language": "en",
+      "validation_error": null,
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد مهام قراءة الأعداد المتميزة هو 210، وعدد حالات الاختبار الفردية التي جرى تقييمها هو 59,010."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              },
+              {
+                "ref_id": "S1:Q3"
+              }
+            ],
+            "text": "عدد مهام قراءة الأعداد المتميزة هو 210، وعدد حالات الاختبار الفردية هو 59,010."
+          }
+        ]
+      }
+    },
+    {
+      "question": "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟ ميّز بين الكميتين.",
+      "language": "en",
+      "validation_error": "Output language mismatch: expected English answer prose",
+      "result": {
+        "statements": [
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "عدد مهام قراءة الأعداد المتميزة هو 210 مُتَمَيّزَة، وعدد حالات الاختبار الفردية التي جرى تقييمها هو 59,010 حالة."
+          },
+          {
+            "citations": [
+              {
+                "ref_id": "S1:Q2"
+              }
+            ],
+            "text": "The benchmark includes 210 number reading tasks."
+          }
+        ]
+      }
+    }
+  ],
+  "rejected_attempts": [
+    {
+      "time": "2026-10-31T09:02:08.659653+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number."
+      },
+      "result": {
+        "error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise states the benchmark comprises 40 tasks and 14,575 questions, but does not explicitly confirm that the 40 tasks are the full scope of the ArabicMMLU benchmark. The claim is partially supported but lacks explicit confirmation of the task count as the defining feature of the benchmark."
+      }
+    },
+    {
+      "time": "2026-10-31T09:03:14.587482+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "According to the ArabicMMLU abstract, how many tasks, questions, and evaluated models are reported, and what score did the best Arabic-centric model achieve? Cite each number."
+      },
+      "result": {
+        "error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise states that the data comprises 40 tasks, but does not explicitly confirm that the ArabicMMLU benchmark itself comprises 40 tasks. The claim about the benchmark's structure is not directly stated or fully supported by the premise, which only describes the data composition."
+      }
+    },
+    {
+      "time": "2026-10-31T09:04:45.945232+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:05:22.317398+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقًا لملخص ArabicMMLU، كم عدد المهام والأسئلة والنماذج التي جرى تقييمها، وما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:06:43.197035+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "According to the ArabicNumBench abstract, how many models, providers, and individual test cases were evaluated? Compare few-shot chain-of-thought accuracy with zero-shot accuracy, using the reported numbers."
+      },
+      "result": {
+        "error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise states that 71 models are evaluated from 10 providers using four prompting strategies on 210 number reading tasks, but does not explicitly confirm the total number of models evaluated as 71. The claim is supported in context, but the word '71 models' is not directly stated as the evaluated count; it is implied through the evaluation scope. The premise does not explicitly state '71 models are evaluated' as a direct factual assertion, so direct support is missing."
+      }
+    },
+    {
+      "time": "2026-10-31T09:09:34.251008+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:10:21.679965+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقًا لملخص ArabicNumBench، كم عدد النماذج ومقدميها وحالات الاختبار الفردية؟ قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:10:57.717426+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "According to the ArabicMMLU abstract, in what language and question format is the dataset written?"
+      },
+      "result": {
+        "error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises do not mention anything about the language of the dataset, only that it is sourced from school exams in various regions. No information is provided about whether the dataset is written in Modern Standard Arabic (MSA) or otherwise."
+      }
+    },
+    {
+      "time": "2026-10-31T09:11:23.182972+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "According to the ArabicMMLU abstract, in what language and question format is the dataset written?"
+      },
+      "result": {
+        "error": "Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premises state that ArabicMMLU is a multi-task language understanding benchmark sourced from school exams, but do not specify that the questions are in Modern Standard Arabic (MSA). The claim about MSA is not explicitly supported."
+      }
+    },
+    {
+      "time": "2026-10-31T09:12:10.259420+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقا لملخص ArabicMMLU، ما لغة الأسئلة وما صيغة الأسئلة في مجموعة البيانات؟"
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:12:26.474456+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقا لملخص ArabicMMLU، ما لغة الأسئلة وما صيغة الأسئلة في مجموعة البيانات؟"
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:14:28.348056+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟ ميّز بين الكميتين."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    },
+    {
+      "time": "2026-10-31T09:14:50.673685+00:00",
+      "stage": "validation-rejection",
+      "request": {
+        "question": "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟ ميّز بين الكميتين."
+      },
+      "result": {
+        "error": "Output language mismatch: expected English answer prose"
+      }
+    }
+  ],
+  "ci_job_result": "success"
+}
