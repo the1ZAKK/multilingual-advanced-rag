@@ -16,6 +16,9 @@ import httpx
 from rag.config import Settings
 from rag.generation.contradictions import reject_polarity_conflicts
 from rag.generation.numerical import (
+    atoms as numerical_values,
+)
+from rag.generation.numerical import (
     validate_comparison_slot,
     validate_count_slot,
     validate_numeric_support,
@@ -1266,13 +1269,9 @@ def numeric_atoms(text):
     Only conventional three-digit grouping is collapsed. Source quote bytes
     remain unchanged, and relation/condition checks still require semantic audit.
     """
-    text = normalized_numerals(text).replace("\u066b", ".")
-    text = re.sub(
-        r"(?<!\d)\d{1,3}(?:[,\u066c]\d{3})+(?!\d)",
-        lambda match: re.sub(r"[,\u066c]", "", match[0]),
-        text,
-    )
-    return set(re.findall(r"(?<![A-Za-z0-9_])\d+(?:\.\d+)?(?![A-Za-z0-9_])", text))
+    # The shared tokenizer also handles multiplier suffixes. The former regex
+    # backtracked 2.8x to 2, rejecting faithful Arabic 2.8 and conflating ratios.
+    return numerical_values(text)
 
 
 def validate_roundtrip_content(original, reverse):

@@ -121,6 +121,28 @@ def test_every_numeric_citation_must_contribute_not_only_the_union():
     assert atoms("2.8x and ٢٫٤ ضعف") == {"2.8", "2.4"}
 
 
+def test_multiplier_suffixes_preserve_decimal_values_through_arabic_translation():
+    from rag.generation.ollama import numeric_atoms
+
+    assert numeric_atoms("2.8x and 14,575 questions") == numeric_atoms("2.8 ضعف و١٤٬٥٧٥ سؤالا")
+    assert numeric_atoms("2.8x") != numeric_atoms("2.7x")
+    with pytest.raises(ValueError, match="unsupported number"):
+        semantic_items(
+            {
+                "statements": [
+                    {
+                        "text": "The accuracy is 2x higher.",
+                        "citations": [{"ref_id": "S1:Q1"}],
+                    }
+                ]
+            },
+            [evidence("The accuracy is 2.8x higher.")],
+            {},
+            "What is the reported ratio?",
+            "en",
+        )
+
+
 @pytest.mark.parametrize("answer", ["The models were evaluated.", "The study has 48 tasks."])
 def test_omitted_requested_count_cannot_be_replaced_by_supported_background(answer):
     with pytest.raises(ValueError, match="missing requested model count"):

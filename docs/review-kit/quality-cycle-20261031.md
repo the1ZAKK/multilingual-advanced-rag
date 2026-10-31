@@ -88,3 +88,16 @@ The final pre-recording pass also rejects qualitative prose in a requested
 numerical score slot, and makes compact-report/trace reads explicitly UTF-8 on
 Windows. Its local checks are **427 passed, 5 skipped**, with clean Ruff lint,
 format and diff checks. No previously failed CI result has been discarded.
+
+### Decimal multipliers
+
+A further deterministic regression exposed a pre-existing tokenizer defect:
+`numeric_atoms("2.8x")` returned the integer `2` by regex backtracking, while
+Arabic `2.8 ضعف` returned `2.8`. That could reject a faithful multiplier
+translation and conflate different decimal ratios. Ordinary generation and
+translation now share the decimal/grouping/multiplier tokenizer with the new
+relation checks. The tokenizer still excludes model identifiers and recognizes
+Arabic digits and grouping marks. A regression also rejects claiming `2x`
+from a premise reporting `2.8x`. Local validation is **428 passed, 5 skipped**.
+Earlier recordings remain associated with their own code; the final recording
+must use the commit containing this correction.
