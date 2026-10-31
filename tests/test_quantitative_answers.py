@@ -36,7 +36,9 @@ def evidence(text, *, section="Abstract", page=1):
 def test_exact_development_questions_have_four_required_slots():
     from pathlib import Path
 
-    suite = json.loads(Path("data/evaluation/additional-paper-review.json").read_text())
+    suite = json.loads(
+        Path("data/evaluation/additional-paper-review.json").read_text(encoding="utf-8")
+    )
     for case in suite["cases"]:
         parts = question_parts(case["question"])
         assert len(parts) == 4, (case["id"], parts)
@@ -77,6 +79,28 @@ def test_swapped_condition_to_accuracy_mapping_is_rejected(claim):
         validate_numeric_support(
             claim, ["Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."]
         )
+
+
+def test_model_strategy_combinations_are_not_model_counts():
+    from rag.generation.numerical import count_bindings
+
+    assert count_bindings("281 model-strategy combinations") == set()
+    assert count_bindings("210 distinct number-reading tasks") == {("task", "210")}
+
+
+def test_inline_abstract_stops_before_index_terms_and_roman_sections():
+    from rag.ingestion.structure import chunk_spans, section_marks
+
+    text = (
+        "Title\nAbstract—We evaluated 23 models on 48 tasks.\n"
+        "Index Terms—model evaluation\nI. INTRODUCTION\n"
+        "Related experiments use 900 questions.\nII. RELATED WORK\nOther findings.\n"
+    )
+    spans = chunk_spans(text, 900, 150, section_marks(text, None))
+    abstract = "".join(text[start:end] for start, end, section in spans if section == "Abstract")
+    assert "23 models" in abstract and "48 tasks" in abstract
+    assert "Index Terms" not in abstract and "900" not in abstract
+    assert abstract in text
 
 
 def test_faithful_comparison_may_reverse_mention_order():

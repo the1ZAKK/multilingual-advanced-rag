@@ -99,7 +99,7 @@ def packet(dataset, run_path, output, *, sources=None, archive=None):
             "human_reviews": 0,
             "verdicts": "ungraded",
             "files": {
-                str(p.relative_to(output)): hashlib.sha256(p.read_bytes()).hexdigest()
+                p.relative_to(output).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
                 for p in sorted(output.rglob("*"))
                 if p.is_file()
             },

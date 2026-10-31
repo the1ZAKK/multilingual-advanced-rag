@@ -5,7 +5,7 @@ from bisect import bisect_right
 
 from rag.ingestion.text import normalize
 
-VERSION = "columns-sentences-v4"
+VERSION = "columns-sentences-v5"
 
 _COUNT_WORDS = {
     "one": 1,
@@ -183,6 +183,16 @@ def section_marks(
             marks.append((match.start(), match.group(0).strip().replace("\n", " ")))
     for match in re.finditer(r"(?m)^[ \t]*(Abstract|References|Appendix)[ \t]*\n", text):
         marks.append((match.start(), match.group(1)))
+    # IEEE-style inline abstracts and Roman section headings are real section
+    # boundaries. Keep every original character/offset; do not quote a rebuilt
+    # abstract or treat related work on that page as abstract evidence.
+    for match in re.finditer(r"(?m)^[ \t]*(?:Abstract|ملخص)[ \t]*[—–:-]", text):
+        marks.append((match.start(), "Abstract"))
+    for match in re.finditer(r"(?m)^[ \t]*(?:Index Terms|Keywords)[ \t]*[—–:-]", text):
+        marks.append((match.start(), "Keywords"))
+    for match in re.finditer(r"(?m)^[IVX]{1,7}\.[ \t]+([A-Z][^\n.!?]{2,65})\n", text):
+        if bold_text is None or match[1].strip() in bold_text:
+            marks.append((match.start(), match[0].strip()))
     for start, _, _ in contribution_declarations(text):
         current = max((mark for mark in marks if mark[0] <= start), key=lambda m: m[0])[1]
         if not current or not re.match(r"^(?:Appendix|References|[A-Z](?:\.\d+)*\b)", current):

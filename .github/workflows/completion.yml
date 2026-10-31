@@ -2,7 +2,7 @@ name: Record model tests and Windows acceptance
 on:
   push:
     branches: [arabic-quality-candidate]
-    paths: [scripts/prepare_model.py, .github/workflows/completion.yml]
+    paths: [src/rag/**, scripts/prepare_model.py, scripts/review_packet.py, data/evaluation/quality-cycle-20261031.json, .github/workflows/completion.yml]
   workflow_dispatch:
     inputs:
       suite:

@@ -63,3 +63,23 @@ service. Hosted verified execution is used rather than substituting mock model
 answers. Model and CI outcomes will be recorded after the pushed run completes.
 Independent human source review and actual laptop acceptance remain pending;
 no stable release is authorized or published.
+
+## Cross-platform and source follow-up
+
+The first implementation recording uses commit `2a085bf` and model workflow
+41185838438. Its Quality run 41185838432 passed Linux and Docker but exposed
+two Windows regressions: an implicit cp1252 test read of Arabic JSON and native
+backslashes in the new ZIP manifest. Both were corrected with explicit UTF-8
+and POSIX archive keys. The failed run is retained, not relabeled a pass.
+
+Direct original-PDF checks also found that inline `Abstract—` and IEEE Roman
+section headings were not classified by parser v4. Parser v5 recognizes those
+boundaries without rewriting source characters. Fresh ArabicNumBench abstract
+evidence is now confined to its 1,623 source characters on PDF page 1, excluding
+index terms, introduction and related work. Existing stored indexes keep their
+extraction version and are not automatically reindexed or migrated. Compound
+model-strategy counts are also excluded from bare model counts.
+
+After these fixes, local validation is **424 passed, 5 skipped**; Ruff lint and
+format checks pass. A new hosted run is required for the corrected commit;
+the earlier model run cannot validate the parser or Windows follow-up changes.

@@ -50,7 +50,7 @@ def count_bindings(text):
     for role, expression in ROLES.items():
         for match in re.finditer(
             rf"(?<![\w.])({NUMBER})\s+(?:(?:evaluated|distinct|individual|multiple[- ]?choice|"
-            rf"number[- ]reading|large language|الفردية|مختلفة)\s+){{0,3}}(?:{expression})(?!\w)",
+            rf"number[- ]reading|large language|الفردية|مختلفة)\s+){{0,3}}(?:{expression})(?![\w-])",
             text,
         ):
             result.add((role, match[1]))
