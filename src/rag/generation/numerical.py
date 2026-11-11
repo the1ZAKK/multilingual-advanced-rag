@@ -57,6 +57,17 @@ def count_bindings(text):
     return result
 
 
+def strategy_mentions(text):
+    """Find specific prompting conditions before their overlapping shorter names."""
+    text = clean_numbers(text)
+    matches = []
+    for strategy, expression in STRATEGIES.items():
+        for match in re.finditer(expression, text):
+            if not any(match.start() < end and start < match.end() for start, end, _ in matches):
+                matches.append((match.start(), match.end(), strategy))
+    return sorted(matches)
+
+
 def strategy_bindings(text):
     """Bind two explicitly named prompting conditions to their percentage pair.
 
@@ -64,12 +75,7 @@ def strategy_bindings(text):
     Ambiguous lists/ranges return no bindings, never a guessed association.
     """
     text = clean_numbers(text)
-    matches = []
-    for strategy, expression in STRATEGIES.items():
-        for match in re.finditer(expression, text):
-            if not any(match.start() < end and start < match.end() for start, end, _ in matches):
-                matches.append((match.start(), match.end(), strategy))
-    matches.sort()
+    matches = strategy_mentions(text)
     percentages = list(re.finditer(rf"({NUMBER})\s*%", text))
     if len(matches) != 2 or len(percentages) != 2 or matches[0][2] == matches[1][2]:
         return set()
@@ -97,7 +103,8 @@ def validate_numeric_support(claim, premises):
         expected = set().union(*(extractor(p) for p in premises))
         for role, value in extractor(claim):
             alternatives = {v for r, v in expected if r == role}
-            if alternatives and value not in alternatives:
+            wrong_role = not alternatives and any(v == value for _, v in expected)
+            if wrong_role or (alternatives and value not in alternatives):
                 raise ValueError(f"Numerical grounding failed: swapped {label} {role}")
 
 
@@ -127,6 +134,11 @@ def validate_comparison_slot(question, answer, premises):
     if not re.search(r"\bcompare\b|قارن", question, re.IGNORECASE):
         return
     pairs = [p for p in premises if strategy_bindings(p)]
+    requested = {role for _, _, role in strategy_mentions(question)}
+    if len(requested) == 2:
+        pairs = [p for p in pairs if {role for role, _ in strategy_bindings(p)} == requested]
+        if not pairs:
+            raise ValueError("Insufficient evidence for the requested condition comparison")
     expected = set().union(*(strategy_bindings(p) for p in pairs))
     # Conflicting source values are ambiguous, not a license to pick an answer.
     if not expected or any(len({v for r, v in expected if r == role}) > 1 for role, _ in expected):

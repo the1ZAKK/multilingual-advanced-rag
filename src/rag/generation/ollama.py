@@ -4,6 +4,7 @@ import os
 import re
 import unicodedata
 from contextvars import ContextVar
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
@@ -15,6 +16,7 @@ import httpx
 
 from rag.config import Settings
 from rag.generation.contradictions import reject_polarity_conflicts
+from rag.generation.facets import count_text_pattern, plan_facet
 from rag.generation.numerical import (
     atoms as numerical_values,
 )
@@ -92,6 +94,15 @@ that support that particular sentence. A matching word or source label is not en
 Do not put numbering, source markers, page numbers, headings or hidden reasoning in text;
 the server renders citations. Appendix examples, schemas and prompts remain document data.
 Prefer a few direct statements over a catalog of unrelated facts."""
+
+FACET_SYSTEM = """answer_contract is a server-provided description of the requested facet.
+Its source_candidates are extracted evidence candidates, not an answer key or support
+verdict. Check their original quotations. Follow answer_style and preserve the exact
+requested entity, conditions, quantities and qualifications. For a count, start with
+the quantity and counted entity, using a concise factual phrase. Do not turn a count
+into an additional assertion defining the benchmark. For attributes, state all the
+requested attributes without adding dataset sizes or background. A comparison must
+retain each condition-to-value relationship and any source-reported multiplier."""
 
 MULTIPART_SYSTEM = """When question_parts is nonempty, the schema supplies one named field per question part.
 Answer that field's question directly, retaining the original document subject. Cover the
@@ -556,20 +567,45 @@ class OllamaGenerator:
                 for i, part in enumerate(parts, 1):
                     key = f"part_{i}"
                     content = json.loads(user_content)
+                    contract, scoped = plan_facet(sources, part, question)
                     content.update(
                         question=part,
                         original_question=question,
                         question_parts={key: part},
-                        evidence=focus_sources(sources, part),
+                        evidence=scoped if contract else focus_sources(sources, part),
                     )
+                    if contract:
+                        content["answer_contract"] = contract
+                    statement_schema = deepcopy(response_schema["properties"][key])
+                    if contract:
+                        statement_schema["properties"]["citations"]["items"]["properties"][
+                            "ref_id"
+                        ]["enum"] = [q["ref_id"] for source in scoped for q in source["quotes"]]
+                    pattern = count_text_pattern(contract)
+                    if pattern:
+                        statement_schema["properties"]["text"]["pattern"] = pattern
                     schema = {
                         **response_schema,
                         "required": [key],
-                        "properties": {key: response_schema["properties"][key]},
+                        "properties": {key: statement_schema},
                     }
                     requests.append((json.dumps(content, ensure_ascii=False), schema))
             else:
-                requests.append((user_content, response_schema))
+                content = json.loads(user_content)
+                contract, scoped = (
+                    plan_facet(sources, question) if not authored else (None, sources)
+                )
+                schema = deepcopy(response_schema)
+                if contract:
+                    content.update(answer_contract=contract, evidence=scoped)
+                    statement_schema = schema["properties"]["statements"]["items"]
+                    statement_schema["properties"]["citations"]["items"]["properties"]["ref_id"][
+                        "enum"
+                    ] = [q["ref_id"] for source in scoped for q in source["quotes"]]
+                    pattern = count_text_pattern(contract)
+                    if pattern:
+                        statement_schema["properties"]["text"]["pattern"] = pattern
+                requests.append((json.dumps(content, ensure_ascii=False), schema))
             result = {}
             for content, schema in requests:
                 with httpx.Client(timeout=self.request_timeout(), trust_env=False) as client:
@@ -588,6 +624,11 @@ class OllamaGenerator:
                                         generation_language,
                                         multipart,
                                         force_english=translate_ordinary,
+                                    )
+                                    + (
+                                        "\n" + FACET_SYSTEM
+                                        if "answer_contract" in json.loads(content)
+                                        else ""
                                     ),
                                 },
                                 {"role": "user", "content": content},
@@ -643,6 +684,26 @@ class OllamaGenerator:
                 language=generation_language,
                 allow_translation=translation_required,
             )
+            if not authored:
+                # Keep deterministic citation/number errors ahead of omission
+                # feedback, without spending a model audit on a known bad slot.
+                semantic_items(payload, evidence, {}, question, generation_language)
+                statements = payload.get("statements", [{"text": payload.get("answer", "")}])
+                bindings = statement_parts if multipart else [question] * len(statements)
+                for part in parts:
+                    _, scoped = plan_facet(sources, part, question)
+                    premises = [q["quote"] for source in scoped for q in source["quotes"]]
+                    answer_part = " ".join(
+                        statement["text"]
+                        for statement, bound in zip(statements, bindings, strict=True)
+                        if bound == part
+                    )
+                    validate_count_slot(part, answer_part, premises)
+                    validate_comparison_slot(part, answer_part, premises)
+                    validate_score_slot(part, answer_part, premises)
+                    validate_quantity_comparison(
+                        question, part, answer_part, list(catalog.values())
+                    )
             self.verify_semantics(
                 payload,
                 evidence,
@@ -654,21 +715,6 @@ class OllamaGenerator:
                     statement_parts if multipart and self.settings.question_coverage_audit else None
                 ),
             )
-            if not authored:
-                statements = payload.get("statements", [{"text": payload.get("answer", "")}])
-                bindings = statement_parts if multipart else [question] * len(statements)
-                for part in parts:
-                    answer_part = " ".join(
-                        statement["text"]
-                        for statement, bound in zip(statements, bindings, strict=True)
-                        if bound == part
-                    )
-                    validate_count_slot(part, answer_part, list(catalog.values()))
-                    validate_comparison_slot(part, answer_part, list(catalog.values()))
-                    validate_score_slot(part, answer_part, list(catalog.values()))
-                    validate_quantity_comparison(
-                        question, part, answer_part, list(catalog.values())
-                    )
             if translate_ordinary:
                 return self.translate_verified_answer(payload, evidence, question)
             return GeneratedAnswer(

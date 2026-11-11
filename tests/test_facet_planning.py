@@ -1,0 +1,176 @@
+import json
+import re
+from copy import deepcopy
+
+import httpx
+import pytest
+
+from rag.generation.facets import count_text_pattern, plan_facet, requested_counts
+from rag.generation.numerical import validate_comparison_slot, validate_numeric_support
+from rag.generation.ollama import GenerationUnavailable
+from rag.models import Chunk, Hit
+
+
+def source(*quotes):
+    return [
+        dict(
+            label="S1",
+            page=1,
+            document="Independent.pdf",
+            quotes=[dict(ref_id=f"S1:Q{i}", quote=q) for i, q in enumerate(quotes, 1)],
+        )
+    ]
+
+
+@pytest.mark.parametrize("quantity", ["23", "31"])
+@pytest.mark.parametrize(
+    "question", ["How many models were evaluated?", "كم عدد النماذج التي تم تقييمها؟"]
+)
+def test_count_contract_uses_source_values_and_the_requested_predicate(quantity, question):
+    sources = source(
+        f"We evaluated {quantity} models from 9 providers.",
+        "Only 4 models consistently generate structured output.",
+    )
+    original = deepcopy(sources)
+    contract, selected = plan_facet(sources, question)
+    assert contract["requested_entities"] == ["model"]
+    assert {item["quantity"] for item in contract["source_candidates"]} == {quantity}
+    assert [q["ref_id"] for s in selected for q in s["quotes"]] == ["S1:Q1"]
+    assert sources == original
+    assert re.match(count_text_pattern(contract), f"{quantity} evaluated models.")
+    assert not re.match(count_text_pattern(contract), "4 models.")
+
+
+def test_generation_count_does_not_select_evaluation_total():
+    contract, selected = plan_facet(
+        source("We evaluated 23 models.", "Only 4 models consistently generate structured output."),
+        "How many models consistently generate structured output across the test cases?",
+    )
+    assert {item["quantity"] for item in contract["source_candidates"]} == {"4"}
+    assert selected[0]["quotes"][0]["ref_id"] == "S1:Q2"
+
+
+def test_facet_roles_do_not_come_from_the_document_name_or_an_empty_pattern():
+    assert requested_counts("According to ModelStudy, how many questions?") == {"question"}
+    contract, _ = plan_facet(source("23.5 tasks are used."), "How many tasks?")
+    assert re.match(count_text_pattern(contract), "23.5 tasks")
+    assert not re.match(count_text_pattern(contract), " tasks")
+    assert not re.match(count_text_pattern(contract), "23.55 tasks")
+
+
+def test_the_requested_condition_pair_excludes_a_different_real_comparison():
+    good = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
+    other = "Few-shot methods achieve 2.2x the zero-shot accuracy (80% vs 36%)."
+    contract, selected = plan_facet(
+        source(other, good), "Compare few-shot CoT accuracy with zero-shot accuracy."
+    )
+    assert contract["kind"] == "condition-comparison"
+    assert selected[0]["quotes"] == [dict(ref_id="S1:Q2", quote=good)]
+    with pytest.raises(ValueError, match="requested condition comparison"):
+        validate_comparison_slot(
+            "Compare few-shot CoT accuracy with zero-shot accuracy.", other, [other]
+        )
+
+
+def test_attribute_plans_select_the_data_attribute_without_unrelated_model_background():
+    sources = source(
+        "Models trained on French texts are evaluated in Arabic despite limited datasets.",
+        "The data comprises 900 multiple-choice questions in French.",
+    )
+    contract, selected = plan_facet(
+        sources, "In what language and question format is the dataset written?"
+    )
+    assert contract["kind"] == "attribute"
+    assert [q["ref_id"] for s in selected for q in s["quotes"]] == ["S1:Q2"]
+    assert plan_facet(sources, "Was this model trained on the French language?")[0] is None
+
+
+def test_a_known_value_cannot_be_relabelled_as_an_uncited_entity():
+    with pytest.raises(ValueError, match="swapped counted entity"):
+        validate_numeric_support("23 questions were evaluated.", ["We evaluated 23 models."])
+
+
+def test_omitted_counts_and_wrong_scope_fail_before_a_positive_semantic_judge(service, monkeypatch):
+    text = "We evaluated 23 models. Only 4 models consistently generate structured output."
+    hits = [
+        Hit(
+            chunk=Chunk(
+                chunk_id="source:p1:0",
+                document_id="source",
+                document_name="Source.pdf",
+                page=1,
+                text=text,
+                normalized=text,
+                start=0,
+                end=len(text),
+            ),
+            score=1,
+        )
+    ]
+    original_client = httpx.Client
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        seen.append(user)
+        assert user.get("task") != "semantic-grounding-audit", "An invalid count reached the judge"
+        assert user["answer_contract"]["source_candidates"][0]["quantity"] == "23"
+        assert body["format"]["properties"]["statements"]["items"]["properties"]["text"]["pattern"]
+        result = {"statements": [{"text": "4 models.", "citations": [{"ref_id": "S1:Q2"}]}]}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kwargs: original_client(transport=httpx.MockTransport(respond))
+    )
+    with pytest.raises(GenerationUnavailable, match="missing requested model count"):
+        service.generator.generate("How many models were evaluated?", "en", hits)
+    assert len(seen) == 2
+
+
+def test_facet_candidates_are_not_automatic_acceptance(service, monkeypatch):
+    text = "We evaluated 23 models."
+    hits = [
+        Hit(
+            chunk=Chunk(
+                chunk_id="source:p1:0",
+                document_id="source",
+                document_name="Source.pdf",
+                page=1,
+                text=text,
+                normalized=text,
+                start=0,
+                end=len(text),
+            ),
+            score=1,
+        )
+    ]
+    original_client = httpx.Client
+    audits = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        if user.get("task") == "semantic-grounding-audit":
+            audits.append(user)
+            result = {
+                "verdicts": [
+                    dict(
+                        item_id=user["items"][0]["item_id"],
+                        supported=False,
+                        complete=False,
+                        direct=False,
+                        reason="A negative audit must remain a rejection.",
+                    )
+                ]
+            }
+        else:
+            result = {"statements": [{"text": "23 models.", "citations": [{"ref_id": "S1:Q1"}]}]}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kwargs: original_client(transport=httpx.MockTransport(respond))
+    )
+    with pytest.raises(GenerationUnavailable, match="Semantic grounding failed"):
+        service.generator.generate("How many models were evaluated?", "en", hits)
+    assert len(audits) == 2
