@@ -1,0 +1,9 @@
+{
+  "workflow_run": 43014685739,
+  "artifact_id": 13855991775,
+  "artifact_sha256": "ee4e77058aae9326ba755472c6222513f939aca2bcfebae132622379b1ce3723",
+  "source_code_sha": "c5719b436b2b35f4c36f868a16a55ee6ee3b4475",
+  "packet_git_blob_sha": "28043319481450f0002601aba9a7672c0b1829a5",
+  "model_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+  "note": "Previously locally verified failed recording, used as a hosted packet-verification control after workspace loss; no semantic or human verdicts assigned."
+}

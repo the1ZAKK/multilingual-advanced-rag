@@ -1,0 +1,231 @@
+name: Verify recorded review packet
+on:
+  push:
+    branches: [arabic-quality-candidate]
+    paths:
+      - .github/workflows/review-verification.yml
+      - docs/validation-results/review-verification-request.json
+permissions:
+  contents: read
+jobs:
+  verify-packet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.19'
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --locked --extra dev --python 3.12
+      - name: Read source-bound verification request
+        id: request
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+          
+          data = json.loads(Path("docs/validation-results/review-verification-request.json").read_text())
+          for field in ("workflow_run", "artifact_id"):
+              if type(data[field]) is not int or data[field] <= 0:
+                  raise ValueError("Invalid numeric artifact identity")
+          for field, length in (("source_code_sha", 40), ("packet_git_blob_sha", 40), ("model_sha256", 64)):
+              if not re.fullmatch("[0-9a-f]{" + str(length) + "}", data[field]):
+                  raise ValueError("Invalid verification hash")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as handle:
+              handle.write("workflow_run=" + str(data["workflow_run"]) + "\n")
+              handle.write("artifact_id=" + str(data["artifact_id"]) + "\n")
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ steps.request.outputs.artifact_id }}
+          run-id: ${{ steps.request.outputs.workflow_run }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          merge-multiple: true
+          path: reports/download
+      - name: Verify native sources, exact answers and ungraded review bindings
+        run: |
+          uv run --no-sync python - <<'PY'
+          import csv
+          import gzip
+          import hashlib
+          import html
+          import json
+          import os
+          import re
+          import tempfile
+          import zipfile
+          from collections import Counter
+          from html.parser import HTMLParser
+          from pathlib import Path, PurePosixPath
+          
+          import pymupdf
+          
+          from rag.evaluation.review import ReviewSuite, summarize_reviews, verify_sources
+          
+          
+          def require(condition, message):
+              if not condition:
+                  raise ValueError(message)
+          
+          
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.hrefs = []
+          
+              def handle_starttag(self, tag, attrs):
+                  if tag == "a":
+                      self.hrefs.extend(value for key, value in attrs if key == "href")
+          
+          
+          request = json.loads(Path("docs/validation-results/review-verification-request.json").read_text())
+          download = Path("reports/download")
+          archive_paths = list(download.glob("RAG-PDF-Review-Kit-*.zip"))
+          require(len(archive_paths) == 1, "Require exactly one recorded portable packet")
+          archive = archive_paths[0]
+          packet_bytes = archive.read_bytes()
+          blob = hashlib.sha1(b"blob " + str(len(packet_bytes)).encode() + b"\0" + packet_bytes).hexdigest()
+          require(blob == request["packet_git_blob_sha"], "Packet differs from its published Git blob")
+          report_path = download / "model-review.json"
+          report = json.loads(report_path.read_text(encoding="utf-8"))
+          require(report["source_code_sha"] == request["source_code_sha"], "Wrong model source commit")
+          require(report["runtime"]["sha256"] == request["model_sha256"], "Wrong verified model")
+          frozen = ReviewSuite.model_validate_json(
+              Path("data/evaluation/quality-cycle-20261031.json").read_text(encoding="utf-8")
+          )
+          
+          with tempfile.TemporaryDirectory() as temporary:
+              root = Path(temporary).resolve()
+              with zipfile.ZipFile(archive) as bundle:
+                  names = bundle.namelist()
+                  require(len(names) == len(set(names)), "Duplicate archive paths")
+                  for info in bundle.infolist():
+                      path = PurePosixPath(info.filename)
+                      require(
+                          not path.is_absolute()
+                          and ".." not in path.parts
+                          and "\\" not in info.filename
+                          and not re.match(r"^[A-Za-z]:", info.filename)
+                          and (info.external_attr >> 16) & 0o170000 != 0o120000,
+                          "Unsafe archive member",
+                      )
+                  require(bundle.testzip() is None, "Archive CRC check failed")
+                  bundle.extractall(root)
+              manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+              result = json.loads((root / "answers.json").read_text(encoding="utf-8"))
+              suite = ReviewSuite.model_validate_json((root / "reference.json").read_text(encoding="utf-8"))
+              require(suite == frozen, "Packet does not match the frozen question suite")
+              require(result["source_code_sha"] == request["source_code_sha"], "Wrong packet source commit")
+              require(manifest["source_code_sha"] == result["source_code_sha"], "Manifest source mismatch")
+              require(manifest["run_id"] == result["run_id"] == report["run_id"], "Run identity mismatch")
+              require(result["records"] == report["records"], "Packet changed the exact recorded answers")
+              require(result["runtime"] == report["runtime"], "Packet model/runtime mismatch")
+              require(result["generation_limits"] == report["generation_limits"], "Packet settings mismatch")
+              require(manifest["human_reviews"] == 0 and manifest["verdicts"] == "ungraded", "Graded manifest")
+              actual = {
+                  path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                  for path in root.rglob("*")
+                  if path.is_file() and path != root / "manifest.json"
+              }
+              require(actual == manifest["files"], "Manifest file-hash mismatch")
+              originals = verify_sources(suite, root / "PDFs")
+              summary = summarize_reviews(suite, result, root / "review.csv")
+              require(summary["reviewed"] == 0, "Fresh packet must be ungraded")
+              require((root / "review.csv").read_bytes().startswith(b"\xef\xbb\xbf"), "CSV needs UTF-8 BOM")
+              with (root / "review.csv").open(encoding="utf-8-sig", newline="") as handle:
+                  rows = list(csv.DictReader(handle))
+              require(
+                  all(not row[key] for row in rows for key in ("reviewer", "reviewer_type", "notes")),
+                  "Fresh reviewer fields must be blank",
+              )
+              source_by_hash = {source.sha256: source for source in suite.sources}
+              checks = []
+              page = (root / "START_HERE.html").read_text(encoding="utf-8")
+              links = Links()
+              links.feed(page)
+              require(len(links.hrefs) == len(suite.cases), "Missing HTML PDF links")
+              for href in links.hrefs:
+                  target = (root / href).resolve()
+                  require(target.is_relative_to(root) and target.is_file(), "Broken or external PDF link")
+              for record in result["records"]:
+                  response = record.get("response", {})
+                  citations = response.get("citations", [])
+                  for citation in citations:
+                      source = source_by_hash[citation["document_id"]]
+                      require(citation["document_id"] == record["document_id"], "Citation source mismatch")
+                      require(citation["document_name"] == source.filename, "Citation filename mismatch")
+                      with pymupdf.open(stream=originals[source.id], filetype="pdf") as pdf:
+                          number = citation["page"]
+                          require(1 <= number <= len(pdf), "Citation PDF page out of bounds")
+                          require(citation["quote"] in pdf[number - 1].get_text(), "Non-native quote/page")
+                      require(html.escape(citation["quote"]) in page, "HTML changed a recorded quotation")
+                  require(html.escape(record["question"]) in page, "HTML changed the question")
+                  answer = response.get("answer", record.get("error", ""))
+                  require(html.escape(answer) in page, "HTML changed the recorded answer")
+                  checks.append({
+                      "id": record["id"],
+                      "mode": response.get("generation_mode", "request-error"),
+                      "native_citations": len(citations),
+                      "native_pages": sorted({citation["page"] for citation in citations}),
+                      "recorded_language_check": record.get("language_matches"),
+                  })
+              verification = {
+                  "source_code_sha": result["source_code_sha"],
+                  "model_workflow_run": request["workflow_run"],
+                  "verification_code_sha": os.environ["GITHUB_SHA"],
+                  "verification_workflow_run": os.environ["GITHUB_RUN_ID"],
+                  "packet_git_blob_sha": blob,
+                  "packet_sha256": hashlib.sha256(packet_bytes).hexdigest(),
+                  "artifact_id": request["artifact_id"],
+                  "artifact_metadata_sha256": request["artifact_sha256"],
+                  "file_hashes_checked": len(actual),
+                  "pdfs_checked": len(originals),
+                  "html_pdf_links_checked": len(links.hrefs),
+                  "review_summary": summary,
+                  "records": checks,
+                  "note": "Packet integrity and native provenance only; no answer-quality or human verdicts assigned.",
+              }
+          
+          trace = (download / "translation-trace/generation-wire.jsonl").read_bytes()
+          events = [json.loads(line) for line in trace.decode("utf-8").splitlines()]
+          compressed = gzip.compress(trace, mtime=0)
+          require(gzip.decompress(compressed) == trace, "Trace compression changed original bytes")
+          verification["trace"] = {
+              "source_code_sha": report["source_code_sha"],
+              "sha256": hashlib.sha256(trace).hexdigest(),
+              "gzip_sha256": hashlib.sha256(compressed).hexdigest(),
+              "event_counts": dict(Counter(event["stage"] for event in events)),
+          }
+          verification["model_report_sha256"] = hashlib.sha256(report_path.read_bytes()).hexdigest()
+          output = Path("reports/publish")
+          output.mkdir(parents=True, exist_ok=False)
+          (output / "model-review.json").write_bytes(report_path.read_bytes())
+          (output / "generation-wire.jsonl.gz").write_bytes(compressed)
+          with (output / "review-packet-verification.json").open("x", encoding="utf-8") as handle:
+              json.dump(verification, handle, ensure_ascii=False, indent=2)
+          print(json.dumps(verification, ensure_ascii=False, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: packet-verification
+          path: reports/publish
+      - name: Preserve verified reports and lossless trace on a data-only branch
+        env:
+          RESULT_BRANCH: ci-review-verification-${{ github.run_id }}
+        run: |
+          git switch --orphan "$RESULT_BRANCH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p docs/validation-results
+          cp reports/publish/* docs/validation-results/
+          git add docs/validation-results
+          git commit -m 'Preserve source-bound packet verification and original model wire trace'
+          git push origin "$RESULT_BRANCH"
