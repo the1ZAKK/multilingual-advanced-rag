@@ -227,6 +227,23 @@ A leading English participle remains a participle/passive continuation, not a co
 
 # Scientific terminology, shared across documents rather than paper answers.
 # Each source-derived unit activates only concepts actually present in that unit.
+LANGUAGE_CENTRIC_TERMS = tuple(
+    (
+        rf"\b{english}[- ]centric\b",
+        f"{english}-centric",
+        f"متمحور حول {arabic}",
+        rf"متمحور(?:ة)?\s+حول\s+(?:اللغة\s+)?{re.escape(normalize(arabic))}",
+    )
+    for english, arabic in (
+        ("Arabic", "العربية"),
+        ("English", "الإنجليزية"),
+        ("French", "الفرنسية"),
+        ("German", "الألمانية"),
+        ("Spanish", "الإسبانية"),
+        ("Chinese", "الصينية"),
+    )
+)
+
 ORDINARY_TECHNICAL_TERMS = (
     (
         r"\bModern Standard Arabic\b",
@@ -235,7 +252,7 @@ ORDINARY_TECHNICAL_TERMS = (
         r"العربية\s+الفصحي\s+(?:المعاصرة|الحديثة)",
     ),
     (r"\bmultiple[- ]choice\b", "multiple-choice", "اختيار من متعدد", r"اختيار.{0,12}متعدد"),
-)
+) + LANGUAGE_CENTRIC_TERMS
 
 TRANSLATION_CONCEPTS = ORDINARY_TECHNICAL_TERMS + (
     (r"\bbenchmarks?\b", "benchmark", "معيار تقييم", r"معيار|معايير|اختبارات معيارية"),
@@ -914,7 +931,14 @@ class OllamaGenerator:
             # Source-independent lexical bindings: inspect only the Arabic
             # candidate, never the forward English claim or repair feedback.
             for _, term, arabic, _ in ORDINARY_TECHNICAL_TERMS:
-                translation_source = translation_source.replace(arabic, term)
+                if term.endswith("-centric"):
+                    # Match this actual Arabic qualification, including its
+                    # definite form. The unseen forward source cannot supply it.
+                    translation_source = re.sub(
+                        rf"(?:ال)?{re.escape(arabic)}", term, translation_source
+                    )
+                else:
+                    translation_source = translation_source.replace(arabic, term)
         translation_input, bindings = protect_answer_identifiers(translation_source)
         system = (
             "Translate the supplied verified answer sentence into Arabic. "

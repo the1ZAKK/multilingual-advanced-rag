@@ -151,3 +151,41 @@ def test_model_http_error_is_retained_without_inventing_an_answer(service, monke
     assert records[0]["stage"] == "generation-http-error"
     assert records[0]["result"]["status_code"] == 500
     assert "schema rejected" in records[0]["result"]["body"]
+
+
+@pytest.mark.parametrize("english,arabic", [("Arabic", "العربية"), ("French", "الفرنسية")])
+def test_language_centric_qualification_uses_only_the_actual_arabic(
+    service, monkeypatch, english, arabic
+):
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        seen.append(body)
+        return httpx.Response(
+            200,
+            json={"message": {"content": json.dumps({"text": f"The {english}-centric model."})}},
+        )
+
+    install(monkeypatch, respond)
+    service.generator.translate_ordinary_text(f"النموذج المتمحور حول {arabic}.", "en")
+    assert json.loads(seen[0]["messages"][-1]["content"]) == f"النموذج {english}-centric."
+    assert len(seen[0]["messages"]) == 2
+
+
+@pytest.mark.parametrize("arabic", ["النموذج العربي.", "النموذج المركزي باللغة العربية."])
+def test_language_mentions_or_central_models_cannot_replace_language_centric(
+    service, monkeypatch, arabic
+):
+    from rag.generation.ollama import validate_translation_atoms
+
+    with pytest.raises(ValueError, match="missing meaning"):
+        validate_translation_atoms("The Arabic-centric model.", arabic)
+
+
+def test_language_centric_qualification_cannot_switch_languages():
+    from rag.generation.ollama import validate_translation_atoms
+
+    validate_translation_atoms("The French-centric model.", "النموذج المتمحور حول الفرنسية.")
+    with pytest.raises(ValueError, match="missing meaning"):
+        validate_translation_atoms("The French-centric model.", "النموذج المتمحور حول العربية.")

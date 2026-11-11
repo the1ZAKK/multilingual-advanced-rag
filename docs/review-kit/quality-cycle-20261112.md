@@ -118,3 +118,19 @@ prompt reuse storage, not evidence size, model weights or KV precision. The
 recording workflow passes it explicitly into the owned container and records the
 client declaration separately from server introspection; the retained server log
 must confirm the effective cap. Existing user services and settings are untouched.
+
+With the optional cache disabled, the server confirms prompt caching is disabled
+and the 4B model reaches Arabic source/translation audits without the earlier
+worker crash. The English control passes again. Arabic count statements preserve
+their values, but the score's language-centric qualification is mistranslated as
+a model "central in" a language. The existing round-trip guard correctly refuses
+that proposal and its bounded repair; this is an observed meaning error.
+
+Source-activated language-centric terminology now covers six languages using the
+same generic rule. It supplies the actual qualification in Arabic and binds it
+back only when the Arabic candidate contains that phrase. Merely mentioning a
+language or a central model cannot pass the qualification guard. Independent
+French controls check that the rule preserves language identity, and missing or
+switched qualifications remain rejected. No number, paper identity or expected
+answer is encoded. Existing numerical, reverse-content and semantic checks remain
+required; these changes still need a fresh real-model recording.
