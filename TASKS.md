@@ -10,10 +10,11 @@
 - [x] Preserve failed 4B recordings separately from the original 3 partial / 1 fail AI-assisted review of d66c62d.
 - [x] Record eight real verified-7B controls at c5719b4; all eight fell back and acceptance failed. Preserve their exact outputs and lossless wire trace.
 - [x] Repair observed Arabic count-clause decomposition and source-bound identifier translation without relaxing validation.
+- [x] Complete the post-repair eight-control 7B run at 3f7544c; all eight are excerpt fallbacks. Verify exact PDFs/quotes/CSV and preserve the full trace on GitHub.
 - [ ] Accept complete English and faithful Arabic answers on the new recorded outputs.
 - [ ] Independent human source review, native Arabic source-prose evaluation and actual laptop acceptance.
 
-See the [current cycle](docs/review-kit/quality-cycle-20261111.md) for exact
+See the [final report](docs/quality-cycle-20261111.md) and [cycle history](docs/review-kit/quality-cycle-20261111.md) for exact
 commits, model profiles, recordings and remaining defects. The application
 default model is unchanged; these cases are exposed development controls.
 

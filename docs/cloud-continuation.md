@@ -84,3 +84,18 @@ for every model attempt. Keep failed attempts for comparison.
   routing-only Arabic rerun: `reports/additional-qwen17-routing-fixed-001`.
   These ignored reports belong to this workspace and are not GitHub artifacts.
 - Independent human reviews remain zero. No stable release was published.
+
+## 11 November 2026 final checkpoint
+
+Application source `3f7544c80247f90606026b866014f5e58202db86` passes 444 tests (5 skipped), Ruff,
+all Windows/Linux Python jobs, Docker and hosted Windows learned acceptance.
+Recording 43025032186 nevertheless returns eight explicit excerpt fallbacks;
+complete answers and faithful Arabic acceptance remain open. The local workspace
+became unavailable after source validation; hosted verification completed the
+native-PDF, exact-answer/CSV and ZIP checks and preserved the full wire trace.
+
+The [final report](quality-cycle-20261111.md) links the exact ungraded packet,
+model/runtime settings, failed attempts and integrity proof. These eight exposed
+controls are not unseen evaluation. The original d66c62d review is still wholly
+AI-assisted and cannot grade later outputs. No independent human review or stable
+release has passed. Application model defaults and user data remain unchanged.

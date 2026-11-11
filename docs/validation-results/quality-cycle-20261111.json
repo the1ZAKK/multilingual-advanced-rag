@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-11-11",
+  "repository": "the1ZAKK/multilingual-advanced-rag",
+  "candidate_branch": "arabic-quality-candidate",
+  "baseline": {
+    "source_code_sha": "4e7aa6a43dedba2b63807b3531bfc9e6bdd22143",
+    "local_tests": {
+      "passed": 406,
+      "skipped": 5
+    },
+    "quality_workflow_run": 41184110709
+  },
+  "original_submitted_review": {
+    "model_workflow_run": 39219463133,
+    "source_code_sha": "d66c62d",
+    "reviewer": "ChatGPT",
+    "reviewer_type": "ai_assisted",
+    "counts": {
+      "pass": 0,
+      "partial": 3,
+      "fail": 1
+    },
+    "independent_human_reviews": 0,
+    "submitted_csv_sha256": "00823989160cedd5aee3e7507cc268d6539f6fc1ff9cda43211d7c5d2e306129",
+    "applies_to_new_outputs": false
+  },
+  "application_source_code_sha": "3f7544c80247f90606026b866014f5e58202db86",
+  "model_workflow_run": 43025032186,
+  "application_run_id": "fb209dba-849e-43c1-a6d6-0fa22d231aa1",
+  "model_report_url": "https://github.com/the1ZAKK/multilingual-advanced-rag/blob/ci-evaluation-43025032186/docs/validation-results/completion-model.json",
+  "runtime": {
+    "repository": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "revision": "8911e8a47f92bac19d6f5c64a2e2095bd2f7d031",
+    "filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "bytes": 4683074240,
+    "publisher": "Bartowski community quantization of Qwen2.5-7B-Instruct",
+    "profile": "qwen25",
+    "model_parameters": {
+      "num_ctx": 8192,
+      "num_thread": 4
+    },
+    "execution_host": {
+      "system": "Linux",
+      "machine": "x86_64",
+      "logical_cpu_count": 4
+    },
+    "installed_model": {
+      "name": "qwen25-instruct-hf:7b",
+      "model": "qwen25-instruct-hf:7b",
+      "modified_at": "2026-11-11T13:00:58.145875853Z",
+      "size": 4683074387,
+      "digest": "fa105931cc3d0c4ee41724c29197600ab3868248b8b4ddfd2961d958ac7ed6e5",
+      "details": {
+        "parent_model": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 3584,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "generation_limits": {
+    "context_chars": 6000,
+    "total_timeout": 600,
+    "max_statements": 4,
+    "question_coverage_audit": false,
+    "context_tokens": 8192,
+    "request_timeout": 300,
+    "temperature": 0
+  },
+  "request_options": {
+    "think": false,
+    "ordinary_generation": {
+      "num_predict": 800,
+      "num_ctx": 8192
+    },
+    "semantic_audit": {
+      "num_predict": 1800,
+      "num_ctx": 8192
+    },
+    "ordinary_translation": {
+      "num_predict": 600,
+      "num_ctx": 4096
+    },
+    "temperature": 0
+  },
+  "embedding_model": "st:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2:default",
+  "retrieval": {
+    "mode": "hybrid",
+    "embedding_backend": "sentence-transformer",
+    "reranker_used": false,
+    "configured_reranker_backend": "none"
+  },
+  "documents": [
+    {
+      "document_id": "14934332d83548980d526a5b99f7487580e23577b023dfafeef2b0fb262192d5",
+      "name": "6- ArabicMMLU-Assessing Massive Multitask Language Understanding in Arabic.pdf",
+      "pages": 19,
+      "chunks": 102,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v5"
+    },
+    {
+      "document_id": "89a2e2125c63348ccc2771c094ca2873243ce1fe7de3cafc1b705257e2afff0b",
+      "name": "10-ArabicNumBench -- Evaluating Arabic Number Reading in Large Language Models.pdf",
+      "pages": 4,
+      "chunks": 30,
+      "warnings": [],
+      "duplicate": false,
+      "extraction_version": "columns-sentences-v5"
+    }
+  ],
+  "software_validation": {
+    "local": {
+      "passed": 444,
+      "skipped": 5,
+      "ruff_check": "passed",
+      "ruff_format_check": "passed",
+      "diff_check": "passed"
+    },
+    "application_quality_workflow_run": 43025032233,
+    "application_ci_jobs": "Windows/Linux Python 3.11/3.12 and Docker all passed",
+    "hosted_windows_acceptance": {
+      "workflow_run": 43025032186,
+      "conclusion": "success"
+    },
+    "later_qa_only_quality_workflow_run": 43031691981,
+    "independent_human_reviews": 0,
+    "actual_user_laptop_acceptance": "not established"
+  },
+  "answer_quality": {
+    "acceptance_met": false,
+    "assessment_type": "AI-assisted development observations; no CSV verdicts assigned",
+    "development_controls": 8,
+    "unseen_evaluation": false,
+    "native_arabic_source_prose_evaluated": false,
+    "generation_modes": {
+      "extractive": 8
+    },
+    "generated_answer_count": 0,
+    "validation_rejections": 15,
+    "ordinary_translation_checks": 2,
+    "records": [
+      {
+        "id": "mmlu-size-en",
+        "language": "en",
+        "mode": "extractive",
+        "latency_ms": 371001.18584999995,
+        "recorded_language_check": true,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise does not explicitly state that the ArabicMMLU benchmark comprises 40 tasks. It only mentions the number of tasks in the data.); showing evidence excerpts",
+        "ai_development_observation": "Semantic judge refuses the explicit source task count; the repair also omits the question count."
+      },
+      {
+        "id": "mmlu-size-ar",
+        "language": "ar",
+        "mode": "extractive",
+        "latency_ms": 354272.252321,
+        "recorded_language_check": false,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise does not explicitly state that ArabicMMLU comprises 40 tasks. It only mentions that the data comprises 40 tasks without specifying the source of these tasks as ArabicMMLU.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "ai_development_observation": "Generated evaluated-model slot repeats the task count; the source audit also refuses the explicit task count."
+      },
+      {
+        "id": "numbers-prompt-en",
+        "language": "en",
+        "mode": "extractive",
+        "latency_ms": 186948.3775950001,
+        "recorded_language_check": true,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Irrelevant numerical citation 2: supports a different comparison); showing evidence excerpts",
+        "ai_development_observation": "Over-budget first attempt; repair replaces the requested accuracy comparison with model/task counts and includes an irrelevant numeric citation."
+      },
+      {
+        "id": "numbers-prompt-ar",
+        "language": "ar",
+        "mode": "extractive",
+        "latency_ms": 218978.50121100008,
+        "recorded_language_check": false,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Generated statement budget exceeded); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "ai_development_observation": "Generated statement budget exceeded; no verified complete Arabic answer returned."
+      },
+      {
+        "id": "mmlu-format-en",
+        "language": "en",
+        "mode": "extractive",
+        "latency_ms": 102638.19046599997,
+        "recorded_language_check": true,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=False, complete=False, direct=False; The premise does not explicitly state that ArabicMMLU comprises 40 tasks and 14,575 questions. It only mentions that the data comprises these elements, but does not confirm the exact count or explicitly state the dataset name as ArabicMMLU.); showing evidence excerpts",
+        "ai_development_observation": "Source-count/format statements receive internally inconsistent negative semantic verdicts."
+      },
+      {
+        "id": "mmlu-format-ar",
+        "language": "ar",
+        "mode": "extractive",
+        "latency_ms": 265269.14882799995,
+        "recorded_language_check": false,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Answer translation changed round-trip content; source excerpts required); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "ai_development_observation": "Identifier spelling is preserved; the translation still changes dataset wording and fails strict reverse-content validation."
+      },
+      {
+        "id": "numbers-task-evaluations-en",
+        "language": "en",
+        "mode": "extractive",
+        "latency_ms": 310166.54462199996,
+        "recorded_language_check": true,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Incomplete quantitative answer: missing requested evaluation count); showing evidence excerpts",
+        "ai_development_observation": "The follow-up substitutes models for evaluations and then omits the evaluation count."
+      },
+      {
+        "id": "numbers-task-evaluations-ar",
+        "language": "ar",
+        "mode": "extractive",
+        "latency_ms": 266608.4390630001,
+        "recorded_language_check": false,
+        "recorded_provenance_check": true,
+        "warning_or_error": "Ollama generation failed (ValueError: Semantic grounding failed for item-1: supported=True, complete=False, direct=False; The premise does not explicitly state that there are 210 number reading tasks. It mentions 210 tasks but does not directly claim the total number of tasks.); showing evidence excerpts No verified Arabic answer was produced; the excerpts retain their source language.",
+        "ai_development_observation": "The three Arabic parts are now separate, but the judge refuses the directly reported task count and no verified Arabic answer returns."
+      }
+    ],
+    "remaining_defects": [
+      "The selected models still omit requested facets or substitute a different comparison.",
+      "The semantic judge refuses directly reported source counts and formats with inconsistent reasons.",
+      "Arabic translation remains unreliable despite identifier preservation; all four Arabic final outputs are English source excerpts.",
+      "Question-coverage auditing remains explicitly disabled in this comparison; deterministic facets and all existing grounding/translation checks stay enforced.",
+      "Strict structural and lexical reverse-content checks remain conservative and can reject faithful phrasing; no such refusal is treated as answer-quality success."
+    ],
+    "completed_generation_proposals": 13
+  },
+  "packet": {
+    "download_url": "https://raw.githubusercontent.com/the1ZAKK/multilingual-advanced-rag/ci-evaluation-43025032186/docs/review-kit/RAG-PDF-Review-Kit-43025032186.zip",
+    "git_blob_sha": "ea855d7d65d507f8e06095aa880e843c5aee6e8b",
+    "sha256": "2f5cf6d41f9a9f7ff961df9053b5a1083fae817fa42b9b5d11e73896e5b25904",
+    "size_bytes": 1305654,
+    "contains": [
+      "START_HERE.html",
+      "exact answers.json",
+      "original PDFs",
+      "reference.json",
+      "ungraded UTF-8-BOM review.csv",
+      "manifest.json",
+      "REVIEW.md"
+    ],
+    "reviewed_rows": 0,
+    "not_reviewed_rows": 8,
+    "blank_fields": [
+      "reviewer",
+      "reviewer_type",
+      "notes"
+    ]
+  },
+  "verification": {
+    "workflow_run": 43031692051,
+    "code_sha": "da9228165f9f21f1c871431c66916245027ba0e6",
+    "conclusion": "success",
+    "proof_url": "https://github.com/the1ZAKK/multilingual-advanced-rag/blob/ci-review-verification-43031692051/docs/validation-results/review-packet-verification.json",
+    "file_hashes_checked": 7,
+    "pdfs_checked": 2,
+    "html_pdf_links_checked": 8,
+    "native_citation_entries_checked": 28,
+    "all_returned_citation_pages": [
+      1
+    ],
+    "semantic_verdicts_assigned": 0
+  },
+  "preserved_trace": {
+    "url": "https://github.com/the1ZAKK/multilingual-advanced-rag/blob/ci-review-verification-43031692051/docs/validation-results/generation-wire.jsonl.gz",
+    "source_code_sha": "3f7544c80247f90606026b866014f5e58202db86",
+    "sha256": "79fb679bff588e6174cbd25d4ed42401b22258aa7b1442c8e9076b030a99d93f",
+    "gzip_sha256": "1fe0b0d8aa67fca4626b395cade081125a13599ea4473a8ce2fb594acefc6df1",
+    "event_counts": {
+      "generation-wire-response": 50,
+      "generation-raw": 50,
+      "generation": 13,
+      "semantic-audit": 16,
+      "validation-rejection": 15,
+      "ordinary-translation-wire-response": 2,
+      "ordinary-translation-ar": 1,
+      "ordinary-translation-en": 1
+    },
+    "artifact_id": 13859069378,
+    "artifact_sha256": "b714ba9ab36d096d3d8b14a817e7b7d571fb0dc454cffef87dc3a791bdbbf90f",
+    "model_report_sha256": "d9ed7da4a92067f766b762d5024ed7ceb3d0843336e2f755ee5ab29e2e99c9c6"
+  },
+  "preserved_previous_attempts": {
+    "history": "docs/review-kit/quality-cycle-20261111.md",
+    "earlier_wire_traces": "docs/validation-results/quality-cycle-traces/manifest.json",
+    "first_failed_publication_report": "docs/validation-results/quality-cycle-first-41185838438.json",
+    "prior_7b_run": 43014685739,
+    "prior_7b_source": "c5719b436b2b35f4c36f868a16a55ee6ee3b4475",
+    "prior_7b_control_verification_run": 43031276589
+  },
+  "environment": {
+    "local_workspace": "became unavailable after local validation and source push",
+    "completion_method": "GitHub-hosted native-PDF/packet verification and permanent trace publication",
+    "private_data_mutations": "No uploaded PDFs, existing user indexes, private settings, backups or submitted reviews were edited by this cycle"
+  },
+  "release_status": {
+    "stable_release_published": false,
+    "independent_human_reviews": 0,
+    "complete_faithful_arabic_acceptance": "not met",
+    "actual_laptop_acceptance": "pending"
+  }
+}

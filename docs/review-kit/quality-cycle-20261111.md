@@ -148,3 +148,22 @@ parameters and execution host for the next CPU comparison. Application defaults,
 the verified 7B weights, generation limits and validation requirements stay the
 same. A fresh recording is required for these repairs; this earlier packet
 cannot validate their new outputs.
+
+## Final recording after the observed repairs
+
+Recording [43025032186](https://github.com/the1ZAKK/multilingual-advanced-rag/actions/runs/43025032186) uses application
+source `3f7544c80247f90606026b866014f5e58202db86`. All eight controls returned explicit excerpt
+fallbacks; all four Arabic final outputs retain English source text. Identifier
+spelling is preserved and Arabic count clauses now have separate slots, but
+complete generated answers and faithful Arabic acceptance remain unmet.
+
+Local validation is 444 passed, 5 skipped; all Windows/Linux Python jobs,
+Docker and hosted Windows acceptance passed. The exact new ZIP and full trace
+passed [hosted packet verification](https://github.com/the1ZAKK/multilingual-advanced-rag/blob/ci-review-verification-43031692051/docs/validation-results/review-packet-verification.json) after
+the local workspace became unavailable. Twenty-eight native citation entries
+match page 1; the eight-row UTF-8 CSV is ungraded. No human review is inferred.
+
+See the [concise final report](../quality-cycle-20261111.md) and
+[machine-readable report](../validation-results/quality-cycle-20261111.json)
+for per-case defects, exact source/model/settings, immutable download and proof
+links, and the distinction between software checks and answer acceptance.
