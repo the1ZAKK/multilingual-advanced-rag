@@ -58,6 +58,15 @@ def test_facet_roles_do_not_come_from_the_document_name_or_an_empty_pattern():
     assert not re.match(count_text_pattern(contract), "23.55 tasks")
 
 
+def test_count_schema_pattern_has_both_required_grammar_anchors():
+    contract, _ = plan_facet(source("We evaluated 23 models."), "How many models?")
+    pattern = count_text_pattern(contract)
+    assert pattern.startswith("^") and pattern.endswith("$")
+    assert re.fullmatch(pattern, "23 evaluated models.")
+    assert not re.fullmatch(pattern, "We evaluated 23 models.")
+    assert not re.fullmatch(pattern, "23 ")
+
+
 def test_the_requested_condition_pair_excludes_a_different_real_comparison():
     good = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
     other = "Few-shot methods achieve 2.2x the zero-shot accuracy (80% vs 36%)."

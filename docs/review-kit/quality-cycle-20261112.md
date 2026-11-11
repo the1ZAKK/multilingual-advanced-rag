@@ -33,7 +33,7 @@ exposed diagnostic controls, not independent or unseen evaluation.
 - Derive each explicit count facet's candidate quantities, role and quote IDs
   directly from native evidence. Match requested evaluation/generation predicates
   where the source supplies them, retaining alternatives when unresolved.
-- Constrain count prose to begin with a source quantity and counted entity,
+- Guide count prose to begin with a source quantity and counted entity,
   retaining all bounds and qualifications. The model still generates its prose;
   no paper-specific answers or review expectations enter the production plan.
 - Select citations for the requested prompting-condition pair. A generic few-shot
@@ -73,3 +73,20 @@ multiple-choice meaning across documents. It contains no paper names, numerical
 answers or expected points. Missing standard-language qualifications are refused
 before a reverse translator can silently insert them. Reverse lexical bindings
 are activated only by the actual Arabic candidate.
+
+## Local runtime failure and hosted rerun
+
+The complete eight-question learned run at `529f9e7` returned eight explicitly
+labelled excerpt fallbacks: the verified local Ollama worker returned HTTP 500
+with "unexpected EOF" before generation. The same native prompt was retried
+with batch sizes 512, 64 and 32; all failed. Small direct schema/audit controls
+work. The cause of the worker exit is unconfirmed; this is a runtime failure,
+not evidence that any answer-quality requirement passed.
+
+The runtime log also showed that the provider ignored the count schema pattern
+because it lacked an end anchor. Both anchors are now supplied. Deterministic
+numeric and semantic validation remain required independently of decoding.
+The next hosted recording uses the existing pinned runtime and verified model
+on the larger runner. The publication job now preserves the entire wire trace
+losslessly with byte hashes alongside the ungraded packet, including HTTP
+errors and rejected proposals, without depending on temporary artifact retention.

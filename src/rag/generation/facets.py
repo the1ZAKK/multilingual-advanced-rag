@@ -163,9 +163,11 @@ def count_text_pattern(contract):
     values |= {f"{int(value):,}" for value in values if value.isdecimal()}
     if not values:
         return None
+    # Ollama's grammar converter requires both anchors, otherwise it ignores
+    # the entire pattern. This decoding hint never replaces numeric/NLI checks.
     # Permit the source's bounds; the unchanged semantic audit must check them.
     return (
         r"^(?:(?:over|more than|at least|at most|less than|under|up to)\s+)?(?:"
         + "|".join(re.escape(value) for value in sorted(values))
-        + r")\s+"
+        + r")\s+.+$"
     )

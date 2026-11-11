@@ -188,6 +188,9 @@ jobs:
           PY
           mkdir -p reports/publish
           cp docs/validation-results/completion-model.json docs/validation-results/completion-windows.json reports/publish/
+          if [ -f reports/download/model/translation-trace/generation-wire.jsonl ]; then
+            python -m scripts.preserve_generation_trace --trace reports/download/model/translation-trace/generation-wire.jsonl --output reports/publish --source-sha "$GITHUB_SHA"
+          fi
           # A data-only root has no workflow files. The ordinary contents token
           # can publish it without requesting the broader workflows permission.
           git switch --orphan "$RESULT_BRANCH"
@@ -196,6 +199,13 @@ jobs:
           mkdir -p docs/validation-results
           cp reports/publish/completion-model.json reports/publish/completion-windows.json docs/validation-results/
           git add docs/validation-results/completion-model.json docs/validation-results/completion-windows.json
+          # Keep full failed/rejected requests and responses past artifact expiry.
+          for trace in reports/publish/generation-wire*; do
+            if [ -f "$trace" ]; then
+              cp "$trace" docs/validation-results/
+              git add -f "docs/validation-results/$(basename "$trace")"
+            fi
+          done
           for packet in reports/download/model/RAG-PDF-Review-Kit-*.zip; do
             if [ -f "$packet" ]; then
               mkdir -p docs/review-kit
