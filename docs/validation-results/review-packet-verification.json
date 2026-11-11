@@ -1,0 +1,136 @@
+{
+  "source_code_sha": "3f7544c80247f90606026b866014f5e58202db86",
+  "model_workflow_run": 43025032186,
+  "verification_code_sha": "da9228165f9f21f1c871431c66916245027ba0e6",
+  "verification_workflow_run": "43031692051",
+  "packet_git_blob_sha": "ea855d7d65d507f8e06095aa880e843c5aee6e8b",
+  "packet_sha256": "2f5cf6d41f9a9f7ff961df9053b5a1083fae817fa42b9b5d11e73896e5b25904",
+  "artifact_id": 13859069378,
+  "artifact_metadata_sha256": "b714ba9ab36d096d3d8b14a817e7b7d571fb0dc454cffef87dc3a791bdbbf90f",
+  "file_hashes_checked": 7,
+  "pdfs_checked": 2,
+  "html_pdf_links_checked": 8,
+  "review_summary": {
+    "run_id": "fb209dba-849e-43c1-a6d6-0fa22d231aa1",
+    "cases": 8,
+    "reviewed": 0,
+    "counts": {
+      "fail": 0,
+      "not_reviewed": 8,
+      "partial": 0,
+      "pass": 0
+    },
+    "by_reviewer_type": {
+      "human": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      },
+      "ai_assisted": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      }
+    },
+    "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+  },
+  "records": [
+    {
+      "id": "mmlu-size-en",
+      "mode": "extractive",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "mmlu-size-ar",
+      "mode": "extractive",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    },
+    {
+      "id": "numbers-prompt-en",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    },
+    {
+      "id": "mmlu-format-en",
+      "mode": "extractive",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "mmlu-format-ar",
+      "mode": "extractive",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    }
+  ],
+  "note": "Packet integrity and native provenance only; no answer-quality or human verdicts assigned.",
+  "trace": {
+    "source_code_sha": "3f7544c80247f90606026b866014f5e58202db86",
+    "sha256": "79fb679bff588e6174cbd25d4ed42401b22258aa7b1442c8e9076b030a99d93f",
+    "gzip_sha256": "1fe0b0d8aa67fca4626b395cade081125a13599ea4473a8ce2fb594acefc6df1",
+    "event_counts": {
+      "generation-wire-response": 50,
+      "generation-raw": 50,
+      "generation": 13,
+      "semantic-audit": 16,
+      "validation-rejection": 15,
+      "ordinary-translation-wire-response": 2,
+      "ordinary-translation-ar": 1,
+      "ordinary-translation-en": 1
+    }
+  },
+  "model_report_sha256": "d9ed7da4a92067f766b762d5024ed7ceb3d0843336e2f755ee5ab29e2e99c9c6"
+}
