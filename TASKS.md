@@ -1,5 +1,19 @@
 # Implementation and validation tracker
 
+## Interrupted-cycle recovery — 12 November 2026
+
+- [x] Recover saved semantic explanation-before-verdict format and preserve both original diagnostic archives.
+- [x] Add HTTP-path negative verdict/trace regressions; 509 tests passed, 5 skipped; Ruff lint and formatting clean.
+- [x] Publish tests/documentation-only recovery at `01b868a`; Windows/Linux Python matrix and Docker passed.
+- [x] Export and verify an ungraded packet for the completed local `c0b28b8` 4B recording: four generated outputs, four explicit fallbacks.
+- [x] Reuse hosted `43086599560` at `d2e5b89` without starting a duplicate; retain its recording identity and observed artifact-upload failure.
+- [ ] Recover the hosted model report/packet; GitHub reports inconsistent step state and job/log reads time out.
+- [ ] Accept complete faithful English/Arabic answers, independent human source review, native Arabic source-prose evaluation and actual laptop acceptance.
+
+See the [recovery cycle report](docs/quality-cycle-20261112.md). The separate raw
+diagnostic archive remains local after auto-review rejected public disclosure.
+No stable release or human-review pass is claimed.
+
 ## Numerical and Arabic quality cycle — 31 October / 11 November 2026
 
 - [x] Reuse abstract routing; recognize inline abstract boundaries without changing source text.

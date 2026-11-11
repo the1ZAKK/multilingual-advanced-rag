@@ -1,0 +1,137 @@
+{
+  "source_code_sha": "c0b28b8620e741264d6f1c55f68840624d8b99bf",
+  "model_workflow_run": "local:1ba5474a-9211-4a68-866a-044bd0481640",
+  "verification_code_sha": "d2e5b893087c08cea4fdd5cd59bc08e6aae3e14a",
+  "verification_workflow_run": "local-resumption-20261112",
+  "packet_git_blob_sha": "a51ad67ad9de4cd35bd9a56444ccb6f76e48d2be",
+  "packet_sha256": "2397ae051e07ff4a9f4487a38f27a61860af88070b6db21e86df10f55c0773b1",
+  "artifact_id": null,
+  "artifact_metadata_sha256": null,
+  "file_hashes_checked": 7,
+  "pdfs_checked": 2,
+  "html_pdf_links_checked": 8,
+  "review_summary": {
+    "run_id": "1ba5474a-9211-4a68-866a-044bd0481640",
+    "cases": 8,
+    "reviewed": 0,
+    "counts": {
+      "fail": 0,
+      "not_reviewed": 8,
+      "partial": 0,
+      "pass": 0
+    },
+    "by_reviewer_type": {
+      "human": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      },
+      "ai_assisted": {
+        "reviewed": 0,
+        "counts": {
+          "pass": 0,
+          "partial": 0,
+          "fail": 0
+        },
+        "pass_rate": null
+      }
+    },
+    "note": "Recorded judgments on development controls, split by human versus AI-assisted review; not an automatic or unseen-paper accuracy score."
+  },
+  "records": [
+    {
+      "id": "mmlu-size-en",
+      "mode": "ollama",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "mmlu-size-ar",
+      "mode": "translated-answer",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "numbers-prompt-en",
+      "mode": "ollama",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    },
+    {
+      "id": "mmlu-format-en",
+      "mode": "ollama",
+      "native_citations": 2,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "mmlu-format-ar",
+      "mode": "extractive",
+      "native_citations": 4,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": true
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "mode": "extractive",
+      "native_citations": 3,
+      "native_pages": [
+        1
+      ],
+      "recorded_language_check": false
+    }
+  ],
+  "note": "Packet integrity and native provenance only; no answer-quality or human verdicts assigned.",
+  "trace": {
+    "source_code_sha": "c0b28b8620e741264d6f1c55f68840624d8b99bf",
+    "sha256": "e5226a580a703dec4391d952fbacb61488c644eff2cf5a5483f82723656e7a44",
+    "gzip_sha256": "99525bf58c4a30e6198841c9c926118c48d4f25a79fde489ad2df7ff09960a18",
+    "event_counts": {
+      "generation-wire-response": 41,
+      "generation-raw": 38,
+      "generation": 10,
+      "semantic-audit-wire-response": 32,
+      "semantic-audit": 32,
+      "ordinary-translation-wire-response": 30,
+      "ordinary-translation-ar": 15,
+      "ordinary-translation-en": 15,
+      "validation-rejection": 17
+    }
+  },
+  "model_report_sha256": "49d1f4a37b34134d0ba2aadef250dcd07d3f465217edafc2b74fba96fb1dba53"
+}
