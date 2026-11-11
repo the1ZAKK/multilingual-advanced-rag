@@ -244,7 +244,36 @@ LANGUAGE_CENTRIC_TERMS = tuple(
     )
 )
 
-ORDINARY_TECHNICAL_TERMS = (
+PROMPT_STRATEGY_TERMS = (
+    (
+        r"\bfew[- ]shot\s+chain[- ]of[- ]thought\b",
+        "few-shot chain-of-thought",
+        "سلسلة التفكير بأمثلة قليلة",
+        r"سلسلة\s+التفكير\s+بامثلة\s+قليلة",
+    ),
+    (
+        r"\bfew[- ]shot\s+CoT\b",
+        "few-shot CoT",
+        "سلسلة التفكير بأمثلة قليلة (CoT)",
+        r"سلسلة\s+التفكير\s+بامثلة\s+قليلة",
+    ),
+    (
+        r"\bzero[- ]shot\s+chain[- ]of[- ]thought\b",
+        "zero-shot chain-of-thought",
+        "سلسلة التفكير دون أمثلة",
+        r"سلسلة\s+التفكير\s+(?:دون|بدون)\s+امثلة",
+    ),
+    (
+        r"\bzero[- ]shot\s+CoT\b",
+        "zero-shot CoT",
+        "سلسلة التفكير دون أمثلة (CoT)",
+        r"سلسلة\s+التفكير\s+(?:دون|بدون)\s+امثلة",
+    ),
+    (r"\bfew[- ]shot\b", "few-shot", "بأمثلة قليلة", r"بامثلة\s+قليلة"),
+    (r"\bzero[- ]shot\b", "zero-shot", "دون أمثلة", r"(?:دون|بدون)\s+امثلة"),
+)
+
+BASE_TECHNICAL_TERMS = (
     (
         r"\bModern Standard Arabic\b",
         "Modern Standard Arabic",
@@ -254,7 +283,13 @@ ORDINARY_TECHNICAL_TERMS = (
     (r"\bmultiple[- ]choice\b", "multiple-choice", "اختيار من متعدد", r"اختيار.{0,12}متعدد"),
 ) + LANGUAGE_CENTRIC_TERMS
 
-TRANSLATION_CONCEPTS = ORDINARY_TECHNICAL_TERMS + (
+ORDINARY_TECHNICAL_TERMS = (
+    BASE_TECHNICAL_TERMS
+    + ((r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),)
+    + PROMPT_STRATEGY_TERMS
+)
+
+TRANSLATION_CONCEPTS = BASE_TECHNICAL_TERMS + (
     (r"\bbenchmarks?\b", "benchmark", "معيار تقييم", r"معيار|معايير|اختبارات معيارية"),
     (r"\bcomprehensive\b", "comprehensive", "شامل", r"شامل|شمول|اشمل"),
     (
@@ -612,6 +647,11 @@ class OllamaGenerator:
                     pattern = count_text_pattern(contract)
                     if pattern:
                         statement_schema["properties"]["text"]["pattern"] = pattern
+                    elif translate_ordinary:
+                        # Nudge the English grounding stage despite an Arabic
+                        # question. Arabic names/quoted terms remain possible
+                        # later in the sentence; full language checks still run.
+                        statement_schema["properties"]["text"]["pattern"] = r"^[A-Za-z0-9].*$"
                     schema = {
                         **response_schema,
                         "required": [key],
@@ -633,6 +673,10 @@ class OllamaGenerator:
                     pattern = count_text_pattern(contract)
                     if pattern:
                         statement_schema["properties"]["text"]["pattern"] = pattern
+                if translate_ordinary:
+                    schema["properties"]["statements"]["items"]["properties"]["text"].setdefault(
+                        "pattern", r"^[A-Za-z0-9].*$"
+                    )
                 requests.append((json.dumps(content, ensure_ascii=False), schema))
             result = {}
             for content, schema in requests:
@@ -745,12 +789,18 @@ class OllamaGenerator:
                 question,
                 generation_language,
                 reverse_translations=reverse_translations,
+                requested_facets=statement_parts if multipart and not authored else None,
                 question_parts=(
                     statement_parts if multipart and self.settings.question_coverage_audit else None
                 ),
             )
             if translate_ordinary:
-                return self.translate_verified_answer(payload, evidence, question)
+                return self.translate_verified_answer(
+                    payload,
+                    evidence,
+                    question,
+                    requested_facets=statement_parts if multipart else None,
+                )
             return GeneratedAnswer(
                 *result,
                 mode="translated-contributions"
@@ -842,22 +892,32 @@ class OllamaGenerator:
                 f"Ollama generation failed ({type(exc).__name__}: {exc}); showing evidence excerpts"
             ) from exc
 
-    def translate_verified_answer(self, payload, evidence, question):
+    def translate_verified_answer(self, payload, evidence, question, *, requested_facets=None):
         """Translate grounded claims; preserve refs and independently audit meaning.
 
         The reverse translator receives only Arabic, never the source-language
         claim. A round trip is a necessary model-based check, not proof of truth.
         """
         translated = {"statements": []}
+        if requested_facets is not None and len(requested_facets) != len(payload["statements"]):
+            raise ValueError("Translation question bindings do not match generated claims")
         for index, original in enumerate(payload["statements"], 1):
-            candidate = self.translate_checked_statement(original, evidence, question, index)
+            candidate = self.translate_checked_statement(
+                original,
+                evidence,
+                question,
+                index,
+                requested_facet=requested_facets[index - 1] if requested_facets else question,
+            )
             translated["statements"].append(candidate)
         answer, citations = validate_answer(
             translated, evidence, question=question, language="ar", allow_translation=True
         )
         return GeneratedAnswer(answer, citations, "translated-answer")
 
-    def translate_checked_statement(self, original, evidence, question, index):
+    def translate_checked_statement(
+        self, original, evidence, question, index, *, requested_facet=None
+    ):
         repair = None
         for attempt in range(1, 3):
             text = None
@@ -867,7 +927,9 @@ class OllamaGenerator:
                     text = self.translate_ordinary_text(original["text"], "ar")
                 finally:
                     _ordinary_translation_repair.reset(token)
-                return self.audit_answer_translation(original, text, evidence, question, index)
+                return self.audit_answer_translation(
+                    original, text, evidence, question, index, requested_facet=requested_facet
+                )
             except (ValueError, KeyError, TypeError) as error:
                 trace_generation(
                     "validation-rejection",
@@ -884,7 +946,9 @@ class OllamaGenerator:
                 repair = {"validation_error": str(error), "previous_translation": text}
         raise ValueError("Ordinary answer translation did not complete")
 
-    def audit_answer_translation(self, original, text, evidence, question, index):
+    def audit_answer_translation(
+        self, original, text, evidence, question, index, *, requested_facet=None
+    ):
         identifiers = set(re.findall(ANSWER_IDENTIFIER, original["text"]))
         if any(identifier not in text for identifier in identifiers):
             raise ValueError("Answer translation changed a source-grounded identifier")
@@ -914,6 +978,8 @@ class OllamaGenerator:
             independent_reverse_translation=reverse,
             full_author_statement=original["text"],
             require_complete=True,
+            question_context=question,
+            requested_facet=requested_facet or question,
         )
         self.audit_semantic_item(item)
         return candidate
@@ -930,7 +996,9 @@ class OllamaGenerator:
         else:
             # Source-independent lexical bindings: inspect only the Arabic
             # candidate, never the forward English claim or repair feedback.
-            for _, term, arabic, _ in ORDINARY_TECHNICAL_TERMS:
+            for _, term, arabic, _ in sorted(
+                ORDINARY_TECHNICAL_TERMS, key=lambda entry: -len(entry[2])
+            ):
                 if term.endswith("-centric"):
                     # Match this actual Arabic qualification, including its
                     # definite form. The unseen forward source cannot supply it.
@@ -939,7 +1007,9 @@ class OllamaGenerator:
                     )
                 else:
                     translation_source = translation_source.replace(arabic, term)
-        translation_input, bindings = protect_answer_identifiers(translation_source)
+        translation_input, bindings = protect_answer_identifiers(
+            translation_source, translate_terms=language == "ar"
+        )
         system = (
             "Translate the supplied verified answer sentence into Arabic. "
             "Preserve EVERY fact, qualification, number and relation. Keep proper names "
@@ -951,11 +1021,21 @@ class OllamaGenerator:
         )
         if bindings:
             system += (
-                "\nEach __TERM_N__ token is an opaque identifier from this input. "
+                "\nEach __TERM_N__ token is an opaque name or technical term from this input. "
                 "Copy every supplied token exactly once, without changing, expanding "
                 "or translating it. Translate the surrounding prose completely."
             )
         guidance = {"required_technical_terms": terms} if terms else {}
+        if language == "ar" and any(source != target for _, source, target in bindings):
+            guidance["protected_terms"] = [
+                {"token": token, "source": source, "arabic": target}
+                for token, source, target in bindings
+            ]
+            system += (
+                "\nTokens will be restored to their supplied Arabic equivalents. "
+                "Use their grammatical roles when translating the surrounding prose. "
+                "Add any needed Arabic article outside the token; still copy every token once."
+            )
         if language == "ar" and _ordinary_translation_repair.get():
             guidance["repair"] = _ordinary_translation_repair.get()
             system += (
@@ -1010,7 +1090,9 @@ class OllamaGenerator:
         candidate = result["text"]
         if not isinstance(candidate, str) or len(candidate) > 1200:
             raise ValueError("Invalid ordinary answer translation text")
-        candidate = expand_scientific_terms(candidate, bindings)
+        candidate = expand_scientific_terms(
+            candidate, bindings, allow_literal_terms=language == "ar"
+        )
         if len(candidate) > 1200:
             raise ValueError("Invalid ordinary answer translation text")
         validate_output_language(candidate, language)
@@ -1032,6 +1114,7 @@ class OllamaGenerator:
         *,
         reverse_translations=None,
         question_parts=None,
+        requested_facets=None,
     ):
         """Audit generated claims separately from source/quote validation.
 
@@ -1049,6 +1132,16 @@ class OllamaGenerator:
         )
         if not items:
             return
+        if not authored:
+            if requested_facets is not None and len(requested_facets) != len(items):
+                raise ValueError("Source question bindings do not match generated claims")
+            for index, item in enumerate(items):
+                # Context resolves an elliptical count phrase. It is untrusted
+                # question data, never evidence or a prefilled support verdict.
+                item.update(
+                    question_context=question,
+                    requested_facet=requested_facets[index] if requested_facets else question,
+                )
         if question_parts is not None:
             if len(items) != len(question_parts):
                 raise ValueError("Question-part audit bindings do not match generated claims")
@@ -1121,6 +1214,27 @@ class OllamaGenerator:
                 "both scopes, not unrelated future plans. Do not assume the question's "
                 "premise is true. On omission or irrelevance set answers_question=false."
             )
+        flat = schema["properties"]["verdicts"]["items"]
+        flags = [key for key in flat["required"] if key not in {"item_id", "reason"}]
+        # The converter sorts keys alphabetically. Put the existing brief
+        # evidence explanation before the decision, rather than serializing
+        # booleans before the model has stated its evidence. Never infer or
+        # repair a flag from that explanation; every explicit flag stays required.
+        schema["properties"]["verdicts"]["items"] = {
+            "type": "object",
+            "required": ["item_id", "reason", "verdict"],
+            "additionalProperties": False,
+            "properties": {
+                "item_id": flat["properties"]["item_id"],
+                "reason": {"type": "string", "maxLength": 1000},
+                "verdict": {
+                    "type": "object",
+                    "required": flags,
+                    "additionalProperties": False,
+                    "properties": {key: flat["properties"][key] for key in flags},
+                },
+            },
+        }
         with httpx.Client(timeout=self.request_timeout(), trust_env=False) as client:
             response = client.post(
                 self.settings.ollama_url.rstrip("/") + "/api/chat",
@@ -1147,7 +1261,9 @@ class OllamaGenerator:
                 },
             )
             response.raise_for_status()
-        verdicts = json.loads(response.json()["message"]["content"])
+        raw = response.json()["message"]["content"]
+        trace_generation("semantic-audit-wire-response", {"items": items}, raw)
+        verdicts = unpack_semantic_verdicts(json.loads(raw), items)
         trace_generation("semantic-audit", {"items": items}, verdicts)
         validate_semantic_verdicts(verdicts, items)
 
@@ -1676,7 +1792,7 @@ def render_translation_slots(payload, slots):
     return " ".join(piece for piece in pieces if piece).replace(" .", ".").replace(" ،", "،")
 
 
-def protect_answer_identifiers(text):
+def protect_answer_identifiers(text, *, translate_terms=False):
     """Preserve identifiers from this input only, in either translation direction.
 
     No forward English source is supplied to reverse translation. Tokens protect
@@ -1685,14 +1801,26 @@ def protect_answer_identifiers(text):
     """
     if re.search(r"__TERM_\w+__", text):
         raise ValueError("Source contains reserved scientific translation token")
-    bindings = []
-
-    def replace(match):
-        token = f"__TERM_{len(bindings) + 1}__"
-        bindings.append((token, match[0], match[0]))
-        return token
-
-    return re.sub(ANSWER_IDENTIFIER, replace, text), bindings
+    matches = [(m.start(), m.end(), m[0]) for m in re.finditer(ANSWER_IDENTIFIER, text)]
+    if translate_terms:
+        for pattern, _, arabic, _ in ORDINARY_TECHNICAL_TERMS:
+            matches.extend(
+                (m.start(), m.end(), arabic) for m in re.finditer(pattern, text, re.IGNORECASE)
+            )
+    selected = []
+    for match in sorted(matches, key=lambda m: (-(m[1] - m[0]), m[0])):
+        if not any(match[0] < end and start < match[1] for start, end, _ in selected):
+            selected.append(match)
+    bindings = [
+        (f"__TERM_{index}__", text[start:end], target)
+        for index, (start, end, target) in enumerate(sorted(selected), 1)
+    ]
+    template = text
+    for (start, end, _), (token, _, _) in reversed(
+        list(zip(sorted(selected), bindings, strict=True))
+    ):
+        template = template[:start] + token + template[end:]
+    return template, bindings
 
 
 def protect_scientific_terms(text):
@@ -1828,7 +1956,25 @@ def protect_scientific_terms(text):
     return result, bindings
 
 
-def expand_scientific_terms(text, bindings):
+def expand_scientific_terms(text, bindings, *, allow_literal_terms=False):
+    if allow_literal_terms:
+        # New ordinary scientific terms may be rendered directly in their exact
+        # supplied Arabic form. Never relax the existing name/identifier token
+        # protocol, reuse a phrase twice, or count a nested term as another one.
+        retained = []
+        for token, source, target in bindings:
+            unique = sum(other == target for _, _, other in bindings) == 1
+            nested = any(target in other and target != other for _, _, other in bindings)
+            literal = (
+                target != source
+                and unique
+                and not nested
+                and text.count(token) == 0
+                and text.count(target) == 1
+            )
+            if not literal:
+                retained.append((token, source, target))
+        bindings = retained
     expected = {token for token, _, _ in bindings}
     actual = set(re.findall(r"__TERM_\w+__", text))
     if actual - expected:
@@ -2020,6 +2166,34 @@ def semantic_items(
             }
         )
     return result
+
+
+def unpack_semantic_verdicts(payload, items):
+    """Unpack the new wire shape without interpreting reasons or coercing flags.
+
+    Exact legacy flat verdicts still go through the unchanged validator. Extra,
+    missing or non-boolean fields cannot gain acceptance through this adapter.
+    """
+    if not isinstance(payload, dict) or not isinstance(payload.get("verdicts"), list):
+        return payload
+    expected = {item["item_id"]: item for item in items}
+    unpacked = []
+    for verdict in payload["verdicts"]:
+        if isinstance(verdict, dict) and "verdict" in verdict:
+            if set(verdict) != {"item_id", "reason", "verdict"}:
+                raise ValueError("Invalid nested semantic verdict fields")
+            fields = {"supported", "complete", "direct"}
+            if expected.get(verdict["item_id"], {}).get("question_part"):
+                fields.add("answers_question")
+            if not isinstance(verdict["verdict"], dict) or set(verdict["verdict"]) != fields:
+                raise ValueError("Incomplete nested semantic verdict flags")
+            verdict = {
+                "item_id": verdict["item_id"],
+                "reason": verdict["reason"],
+                **verdict["verdict"],
+            }
+        unpacked.append(verdict)
+    return {**payload, "verdicts": unpacked}
 
 
 def validate_semantic_verdicts(payload, items):

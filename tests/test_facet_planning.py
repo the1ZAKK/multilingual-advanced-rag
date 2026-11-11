@@ -87,6 +87,25 @@ def test_count_schema_pairs_each_source_quantity_with_its_own_entity():
     assert not re.fullmatch(pattern, "9 models")
 
 
+def test_quantity_distinction_schema_keeps_both_source_counts_and_their_entities():
+    contract, _ = plan_facet(
+        source("We used 180 distinct tasks for 45,360 individual test cases."),
+        "Distinguish the two quantities.",
+        "How many distinct tasks and individual test cases are evaluated?",
+    )
+    pattern = count_text_pattern(contract)
+    assert re.fullmatch(pattern, "180 distinct tasks and 45,360 individual test cases")
+    assert re.fullmatch(pattern, "45360 individual evaluations; 180 tasks.")
+    for bad in (
+        "180 distinct tasks",
+        "45360 individual test cases",
+        "45360 tasks and 180 individual test cases",
+        "180 tasks and 77 individual test cases",
+        "180 مهام و45360 تقييمات",
+    ):
+        assert not re.fullmatch(pattern, bad)
+
+
 def test_the_requested_condition_pair_excludes_a_different_real_comparison():
     good = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
     other = "Few-shot methods achieve 2.2x the zero-shot accuracy (80% vs 36%)."

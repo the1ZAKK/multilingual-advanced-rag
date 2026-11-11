@@ -77,13 +77,31 @@ def strategy_bindings(text):
     text = clean_numbers(text)
     matches = strategy_mentions(text)
     percentages = list(re.finditer(rf"({NUMBER})\s*%", text))
-    if len(matches) != 2 or len(percentages) != 2 or matches[0][2] == matches[1][2]:
+    if len({role for _, _, role in matches}) != 2 or len(percentages) != 2:
         return set()
-    if matches[0][0] < percentages[0].start() and (
-        matches[1][0] < percentages[1].start()
-        or re.search(r"\b(?:vs|versus|compared)\b|مقابل", text)
-    ):
-        return {(matches[i][2], percentages[i][1]) for i in (0, 1)}
+    before = [role for start, _, role in matches if start < percentages[0].start()]
+    between = [
+        role for start, _, role in matches if percentages[0].end() <= start < percentages[1].start()
+    ]
+    if between:
+        # A 90% versus B 30%. Repeated mentions after their values do not
+        # create a third condition or undo the explicit association.
+        if len(set(before)) == len(set(between)) == 1 and before[0] != between[0]:
+            return {(before[0], percentages[0][1]), (between[0], percentages[1][1])}
+    else:
+        # A versus B (90% vs 30%). A later mention cannot fill a missing
+        # condition in the ordered pair before the values.
+        ordered = list(dict.fromkeys(before))
+        if re.search(r"\b(?:vs|versus|compared)\b|مقابل", text):
+            if len(ordered) == 2:
+                return {(ordered[i], percentages[i][1]) for i in (0, 1)}
+            # Arabic also puts a condition immediately after its percentage:
+            # A 90% مقابل 30% دون أمثلة. Require adjacency, not a later guess.
+            after = [m for m in matches if percentages[1].end() <= m[0]]
+            if len(ordered) == 1 and after and after[0][2] != ordered[0]:
+                gap = text[percentages[1].end() : after[0][0]]
+                if not gap.strip(" ,،:;؛()"):
+                    return {(ordered[0], percentages[0][1]), (after[0][2], percentages[1][1])}
     return set()
 
 

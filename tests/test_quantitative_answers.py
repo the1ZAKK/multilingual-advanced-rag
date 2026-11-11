@@ -7,6 +7,7 @@ import pytest
 
 from rag.generation.numerical import (
     atoms,
+    strategy_bindings,
     validate_comparison_slot,
     validate_count_slot,
     validate_numeric_support,
@@ -110,6 +111,44 @@ def test_faithful_comparison_may_reverse_mention_order():
         "Zero-shot achieves 31.25% versus few-shot CoT at 87.5%, a 2.8x ratio.",
         ["Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."],
     )
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "Few-shot CoT achieves 91% accuracy, while zero-shot achieves 35%, "
+        "resulting in 2.6x higher accuracy for few-shot CoT.",
+        "Few-shot CoT (few-shot chain-of-thought) achieves 91% versus zero-shot 35%, "
+        "reported as 2.6x.",
+        "تبلغ دقة سلسلة التفكير بأمثلة قليلة 91% مقابل 35% دون أمثلة، "
+        "بنسبة 2.6x لسلسلة التفكير بأمثلة قليلة.",
+    ],
+)
+def test_repeated_condition_names_do_not_erase_a_faithful_accuracy_mapping(claim):
+    source = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
+    assert strategy_bindings(claim) == {("few-cot", "91"), ("zero", "35")}
+    validate_numeric_support(claim, [source])
+    validate_comparison_slot("Compare few-shot CoT with zero-shot accuracy.", claim, [source])
+    with pytest.raises(ValueError, match="swapped condition"):
+        validate_numeric_support(claim.replace("91%", "35%").replace("35%,", "91%,"), [source])
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "Few-shot CoT achieves 91% and few-shot CoT achieves 35%, compared to zero-shot.",
+        "Few-shot CoT achieves 91% versus zero-shot 35%, while zero-shot CoT is another condition.",
+        "Few-shot CoT achieves 91%, versus zero-shot 35% or 30%.",
+    ],
+)
+def test_repeated_conditions_cannot_invent_a_missing_or_ambiguous_mapping(claim):
+    assert not strategy_bindings(claim)
+    with pytest.raises(ValueError, match="condition-to-accuracy"):
+        validate_comparison_slot(
+            "Compare few-shot CoT with zero-shot accuracy.",
+            claim,
+            ["Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."],
+        )
 
 
 def test_every_numeric_citation_must_contribute_not_only_the_union():

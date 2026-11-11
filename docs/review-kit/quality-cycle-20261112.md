@@ -141,3 +141,50 @@ recordings retain server logs in their original artifacts when available. This
 keeps runtime failures and effective cache/schema settings inspectable after
 artifact expiry, alongside every rejected proposal. The ungraded review packet
 continues to contain only the recorded source-bound answers and review materials.
+
+## Complete recordings and source-bound repair controls
+
+Hosted recording `43066450023` at `a32a07c` completed eight exposed controls:
+two English generated outputs and six explicit excerpt fallbacks; all four
+Arabic outputs were English excerpts. The complete local 4B recording at
+`4d7bff7` likewise produced two generated outputs and six fallbacks, without
+the earlier worker exits after optional prompt snapshots were disabled.
+Neither a successful recording job nor native quote flags grade answer quality.
+
+Those records exposed further general defects. A comparison repeating its first
+condition after both percentages was incorrectly rejected. Position-aware binding
+now preserves that mapping, while ambiguous assignments, swapped values, extra
+conditions and percentages remain rejected. Arabic conditions immediately after
+a percentage retain the existing swapped-value veto. A source-derived two-count
+schema also keeps both entities and quantities in a requested distinction.
+
+Ordinary technical phrases now have source-activated bindings. Their exact,
+unambiguous canonical Arabic rendering may be returned already expanded; repeated
+or nested phrases cannot fulfill multiple bindings. Existing name/identifier
+token rules remain strict. Standard prompting and metric terminology is confined
+to ordinary translation; authored-unit rendering retains its previous glossary.
+Every full claim still requires the same numeric, language, independent reverse
+content and semantic checks. Direct controls preserve the full prompting
+comparison and language-centric score through Arabic and reverse translation.
+
+Source and translation audits now retain the original question and exact requested
+facet as untrusted context. This resolves elliptical reference without providing
+expected points, source counts or verdict hints. The separate experimental
+question-coverage flag is unchanged. A real control accepted the count with
+English context but still refused Arabic context; additional entity/schema hints
+failed and are not shipped.
+
+The old flat response sometimes emitted negative booleans while its explanation
+concluded that the claim was supported. A paired real control using a brief
+evidence explanation before a nested decision accepted the native count with
+Arabic context and rejected an unsupported training claim. The new wire layout
+retains all verdict requirements, never infers or repairs flags from prose, and
+preserves raw wire responses. The semantic acceptance instructions and canonical
+verdict validator are unchanged. Negative regressions reject false/nonboolean
+flags even alongside a positive explanation.
+
+Software checkpoint: 501 passed, 5 skipped; Ruff lint and formatting clean.
+The skipped optional Ragas test and four absent external-PDF fixtures predate this
+cycle. The new full application recordings must still establish their actual
+outcomes before an exact ungraded packet is delivered. Every case is an exposed
+development control, not unseen evaluation; independent human reviews remain zero.

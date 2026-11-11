@@ -86,6 +86,9 @@ def test_translation_repairs_only_the_failed_stage_and_keeps_reverse_input_blind
     assert len(audits) == 2
     assert audits[-1]["items"][0]["require_complete"] is True
     assert audits[-1]["items"][0]["full_author_statement"] == source
+    assert audits[0]["items"][0]["requested_facet"] == "كم عدد الأسئلة؟"
+    assert audits[-1]["items"][0]["requested_facet"] == "كم عدد الأسئلة؟"
+    assert all(a["items"][0]["question_context"] == "كم عدد الأسئلة؟" for a in audits)
     events = [
         json.loads(line) for line in (tmp_path / "generation-wire.jsonl").read_text().splitlines()
     ]
@@ -117,7 +120,7 @@ def test_reverse_translator_cannot_launder_a_missing_standard_language_qualifica
         return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
 
     install(monkeypatch, respond)
-    with pytest.raises(GenerationUnavailable, match="missing meaning"):
+    with pytest.raises(GenerationUnavailable, match="missing meaning|Protected translation token"):
         service.generator.generate("ما لغة الأسئلة؟", "ar", hits(source))
     assert reverses == []
 
@@ -189,3 +192,195 @@ def test_language_centric_qualification_cannot_switch_languages():
     validate_translation_atoms("The French-centric model.", "النموذج المتمحور حول الفرنسية.")
     with pytest.raises(ValueError, match="missing meaning"):
         validate_translation_atoms("The French-centric model.", "النموذج المتمحور حول العربية.")
+
+
+def test_ordinary_translation_binds_full_scientific_terms_and_retains_identifiers(
+    service, monkeypatch
+):
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        seen.append(body)
+        assert json.loads(body["messages"][-1]["content"]) == (
+            "__TERM_1__ questions in __TERM_2__ (__TERM_3__)."
+        )
+        result = {"text": "أسئلة __TERM_1__ باللغة __TERM_2__ (__TERM_3__)."}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    translated = service.generator.translate_ordinary_text(
+        "Multiple-choice questions in Modern Standard Arabic (MSA).", "ar"
+    )
+    assert translated == "أسئلة اختيار من متعدد باللغة العربية الفصحى المعاصرة (MSA)."
+    assert "Modern Standard Arabic" in json.dumps(seen[0])  # Forward-only terminology guidance.
+
+
+@pytest.mark.parametrize("text", ["أسئلة من متعدد.", "__TERM_1__ __TERM_1__"])
+def test_ordinary_translation_cannot_drop_or_duplicate_a_protected_scientific_term(
+    service, monkeypatch, text
+):
+    install(
+        monkeypatch,
+        lambda request: httpx.Response(
+            200, json={"message": {"content": json.dumps({"text": text})}}
+        ),
+    )
+    with pytest.raises(ValueError, match="Protected translation token"):
+        service.generator.translate_ordinary_text("Multiple-choice questions.", "ar")
+
+
+def test_source_audits_bind_each_count_to_its_own_request_without_prefilling_verdicts(
+    service, monkeypatch
+):
+    question = "How many models and providers were evaluated?"
+    requests = {}
+    audits = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        if user.get("task") == "semantic-grounding-audit":
+            item = user["items"][0]
+            audits.append(item)
+            assert item["requested_facet"] == requests[item["claim"]]
+            assert item["question_context"] == question
+            assert "question_part" not in item  # Experimental extra verdict remains optional.
+            assert "supported" not in item and "complete" not in item
+            result = positive(user)
+        else:
+            role = user["answer_contract"]["requested_entities"][0]
+            text = "23 models" if role == "model" else "9 providers"
+            requests[text] = user["question"]
+            key = next(iter(user["question_parts"]))
+            result = {key: {"text": text, "citations": [{"ref_id": "S1:Q1"}]}}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    answer = service.generator.generate(
+        question, "en", hits("We evaluated 23 models from 9 providers.")
+    )
+    assert answer.mode == "ollama" and len(audits) == 2
+    assert len(set(requests.values())) == 2
+
+
+def test_question_context_cannot_override_a_negative_source_judge(service, monkeypatch):
+    question = "How many models were evaluated?"
+    rejected = []
+
+    def respond(request):
+        user = json.loads(json.loads(request.content)["messages"][-1]["content"])
+        if user.get("task") == "semantic-grounding-audit":
+            rejected.append(user)
+            assert user["items"][0]["requested_facet"] == question
+            result = positive(user)
+            result["verdicts"][0].update(supported=False, complete=False, direct=False)
+        else:
+            result = {"statements": [{"text": "23 models", "citations": [{"ref_id": "S1:Q1"}]}]}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    with pytest.raises(GenerationUnavailable, match="Semantic grounding"):
+        service.generator.generate(question, "en", hits("We evaluated 23 models."))
+    assert len(rejected) == 2
+
+
+@pytest.mark.parametrize("question", ["ما صيغة الأسئلة؟", "كيف صيغت الأسئلة؟"])
+def test_english_grounding_hint_never_certifies_untranslated_internal_prose(
+    service, monkeypatch, question
+):
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        assert user.get("task") != "semantic-grounding-audit"
+        seen.append(body)
+        schema = body["format"]["properties"]["statements"]["items"]["properties"]["text"]
+        assert schema["pattern"] == r"^[A-Za-z0-9].*$"
+        result = {
+            "statements": [{"text": "الأسئلة اختيار من متعدد.", "citations": [{"ref_id": "S1:Q1"}]}]
+        }
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    with pytest.raises(GenerationUnavailable, match="expected English"):
+        service.generator.generate(question, "ar", hits("The data uses multiple-choice questions."))
+    assert len(seen) == 2
+
+
+def test_protected_prompt_terms_cannot_swap_their_accuracies(service, monkeypatch):
+    source = "Few-shot CoT achieves 91% versus zero-shot 35%, a 2.6x ratio."
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        seen.append(body)
+        assert json.loads(body["messages"][-1]["content"]) == (
+            "__TERM_1__ achieves 91% versus __TERM_2__ 35%, a 2.6x ratio."
+        )
+        result = {"text": "تحقق __TERM_2__ دقة 91% مقابل __TERM_1__ بدقة 35%، بنسبة 2.6 ضعف."}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    translated = service.generator.translate_ordinary_text(source, "ar")
+    with pytest.raises(ValueError, match="swapped condition"):
+        service.generator.audit_answer_translation(
+            {"text": source, "citations": [{"ref_id": "S1:Q1"}]},
+            translated,
+            hits(source),
+            "Compare few-shot CoT and zero-shot accuracies.",
+            1,
+        )
+    assert len(seen) == 1  # Refuse before reverse translation or a permissive judge.
+
+
+def test_reverse_prompt_terminology_keeps_cot_distinct_from_its_base_strategy(service, monkeypatch):
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        seen.append(json.loads(body["messages"][-1]["content"]))
+        result = {"text": "Few-shot __TERM_1__ and zero-shot __TERM_2__."}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    service.generator.translate_ordinary_text(
+        "سلسلة التفكير بأمثلة قليلة (CoT) وسلسلة التفكير دون أمثلة (CoT).", "en"
+    )
+    assert "chain-of-thought" not in seen[0]
+    assert "__TERM_1__" in seen[0] and "__TERM_2__" in seen[0]
+    assert "سلسلة التفكير" not in seen[0]
+
+
+def test_ordinary_term_may_already_be_faithfully_expanded_without_changing_name_rules():
+    from rag.generation.ollama import expand_scientific_terms, protect_answer_identifiers
+
+    _, bindings = protect_answer_identifiers("Multiple-choice questions.", translate_terms=True)
+    text = "أسئلة اختيار من متعدد."
+    assert expand_scientific_terms(text, bindings, allow_literal_terms=True) == text
+    with pytest.raises(ValueError, match="Protected translation token"):
+        expand_scientific_terms(text, bindings)  # Existing strict protocol remains the default.
+    _, bindings = protect_answer_identifiers(
+        "Multiple-choice questions for QWEN2.", translate_terms=True
+    )
+    with pytest.raises(ValueError, match="Protected translation token"):
+        expand_scientific_terms(
+            "أسئلة اختيار من متعدد لـQWEN2.", bindings, allow_literal_terms=True
+        )
+
+
+@pytest.mark.parametrize(
+    "source,text",
+    [
+        ("Multiple-choice questions.", "اختيار من متعدد واختيار من متعدد"),
+        ("Multiple-choice and multiple-choice.", "اختيار من متعدد"),
+        ("Few-shot CoT and few-shot.", "سلسلة التفكير بأمثلة قليلة (CoT)"),
+    ],
+)
+def test_literal_terms_cannot_duplicate_or_reuse_one_phrase_for_two_source_terms(source, text):
+    from rag.generation.ollama import expand_scientific_terms, protect_answer_identifiers
+
+    _, bindings = protect_answer_identifiers(source, translate_terms=True)
+    with pytest.raises(ValueError, match="Protected translation token"):
+        expand_scientific_terms(text, bindings, allow_literal_terms=True)

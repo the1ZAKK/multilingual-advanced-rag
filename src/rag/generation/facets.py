@@ -106,8 +106,9 @@ def plan_facet(sources, question, original_question=None):
         if chosen:
             contract = {
                 "kind": "condition-comparison",
-                "answer_style": "State both conditions with their own accuracies and the reported ratio. "
-                "Use one sentence; do not substitute other study counts or another comparison.",
+                "answer_style": "Use concise condition labels with their own accuracies and the "
+                "source-reported multiplier. Avoid extra prose or repeated condition names. "
+                "Do not substitute other study counts or another comparison.",
             }
     elif re.search(r"\bwhat\s+score\b|(?:ما|وما)\s+(?:نتيجة|درجة|دقة)\b", normalized):
         chosen = [
@@ -167,9 +168,10 @@ def plan_facet(sources, question, original_question=None):
 
 
 def count_text_pattern(contract):
-    if not contract or contract["kind"] != "count":
+    if not contract or contract["kind"] not in {"count", "quantity-distinction"}:
         return None
     alternatives = set()
+    entity_patterns = {}
     for item in contract["source_candidates"]:
         values = {item["quantity"]}
         values |= {f"{int(value):,}" for value in values if value.isdecimal()}
@@ -181,18 +183,33 @@ def count_text_pattern(contract):
                 # with their own entity, and keep this intermediate stage in
                 # English even when the original user question is Arabic.
                 prefix += r"(?:[A-Za-z][A-Za-z-]*[ \t]+){0,6}" + entity
+                entity_patterns.setdefault(item["entity"], set()).add(prefix)
                 prefix += r"(?:[ \t]+.+|[.!?])?"
             else:
                 prefix += r".+"
             alternatives.add(prefix)
     if not alternatives:
         return None
+    bounds = r"(?:(?:over|more than|at least|at most|less than|under|up to)[ \t]+)?"
+    if contract["kind"] == "quantity-distinction":
+        roles = sorted(contract["requested_entities"])
+        if len(roles) != 2 or set(entity_patterns) != set(roles):
+            return None
+        facts = [bounds + "(?:" + "|".join(sorted(entity_patterns[role])) + ")" for role in roles]
+        separator = r"(?:[ \t]*[,;][ \t]*|[ \t]+(?:and|versus|compared[ \t]+with)[ \t]+)"
+        return (
+            "^(?:"
+            + facts[0]
+            + separator
+            + facts[1]
+            + "|"
+            + facts[1]
+            + separator
+            + facts[0]
+            + r")(?:[ \t]+.+|[.!?])?$"
+        )
     # Ollama's grammar converter requires both anchors and does not support
     # regex shorthand escapes such as \s. Unsupported patterns are ignored.
     # This decoding hint never replaces numeric/NLI checks.
     # Permit the source's bounds; the unchanged semantic audit must check them.
-    return (
-        r"^(?:(?:over|more than|at least|at most|less than|under|up to)[ \t]+)?(?:"
-        + "|".join(sorted(alternatives))
-        + r")$"
-    )
+    return "^" + bounds + "(?:" + "|".join(sorted(alternatives)) + r")$"

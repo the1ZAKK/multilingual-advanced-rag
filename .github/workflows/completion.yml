@@ -103,6 +103,14 @@ jobs:
                   data = json.loads(path.read_text())
                   modes = Counter(r.get('response', {}).get('generation_mode', 'error') for r in data['records'])
                   out.write(f"Recorded {len(data['records'])} attempts: `{dict(modes)}`.\n\n")
+                  out.write('| Case | Output mode | Language/script | Native quote provenance |\n')
+                  out.write('| --- | --- | --- | --- |\n')
+                  for record in data['records']:
+                      mode = record.get('response', {}).get('generation_mode', 'error')
+                      language = record.get('language_matches')
+                      provenance = record.get('citation_provenance_valid')
+                      out.write(f"| {record['id']} | {mode} | {language} | {provenance} |\n")
+                  out.write('\nThese flags do not grade completeness, Arabic meaning or citation entailment. Excerpts remain incomplete generated-answer attempts.\n\n')
               else:
                   out.write('No complete compact model report; inspect the failed step and preserved artifacts.\n\n')
               out.write('Independent human reviews: **0**. Generated mode and exact quotes do not establish correctness or completeness.\n')
