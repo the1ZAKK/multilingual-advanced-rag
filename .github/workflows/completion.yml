@@ -84,6 +84,9 @@ jobs:
         run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
       - name: Export portable ungraded packet with verified original PDFs
         run: uv run --no-sync python -m scripts.review_packet --dataset ${{ env.EVAL_DATASET }} --run reports/model-review.json --sources reports/papers --output reports/review-packet --zip reports/RAG-PDF-Review-Kit-${{ github.run_id }}.zip
+      - name: Preserve model server diagnostics, including schema compatibility warnings
+        if: always()
+        run: docker logs rag-model-${{ github.run_id }} > reports/model-server.log 2>&1 || true
       - name: Explain recorded outcomes without assigning semantic grades
         if: always()
         run: |
@@ -109,6 +112,7 @@ jobs:
           path: |
             reports/papers/fetch-error.json
             reports/model-runtime.json
+            reports/model-server.log
             reports/model-review.json
             reports/completion-model/answers.json
             reports/completion-model/review.csv

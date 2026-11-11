@@ -62,6 +62,7 @@ def test_count_schema_pattern_has_both_required_grammar_anchors():
     contract, _ = plan_facet(source("We evaluated 23 models."), "How many models?")
     pattern = count_text_pattern(contract)
     assert pattern.startswith("^") and pattern.endswith("$")
+    assert r"\s" not in pattern  # Unsupported by the real provider's grammar converter.
     assert re.fullmatch(pattern, "23 evaluated models.")
     assert not re.fullmatch(pattern, "We evaluated 23 models.")
     assert not re.fullmatch(pattern, "23 ")

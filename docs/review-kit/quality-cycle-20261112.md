@@ -90,3 +90,11 @@ The next hosted recording uses the existing pinned runtime and verified model
 on the larger runner. The publication job now preserves the entire wire trace
 losslessly with byte hashes alongside the ungraded packet, including HTTP
 errors and rejected proposals, without depending on temporary artifact retention.
+
+Real nested-schema probes then confirmed a second compatibility issue: this
+provider also ignores regex shorthand `\s`, even with both anchors. Its pinned
+llama.cpp b11669 converter explicitly reports that escape as unsupported. The
+pattern now uses an explicit space/tab class. Probe outputs and provider warnings
+are retained, including the unsuccessful intermediate anchored pattern. The
+hosted workflow also retains server diagnostics to expose future converter
+warnings and worker exits.
