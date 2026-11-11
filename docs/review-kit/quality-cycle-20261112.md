@@ -134,3 +134,10 @@ French controls check that the rule preserves language identity, and missing or
 switched qualifications remain rejected. No number, paper identity or expected
 answer is encoded. Existing numerical, reverse-content and semantic checks remain
 required; these changes still need a fresh real-model recording.
+
+The final recording also preserves server diagnostics losslessly on its isolated
+results branch, with exact byte hashes in the trace manifest. Earlier hosted
+recordings retain server logs in their original artifacts when available. This
+keeps runtime failures and effective cache/schema settings inspectable after
+artifact expiry, alongside every rejected proposal. The ungraded review packet
+continues to contain only the recorded source-bound answers and review materials.

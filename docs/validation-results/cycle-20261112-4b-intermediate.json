@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source_code_sha": "59ef614c054392cf10628c0489932ea299e23c53",
+  "review_status": "Intermediate exposed controls: one complete English output, two fallbacks, one interrupted question, and a prior ingestion exit 137. Not a final suite or human review.",
+  "independent_human_reviews": 0,
+  "file": "cycle-20261112-4b-intermediate.json.gz",
+  "bytes": 40439,
+  "sha256": "41254505c3eca5a913f13b7ab98f4a35888740e5d32416ac8de54444a7fb0964",
+  "uncompressed_sha256": "773f785ebb45746ae6d50c868d5067d42893a3dce726a83c55503f38d126d77f",
+  "files": 12
+}

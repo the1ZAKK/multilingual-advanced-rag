@@ -195,7 +195,7 @@ jobs:
           mkdir -p reports/publish
           cp docs/validation-results/completion-model.json docs/validation-results/completion-windows.json reports/publish/
           if [ -f reports/download/model/translation-trace/generation-wire.jsonl ]; then
-            python -m scripts.preserve_generation_trace --trace reports/download/model/translation-trace/generation-wire.jsonl --output reports/publish --source-sha "$GITHUB_SHA"
+            python -m scripts.preserve_generation_trace --trace reports/download/model/translation-trace/generation-wire.jsonl --output reports/publish --source-sha "$GITHUB_SHA" --server-log reports/download/model/model-server.log
           fi
           # A data-only root has no workflow files. The ordinary contents token
           # can publish it without requesting the broader workflows permission.
@@ -206,7 +206,7 @@ jobs:
           cp reports/publish/completion-model.json reports/publish/completion-windows.json docs/validation-results/
           git add docs/validation-results/completion-model.json docs/validation-results/completion-windows.json
           # Keep full failed/rejected requests and responses past artifact expiry.
-          for trace in reports/publish/generation-wire*; do
+          for trace in reports/publish/generation-wire* reports/publish/model-server.log.gz; do
             if [ -f "$trace" ]; then
               cp "$trace" docs/validation-results/
               git add -f "docs/validation-results/$(basename "$trace")"
