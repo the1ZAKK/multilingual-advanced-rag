@@ -1,0 +1,87 @@
+{
+  "file": "cycle-20261112-local-evidence.json.gz",
+  "sha256": "097181091fb0464b8c2d6fb7d728b71948d9a868b1a4e5dfe57f68f4c09f19ea",
+  "uncompressed_sha256": "9b159c162e3c5c72b0733508dba96f5b0fcc9fc0fd02d15ffb1e5e0389aba329",
+  "bytes": 41417,
+  "uncompressed_bytes": 567001,
+  "files": 43,
+  "source_bindings": [
+    {
+      "prefix": "probe-semantics",
+      "source_code_sha": "fe63d3d05d9e10c89862792cc07205cb94172554",
+      "kind": "direct semantic controls; not application answers"
+    },
+    {
+      "prefix": "facet-first-en-001",
+      "source_code_sha": "0a9771c8f56dcb2ce7a58266381e53b0eb4dbab2",
+      "kind": "learned application; one HTTP 500 / excerpt fallback"
+    },
+    {
+      "prefix": "learned-eight-001",
+      "source_code_sha": "529f9e77061c135768a707db8963a45660bdae19",
+      "kind": "learned application; eight HTTP 500 / excerpt fallbacks"
+    },
+    {
+      "prefix": "batch-probe",
+      "source_code_sha": "529f9e77061c135768a707db8963a45660bdae19",
+      "kind": "same first-question native prompt, learned model resident; batches 512,64,32 all HTTP 500"
+    },
+    {
+      "prefix": "probe-anchored-schema",
+      "source_code_sha": "76eb19c734a66682a8184338ca92da04f3e216c9",
+      "kind": "direct nested schema; unsupported shorthand ignored; interrupted first probe retained"
+    },
+    {
+      "prefix": "probe-compatible-schema",
+      "source_code_sha": "a32a07cbb8c4e1924c88dbe5a20e54df9c580bc1",
+      "kind": "direct nested schema; supported prefix enforced, both length-bound controls HTTP 200; no factual acceptance inferred"
+    }
+  ],
+  "model_runtime": {
+    "repository": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "revision": "8911e8a47f92bac19d6f5c64a2e2095bd2f7d031",
+    "filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "bytes": 4683074240,
+    "publisher": "Bartowski community quantization of Qwen2.5-7B-Instruct",
+    "profile": "qwen25",
+    "model_parameters": {
+      "num_ctx": 8192,
+      "num_thread": 4
+    },
+    "execution_host": {
+      "system": "Linux",
+      "machine": "x86_64",
+      "logical_cpu_count": 9
+    },
+    "installed_model": {
+      "name": "qwen25-instruct-hf:7b",
+      "model": "qwen25-instruct-hf:7b",
+      "modified_at": "2026-11-12T00:20:15.294457484+08:00",
+      "size": 4683074387,
+      "digest": "fa105931cc3d0c4ee41724c29197600ab3868248b8b4ddfd2961d958ac7ed6e5",
+      "details": {
+        "parent_model": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 3584,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "tools",
+        "completion"
+      ]
+    },
+    "ollama": {
+      "version": "0.40.5"
+    }
+  },
+  "independent_human_reviews": 0,
+  "note": "All individual source bytes and hashes are inside the lossless archive, including native prompts, exact outputs, unsuccessful schema probes, server diagnostics and test logs. These are exposed development controls."
+}
