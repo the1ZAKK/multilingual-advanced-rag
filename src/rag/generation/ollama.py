@@ -227,7 +227,17 @@ A leading English participle remains a participle/passive continuation, not a co
 
 # Scientific terminology, shared across documents rather than paper answers.
 # Each source-derived unit activates only concepts actually present in that unit.
-TRANSLATION_CONCEPTS = (
+ORDINARY_TECHNICAL_TERMS = (
+    (
+        r"\bModern Standard Arabic\b",
+        "Modern Standard Arabic",
+        "العربية الفصحى المعاصرة",
+        r"العربية\s+الفصحي\s+(?:المعاصرة|الحديثة)",
+    ),
+    (r"\bmultiple[- ]choice\b", "multiple-choice", "اختيار من متعدد", r"اختيار.{0,12}متعدد"),
+)
+
+TRANSLATION_CONCEPTS = ORDINARY_TECHNICAL_TERMS + (
     (r"\bbenchmarks?\b", "benchmark", "معيار تقييم", r"معيار|معايير|اختبارات معيارية"),
     (r"\bcomprehensive\b", "comprehensive", "شامل", r"شامل|شمول|اشمل"),
     (
@@ -317,6 +327,7 @@ class GeneratedAnswer:
 
 
 _generation_deadline = ContextVar("generation_deadline", default=None)
+_ordinary_translation_repair = ContextVar("ordinary_translation_repair", default=None)
 
 
 def bounded_generation(method):
@@ -640,6 +651,12 @@ class OllamaGenerator:
                             },
                         },
                     )
+                    if response.is_error:
+                        trace_generation(
+                            "generation-http-error",
+                            json.loads(content),
+                            {"status_code": response.status_code, "body": response.text[:8192]},
+                        )
                     response.raise_for_status()
                 raw_content = response.json()["message"]["content"]
                 trace_generation("generation-wire-response", json.loads(content), raw_content)
@@ -816,45 +833,89 @@ class OllamaGenerator:
         """
         translated = {"statements": []}
         for index, original in enumerate(payload["statements"], 1):
-            text = self.translate_ordinary_text(original["text"], "ar")
-            identifiers = set(re.findall(ANSWER_IDENTIFIER, original["text"]))
-            if any(identifier not in text for identifier in identifiers):
-                raise ValueError("Answer translation changed a source-grounded identifier")
-            if numeric_atoms(text) != numeric_atoms(original["text"]):
-                raise ValueError("Answer translation changed a source-grounded number")
-            validate_numeric_support(text, [original["text"]])
-            reverse = self.translate_ordinary_text(text, "en")
-            if numeric_atoms(reverse) != numeric_atoms(original["text"]):
-                raise ValueError("Reverse answer translation changed a source-grounded number")
-            names = {
-                word.casefold()
-                for word in re.findall(r"\b[A-Z][A-Za-z]+\b", original["text"])
-                if word not in {"The", "A", "An", "This", "These", "It", "Each", "Our", "We"}
-            }
-            reverse_words = set(re.findall(r"[A-Za-z]+", reverse.casefold()))
-            if not names <= reverse_words:
-                raise ValueError("Reverse answer translation lost a source-grounded name")
-            validate_roundtrip_content(original["text"], reverse)
-            validate_numeric_support(reverse, [original["text"]])
-            candidate = {"text": text, "citations": original["citations"]}
-            item = semantic_items({"statements": [candidate]}, evidence, {}, question, "ar")[0]
-            item.update(
-                item_id=f"translation-{index}",
-                claim=reverse,
-                translated_claim=text,
-                independent_reverse_translation=reverse,
-                full_author_statement=original["text"],
-                require_complete=True,
-            )
-            self.audit_semantic_item(item)
+            candidate = self.translate_checked_statement(original, evidence, question, index)
             translated["statements"].append(candidate)
         answer, citations = validate_answer(
             translated, evidence, question=question, language="ar", allow_translation=True
         )
         return GeneratedAnswer(answer, citations, "translated-answer")
 
+    def translate_checked_statement(self, original, evidence, question, index):
+        repair = None
+        for attempt in range(1, 3):
+            text = None
+            try:
+                token = _ordinary_translation_repair.set(repair)
+                try:
+                    text = self.translate_ordinary_text(original["text"], "ar")
+                finally:
+                    _ordinary_translation_repair.reset(token)
+                return self.audit_answer_translation(original, text, evidence, question, index)
+            except (ValueError, KeyError, TypeError) as error:
+                trace_generation(
+                    "validation-rejection",
+                    {
+                        "question": question,
+                        "phase": "ordinary-translation",
+                        "statement": index,
+                        "attempt": attempt,
+                    },
+                    {"error": str(error)},
+                )
+                if attempt == 2:
+                    raise
+                repair = {"validation_error": str(error), "previous_translation": text}
+        raise ValueError("Ordinary answer translation did not complete")
+
+    def audit_answer_translation(self, original, text, evidence, question, index):
+        identifiers = set(re.findall(ANSWER_IDENTIFIER, original["text"]))
+        if any(identifier not in text for identifier in identifiers):
+            raise ValueError("Answer translation changed a source-grounded identifier")
+        if numeric_atoms(text) != numeric_atoms(original["text"]):
+            raise ValueError("Answer translation changed a source-grounded number")
+        validate_translation_atoms(original["text"], text)
+        validate_numeric_support(text, [original["text"]])
+        reverse = self.translate_ordinary_text(text, "en")
+        if numeric_atoms(reverse) != numeric_atoms(original["text"]):
+            raise ValueError("Reverse answer translation changed a source-grounded number")
+        names = {
+            word.casefold()
+            for word in re.findall(r"\b[A-Z][A-Za-z]+\b", original["text"])
+            if word not in {"The", "A", "An", "This", "These", "It", "Each", "Our", "We"}
+        }
+        reverse_words = set(re.findall(r"[A-Za-z]+", reverse.casefold()))
+        if not names <= reverse_words:
+            raise ValueError("Reverse answer translation lost a source-grounded name")
+        validate_roundtrip_content(original["text"], reverse)
+        validate_numeric_support(reverse, [original["text"]])
+        candidate = {"text": text, "citations": original["citations"]}
+        item = semantic_items({"statements": [candidate]}, evidence, {}, question, "ar")[0]
+        item.update(
+            item_id=f"translation-{index}",
+            claim=reverse,
+            translated_claim=text,
+            independent_reverse_translation=reverse,
+            full_author_statement=original["text"],
+            require_complete=True,
+        )
+        self.audit_semantic_item(item)
+        return candidate
+
     def translate_ordinary_text(self, text, language):
-        translation_input, bindings = protect_answer_identifiers(text)
+        terms = []
+        translation_source = text
+        if language == "ar":
+            terms = [
+                {"source": term, "arabic": arabic}
+                for pattern, term, arabic, _ in ORDINARY_TECHNICAL_TERMS
+                if re.search(pattern, text, re.IGNORECASE)
+            ]
+        else:
+            # Source-independent lexical bindings: inspect only the Arabic
+            # candidate, never the forward English claim or repair feedback.
+            for _, term, arabic, _ in ORDINARY_TECHNICAL_TERMS:
+                translation_source = translation_source.replace(arabic, term)
+        translation_input, bindings = protect_answer_identifiers(translation_source)
         system = (
             "Translate the supplied verified answer sentence into Arabic. "
             "Preserve EVERY fact, qualification, number and relation. Keep proper names "
@@ -870,6 +931,21 @@ class OllamaGenerator:
                 "Copy every supplied token exactly once, without changing, expanding "
                 "or translating it. Translate the surrounding prose completely."
             )
+        guidance = {"required_technical_terms": terms} if terms else {}
+        if language == "ar" and _ordinary_translation_repair.get():
+            guidance["repair"] = _ordinary_translation_repair.get()
+            system += (
+                "\nRepair the previous untrusted proposal using only the verified English "
+                "sentence. Correct the stated validation error. Do not copy wrong numbers "
+                "or facts from the previous proposal. Preserve singular/plural scope and "
+                "every scientific qualification."
+            )
+        messages = [{"role": "system", "content": system}]
+        if guidance:
+            messages.append({"role": "user", "content": json.dumps(guidance, ensure_ascii=False)})
+        messages.append(
+            {"role": "user", "content": json.dumps(translation_input, ensure_ascii=False)}
+        )
         with httpx.Client(timeout=self.request_timeout(), trust_env=False) as client:
             response = client.post(
                 self.settings.ollama_url.rstrip("/") + "/api/chat",
@@ -883,13 +959,7 @@ class OllamaGenerator:
                         "additionalProperties": False,
                         "properties": {"text": {"type": "string", "maxLength": 1200}},
                     },
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {
-                            "role": "user",
-                            "content": json.dumps(translation_input, ensure_ascii=False),
-                        },
-                    ],
+                    "messages": messages,
                     "options": {
                         "temperature": 0,
                         "num_predict": 600,
@@ -906,6 +976,7 @@ class OllamaGenerator:
                 "translation_input": translation_input,
                 "language": language,
                 "model": self.settings.translation_model or self.settings.ollama_model,
+                "guidance": guidance,
             },
             raw_content,
         )

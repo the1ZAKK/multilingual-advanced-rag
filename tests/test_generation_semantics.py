@@ -758,7 +758,8 @@ def test_ordinary_translation_rejects_changed_identifier_before_reverse_audit(se
     monkeypatch.setattr(service.generator, "translate_ordinary_text", translate)
     with pytest.raises(ValueError, match="identifier"):
         service.generator.translate_verified_answer(payload, hits, "كم عدد الأسئلة؟")
-    assert calls == ["ar"]
+    # Both bounded forward attempts must reject before any reverse audit.
+    assert calls == ["ar", "ar"]
 
 
 def test_reverse_translation_cannot_drop_geographical_names_even_if_judge_would_approve(

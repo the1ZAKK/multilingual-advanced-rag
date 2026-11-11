@@ -52,3 +52,24 @@ wrong role, wrong subset/predicate, wrong comparison, irrelevant background,
 omitted count, and an explicitly negative semantic judge. Full model recording,
 Arabic fidelity checks and an ungraded new packet remain required after the
 validated source checkpoint. Software success does not establish answer quality.
+
+## Translation-stage repair and runtime diagnostics
+
+The initial learned-retrieval application probe at `0a9771c` returned a model
+HTTP 500 and disclosed an excerpt fallback. The failed output and settings are
+preserved; separate direct schema controls returned HTTP 200. No answer-quality
+success is inferred from those controls. New bounded HTTP-error tracing retains
+the status and response body for diagnosing subsequent server failures.
+
+Ordinary translation now gets a bounded repair of the failed statement before
+the application retries the entire answer. Both attempts use the same strict
+identifier, numerical, scientific-concept, reverse-content and semantic checks
+and the original total deadline. Repair feedback is untrusted and supplied only
+to the forward translator; the reverse translator receives only its Arabic
+candidate. Failed translations remain in the wire trace.
+
+A small source-activated technical lexicon preserves Modern Standard Arabic and
+multiple-choice meaning across documents. It contains no paper names, numerical
+answers or expected points. Missing standard-language qualifications are refused
+before a reverse translator can silently insert them. Reverse lexical bindings
+are activated only by the actual Arabic candidate.
