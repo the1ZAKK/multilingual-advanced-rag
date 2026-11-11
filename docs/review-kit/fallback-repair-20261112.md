@@ -80,3 +80,25 @@ Nine additional source-independent regressions cover these compounds, wrong
 nouns/conditions, exact selected-span guidance and blind reverse input.
 534 tests passed, 5 skipped; Ruff lint and formatting clean. Live acceptance of
 this follow-up remains pending its own source-labelled recording.
+
+The Arabic two-count distinction additionally exposed a conservative round-trip
+refusal when a repeated assessment verb was paraphrased on only one of the two
+counts. The count facts and Arabic text were preserved, but the unchanged lexical
+guard rejects that alteration. The distinction decoder now requests only the
+two qualified quantity/entity noun phrases, rather than redundantly adding an
+assessment clause. Both counts, entity mappings, native source references,
+completeness and semantic audits remain required; no content words are ignored
+to accept the former proposal. The numerical generation tests cover added
+assessment clauses and preserve qualification requirements.
+
+The completed `9e9703a` run records six generated answers and two explicit
+fallbacks. The English quantity distinction and Arabic language/format answers
+improve on the recovered packet. The Arabic comparison and Arabic quantity
+distinction still fail and remain preserved locally. This follow-up checkpoint
+passes 535 tests, with 5 skipped, and clean Ruff checks.
+
+Its next isolated recording covers the four formerly failing questions plus
+the Arabic size/score and English numerical-comparison controls. Those six exact
+questions are selected unchanged from the frozen eight-case suite. The other
+two English controls already completed at `9e9703a`; their results are labelled
+with that commit rather than relabelled as a new run.

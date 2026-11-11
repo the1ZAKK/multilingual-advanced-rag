@@ -86,7 +86,9 @@ def plan_facet(sources, question, original_question=None):
                     for _, quote, role, value in chosen
                 ],
                 "answer_style": (
-                    "Distinguish every originally requested quantity, retaining each entity and count."
+                    "Distinguish every originally requested quantity with two concise "
+                    "quantity-and-entity noun phrases joined by 'and'. Retain source "
+                    "qualifications. Do not add an assessment verb, definition or narrative."
                     if deictic
                     else "Start with the quantity and its counted entity; use a short factual phrase. "
                     "Retain every necessary bound or condition. Do not add a new claim about "
@@ -235,7 +237,7 @@ def count_text_pattern(contract):
             + facts[1]
             + separator
             + facts[0]
-            + r")(?:[ \t]+.+|[.!?])?$"
+            + r")[.!?]?$"
         )
     # Ollama's grammar converter requires both anchors and does not support
     # regex shorthand escapes such as \s. Unsupported patterns are ignored.

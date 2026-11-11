@@ -121,7 +121,20 @@ def test_two_quantity_grammar_cannot_grow_an_unbounded_adjective_or_pre_count_cl
     assert re.fullmatch(pattern, "180 distinct tasks; 45,360 individual test cases.")
     assert not re.fullmatch(pattern, "180 " + "distinct" * 200 + " tasks; 45360 test cases")
     assert not re.fullmatch(pattern, "180 tasks are evaluated; 45360 individual test cases")
+    assert not re.fullmatch(pattern, "180 tasks; 45360 individual test cases were evaluated")
+    assert not re.fullmatch(pattern, "180 tasks; 45360 individual test cases were assessed")
     assert "[A-Za-z-]*" not in pattern
+
+
+def test_quantity_distinction_uses_qualified_noun_phrases_without_an_added_evaluation_clause():
+    contract, _ = plan_facet(
+        source("We evaluated 67 tasks on 2,040 individual test cases."),
+        "Distinguish the two quantities.",
+        "How many tasks and individual test cases were evaluated?",
+    )
+    assert "noun phrases" in contract["answer_style"]
+    assert "Retain source qualifications" in contract["answer_style"]
+    assert re.fullmatch(count_text_pattern(contract), "67 tasks and 2,040 individual test cases.")
 
 
 def test_distinct_quantities_bind_their_own_unambiguous_sources_after_overlap_deduplication():
