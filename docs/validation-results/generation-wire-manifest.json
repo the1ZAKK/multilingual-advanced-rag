@@ -1,0 +1,29 @@
+{
+  "source_code_sha": "c0b28b8620e741264d6f1c55f68840624d8b99bf",
+  "file": "generation-wire.jsonl.gz",
+  "raw_bytes": 600277,
+  "raw_sha256": "0eeb275cd93063babde9b8ae2e9a568b92cb008b027ac06d1282c01825bb2530",
+  "compressed_bytes": 22928,
+  "compressed_sha256": "83c8fc2be48dcd74c4c8bc0a6b8131a95ccf9d862f31d3e24eacdd20f0349beb",
+  "events": 231,
+  "stages": {
+    "generation": 16,
+    "generation-raw": 50,
+    "generation-wire-response": 50,
+    "ordinary-translation-ar": 4,
+    "ordinary-translation-en": 4,
+    "ordinary-translation-wire-response": 8,
+    "semantic-audit": 41,
+    "semantic-audit-wire-response": 41,
+    "validation-rejection": 17
+  },
+  "independent_human_reviews": 0,
+  "review_status": "Ungraded wire evidence, including rejected and failed attempts",
+  "server_diagnostics": {
+    "file": "model-server.log.gz",
+    "raw_bytes": 303680,
+    "raw_sha256": "2a764404d62ccf3c0ac40a3d9d0e777ea665776817ad0daa6207f91c18944275",
+    "compressed_bytes": 27160,
+    "compressed_sha256": "90593c181405dfbe2bb681b6c1bf5c5a410b1b6a30b8d171a613ce23187fdda2"
+  }
+}
