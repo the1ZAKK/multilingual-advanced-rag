@@ -1,0 +1,60 @@
+{
+  "workflow_run": 43086599560,
+  "source_code_sha": "d2e5b893087c08cea4fdd5cd59bc08e6aae3e14a",
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "updated_at_utc": "2026-11-11T21:01:39Z",
+  "model": "qwen25-instruct-hf:7b",
+  "exact_recording_recovered": false,
+  "log_preserved": "local_only",
+  "log_sha256": "63d4436016ebc7719a315eff967a7502cefe2c58dd0da9644455e7d0db1d7c7d",
+  "log_bytes": 51177,
+  "console_mode_records": [
+    {
+      "case": "mmlu-size-en",
+      "mode": "extractive",
+      "latency_ms": 600129
+    },
+    {
+      "case": "mmlu-size-ar",
+      "mode": "extractive",
+      "latency_ms": 600106
+    },
+    {
+      "case": "numbers-prompt-en",
+      "mode": "extractive",
+      "latency_ms": 600114
+    },
+    {
+      "case": "numbers-prompt-ar",
+      "mode": "extractive",
+      "latency_ms": 600103
+    },
+    {
+      "case": "mmlu-format-en",
+      "mode": "extractive",
+      "latency_ms": 191174
+    },
+    {
+      "case": "mmlu-format-ar",
+      "mode": "extractive",
+      "latency_ms": 320033
+    },
+    {
+      "case": "numbers-task-evaluations-en",
+      "mode": "ollama",
+      "latency_ms": 178871
+    },
+    {
+      "case": "numbers-task-evaluations-ar",
+      "mode": "extractive",
+      "latency_ms": 600104
+    }
+  ],
+  "model_artifact_available": false,
+  "windows_artifact_id": 13886622306,
+  "result_branch_available": false,
+  "failure": "CreateArtifact failed after five attempts receiving HTML instead of JSON",
+  "note": "Console modes and latencies only; exact answers, citations and wire responses are not reconstructed. No semantic or human grades assigned."
+}

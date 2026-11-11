@@ -11,6 +11,12 @@ import unicodedata
 from rag.ingestion.text import normalize
 
 NUMBER = r"\d+(?:\.\d+)?"
+# Keep count decoding and count validation on the same finite qualifier
+# vocabulary. Arbitrary adjective words in a grammar can trap a model into
+# indefinitely extending one word while it tries to finish a two-count fact.
+ENGLISH_COUNT_QUALIFIERS = (
+    r"evaluated|distinct|individual|multiple[- ]?choice|number[- ]reading|large language"
+)
 ROLES = {
     "model": r"models?|llms?|(?:ال)?نماذج|(?:ال)?نموذج(?:ا)?",
     "provider": r"providers?|(?:ال)?مقدمي(?:ها|ن)?|مزود(?:ي|ين|ا)?(?:\s+الخدمات)?",
@@ -49,8 +55,8 @@ def count_bindings(text):
     result = set()
     for role, expression in ROLES.items():
         for match in re.finditer(
-            rf"(?<![\w.])({NUMBER})\s+(?:(?:evaluated|distinct|individual|multiple[- ]?choice|"
-            rf"number[- ]reading|large language|الفردية|مختلفة)\s+){{0,3}}(?:{expression})(?![\w-])",
+            rf"(?<![\w.])({NUMBER})\s+(?:(?:{ENGLISH_COUNT_QUALIFIERS}|الفردية|مختلفة)"
+            rf"\s+){{0,3}}(?:{expression})(?![\w-])",
             text,
         ):
             result.add((role, match[1]))

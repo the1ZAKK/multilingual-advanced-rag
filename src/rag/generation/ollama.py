@@ -16,7 +16,7 @@ import httpx
 
 from rag.config import Settings
 from rag.generation.contradictions import reject_polarity_conflicts
-from rag.generation.facets import count_text_pattern, plan_facet
+from rag.generation.facets import count_text_pattern, plan_facet, required_count_refs
 from rag.generation.numerical import (
     atoms as numerical_values,
 )
@@ -286,6 +286,8 @@ BASE_TECHNICAL_TERMS = (
 ORDINARY_TECHNICAL_TERMS = (
     BASE_TECHNICAL_TERMS
     + (
+        (r"\bproviders\b", "providers", "مزودين", r"مزودين"),
+        (r"\bprovider\b", "provider", "مزود", r"مزود"),
         (r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),
         (r"\brespectively\b", "respectively", "على التوالي", r"علي\s+التوالي"),
     )
@@ -655,6 +657,10 @@ class OllamaGenerator:
                         # question. Arabic names/quoted terms remain possible
                         # later in the sentence; full language checks still run.
                         statement_schema["properties"]["text"]["pattern"] = r"^[A-Za-z0-9].*$"
+                    if refs := required_count_refs(contract):
+                        statement_schema["properties"]["citations"] = {
+                            "const": [{"ref_id": ref} for ref in refs]
+                        }
                     schema = {
                         **response_schema,
                         "required": [key],
@@ -730,6 +736,18 @@ class OllamaGenerator:
                     not isinstance(item, dict) or set(item) != set(schema["required"])
                 ):
                     raise ValueError("Multipart generation omitted or added a question slot")
+                if multipart:
+                    key = schema["required"][0]
+                    required_citations = schema["properties"][key]["properties"]["citations"].get(
+                        "const"
+                    )
+                    if required_citations is not None and (
+                        not isinstance(item[key], dict)
+                        or item[key].get("citations") != required_citations
+                    ):
+                        raise ValueError(
+                            "Quantity distinction omitted or changed a required source citation"
+                        )
                 result.update(item)
             statement_parts.clear()
             if multipart:

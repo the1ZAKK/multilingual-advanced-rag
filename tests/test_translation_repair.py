@@ -46,6 +46,78 @@ def positive(user):
     }
 
 
+@pytest.mark.parametrize(
+    "quantity,entity,arabic", [(17, "providers", "مزودين"), (1, "provider", "مزود")]
+)
+def test_provider_terminology_is_source_activated_and_reverse_input_remains_independent(
+    service, monkeypatch, quantity, entity, arabic
+):
+    claim = f"{quantity} {entity}"
+    reverse_inputs = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        if isinstance(user, str):
+            if "into Arabic" in body["messages"][0]["content"]:
+                assert user == f"{quantity} __TERM_1__"
+                result = {"text": user}
+            else:
+                reverse_inputs.append(user)
+                assert len(body["messages"]) == 2
+                assert user == claim
+                assert "previous_translation" not in json.dumps(body)
+                result = {"text": user}
+        elif user.get("task") == "semantic-grounding-audit":
+            result = positive(user)
+        else:
+            result = {"statements": [{"text": claim, "citations": [{"ref_id": "S1:Q1"}]}]}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    answer = service.generator.generate(
+        "كم عدد مقدمي الخدمات؟", "ar", hits(f"We evaluated {quantity} {entity}.")
+    )
+    assert answer.mode == "translated-answer"
+    assert f"{quantity} {arabic}" in answer.answer
+    assert reverse_inputs == [claim]
+
+
+@pytest.mark.parametrize("output", ["18 __TERM_1__", "17 نماذج", "17 __TERM_1__ __TERM_1__"])
+def test_provider_binding_cannot_hide_changed_numbers_entities_or_repeated_terms(
+    service, monkeypatch, output
+):
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        if isinstance(user, str):
+            if "into Arabic" in body["messages"][0]["content"]:
+                result = {"text": output}
+            else:
+                pytest.fail("Invalid translation reached independent reverse translation")
+        elif user.get("task") == "semantic-grounding-audit":
+            result = positive(user)
+        else:
+            result = {"statements": [{"text": "17 providers", "citations": [{"ref_id": "S1:Q1"}]}]}
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    with pytest.raises(GenerationUnavailable, match="number|translation token"):
+        service.generator.generate(
+            "كم عدد مقدمي الخدمات؟", "ar", hits("We evaluated 17 providers.")
+        )
+
+
+def test_attribute_prompt_fix_does_not_accept_an_added_existence_assertion():
+    from rag.generation.ollama import validate_roundtrip_content
+
+    with pytest.raises(ValueError, match="round-trip content"):
+        validate_roundtrip_content(
+            "The questions are in Modern Standard Arabic (MSA).",
+            "Questions exist in Modern Standard Arabic (MSA).",
+        )
+
+
 def test_translation_repairs_only_the_failed_stage_and_keeps_reverse_input_blind(
     service, monkeypatch, tmp_path
 ):

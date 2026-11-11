@@ -5,7 +5,12 @@ from copy import deepcopy
 import httpx
 import pytest
 
-from rag.generation.facets import count_text_pattern, plan_facet, requested_counts
+from rag.generation.facets import (
+    count_text_pattern,
+    plan_facet,
+    requested_counts,
+    required_count_refs,
+)
 from rag.generation.numerical import validate_comparison_slot, validate_numeric_support
 from rag.generation.ollama import GenerationUnavailable
 from rag.models import Chunk, Hit
@@ -104,6 +109,53 @@ def test_quantity_distinction_schema_keeps_both_source_counts_and_their_entities
         "180 مهام و45360 تقييمات",
     ):
         assert not re.fullmatch(pattern, bad)
+
+
+def test_two_quantity_grammar_cannot_grow_an_unbounded_adjective_or_pre_count_clause():
+    contract, _ = plan_facet(
+        source("We used 180 distinct tasks for 45,360 individual test cases."),
+        "Distinguish the two quantities.",
+        "How many distinct tasks and individual test cases are evaluated?",
+    )
+    pattern = count_text_pattern(contract)
+    assert re.fullmatch(pattern, "180 distinct tasks; 45,360 individual test cases.")
+    assert not re.fullmatch(pattern, "180 " + "distinct" * 200 + " tasks; 45360 test cases")
+    assert not re.fullmatch(pattern, "180 tasks are evaluated; 45360 individual test cases")
+    assert "[A-Za-z-]*" not in pattern
+
+
+def test_distinct_quantities_bind_their_own_unambiguous_sources_after_overlap_deduplication():
+    sources = source("We used 67 distinct tasks.", "We evaluated 2,040 individual test cases.")
+    sources += [
+        {
+            **sources[0],
+            "label": "S2",
+            "quotes": [
+                {**quote, "ref_id": quote["ref_id"].replace("S1", "S2")}
+                for quote in sources[0]["quotes"]
+            ],
+        }
+    ]
+    contract, scoped = plan_facet(
+        sources,
+        "Distinguish the two quantities.",
+        "How many distinct tasks and individual test cases were evaluated?",
+    )
+    assert required_count_refs(contract) == ["S1:Q1", "S1:Q2"]
+    assert {q["ref_id"] for s in scoped for q in s["quotes"]} == {"S1:Q1", "S1:Q2"}
+    contract["source_candidates"].append(dict(entity="task", quantity="68", ref_id="S1:Q3"))
+    assert required_count_refs(contract) is None
+
+
+@pytest.mark.parametrize(
+    "question", ["What language is the dataset written in?", "ما لغة الأسئلة؟"]
+)
+def test_attribute_plans_request_qualified_values_without_an_existence_claim(question):
+    contract, _ = plan_facet(source("The data comprises questions in French."), question)
+    assert contract["kind"] == "attribute"
+    assert "noun phrase" in contract["answer_style"]
+    assert "source qualifications" in contract["answer_style"]
+    assert "existence" in contract["answer_style"]
 
 
 def test_the_requested_condition_pair_excludes_a_different_real_comparison():

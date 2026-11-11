@@ -3,6 +3,7 @@
 import re
 
 from rag.generation.numerical import (
+    ENGLISH_COUNT_QUALIFIERS,
     ROLES,
     clean_numbers,
     count_bindings,
@@ -147,8 +148,11 @@ def plan_facet(sources, question, original_question=None):
                 chosen.append((source, quote, None, None))
         contract = {
             "kind": "attribute",
-            "answer_style": "Give all requested attributes as a concise source-supported phrase. "
-            "Do not add a definition, dataset size, background, or other unrequested facts.",
+            "answer_style": "Give the requested attribute value as a noun phrase, such as a "
+            "language name or a question-format name. Retain its source qualifications and "
+            "acronyms. Do not re-state the subject or add assertions about its existence or "
+            "availability. Cover every requested attribute. Do not add a definition, "
+            "dataset size, background, or other unrequested facts.",
         }
     if not chosen:
         return contract, sources
@@ -164,7 +168,32 @@ def plan_facet(sources, question, original_question=None):
                 seen.add(quote["quote"])
         if matches:
             scoped.append({**source, "quotes": matches})
+    if contract and "source_candidates" in contract:
+        available = {q["ref_id"] for source in scoped for q in source["quotes"]}
+        contract["source_candidates"] = [
+            candidate
+            for candidate in contract["source_candidates"]
+            if candidate["ref_id"] in available
+        ]
     return contract, scoped
+
+
+def required_count_refs(contract):
+    """Bind a two-count distinction to its unambiguous native source refs.
+
+    This is a decoding contract, never a support verdict. Every generated fact
+    still passes the unchanged numerical, completeness and semantic validators.
+    Ambiguous values or alternative source quotes are left to those validators.
+    """
+    if not contract or contract["kind"] != "quantity-distinction":
+        return None
+    groups = [
+        {(c["quantity"], c["ref_id"]) for c in contract["source_candidates"] if c["entity"] == role}
+        for role in contract["requested_entities"]
+    ]
+    if not groups or any(len(group) != 1 for group in groups):
+        return None
+    return sorted({ref for group in groups for _, ref in group})
 
 
 def count_text_pattern(contract):
@@ -182,7 +211,7 @@ def count_text_pattern(contract):
                 # Retain room for bounds and source qualifiers. Pair quantities
                 # with their own entity, and keep this intermediate stage in
                 # English even when the original user question is Arabic.
-                prefix += r"(?:[A-Za-z][A-Za-z-]*[ \t]+){0,6}" + entity
+                prefix += rf"(?:(?:{ENGLISH_COUNT_QUALIFIERS})[ \t]+){{0,3}}" + entity
                 entity_patterns.setdefault(item["entity"], set()).add(prefix)
                 prefix += r"(?:[ \t]+.+|[.!?])?"
             else:
