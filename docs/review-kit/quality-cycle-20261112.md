@@ -98,3 +98,23 @@ pattern now uses an explicit space/tab class. Probe outputs and provider warning
 are retained, including the unsuccessful intermediate anchored pattern. The
 hosted workflow also retains server diagnostics to expose future converter
 warnings and worker exits.
+
+The local 4B learned run at the same implementation now produces a fully
+source-audited English ArabicMMLU answer with all four requested quantities.
+Its first Arabic question attempt nevertheless emitted an Arabic entity name
+inside an English grounding-stage count, then the repair hit a worker HTTP 500.
+That failed output remains recorded. Count decoding now binds each native
+quantity to its own generic English entity before the separately audited Arabic
+translation. Wrong quantity/entity pairings and untranslated intermediate count
+prose have additional negative regressions. All existing post-generation checks
+are retained. This is an observed grounding-stage defect, not an Arabic
+answer-quality pass; the complete rerun is still required.
+
+The local server accumulated hundreds of MiB of optional cross-request prompt
+snapshots before worker exits. The precise termination cause remains unconfirmed.
+The final owned-runtime experiment sets the pinned llama.cpp server's documented
+`LLAMA_ARG_CACHE_RAM=0`, retaining full context and all validators. This affects
+prompt reuse storage, not evidence size, model weights or KV precision. The
+recording workflow passes it explicitly into the owned container and records the
+client declaration separately from server introspection; the retained server log
+must confirm the effective cap. Existing user services and settings are untouched.

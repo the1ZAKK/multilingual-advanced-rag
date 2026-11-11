@@ -58,6 +58,8 @@ jobs:
       RAG_LLM_TIMEOUT: '300'
       RAG_LLM_TOTAL_TIMEOUT: '600'
       RAG_GENERATION_TRACE_DIR: reports/translation-trace
+      # Disable optional cross-request prompt snapshots, retaining full KV/context.
+      LLAMA_ARG_CACHE_RAM: '0'
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -70,7 +72,7 @@ jobs:
         run: uv run --no-sync python -m scripts.fetch_review_sources --dataset ${{ env.EVAL_DATASET }} --output reports/papers
       - name: Start official pinned Ollama runtime
         run: |
-          docker run -d --name rag-model-${{ github.run_id }} -p 127.0.0.1:11434:11434 ollama/ollama@sha256:0e8ff22ff86b4718cfa886844062117af13b50eb5689cca78279778e15744980
+          docker run -d --name rag-model-${{ github.run_id }} -e LLAMA_ARG_CACHE_RAM -p 127.0.0.1:11434:11434 ollama/ollama@sha256:0e8ff22ff86b4718cfa886844062117af13b50eb5689cca78279778e15744980
           for i in $(seq 1 60); do
             if curl -fsS http://127.0.0.1:11434/api/version; then exit 0; fi
             sleep 1

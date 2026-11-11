@@ -15,6 +15,16 @@ PREDICATES = {
     "generate": r"\bgenerat\w*|\bproduc\w*|توليد|ينتج|انتاج",
 }
 
+# Ordinary count facts are grounded in English before any Arabic translation.
+# These are generic entity names, not document-specific phrases or quantities.
+ENGLISH_COUNT_ENTITIES = {
+    "model": r"(?:models?|[Ll][Ll][Mm]s?)",
+    "provider": r"providers?",
+    "task": r"tasks?",
+    "question": r"questions?",
+    "evaluation": r"(?:evaluations?|test[ \t]+cases?)",
+}
+
 
 def requested_counts(question):
     match = re.search(r"\bhow many\s+|كم\s+(?:عدد\s+)?", question, re.IGNORECASE)
@@ -159,9 +169,23 @@ def plan_facet(sources, question, original_question=None):
 def count_text_pattern(contract):
     if not contract or contract["kind"] != "count":
         return None
-    values = {item["quantity"] for item in contract["source_candidates"]}
-    values |= {f"{int(value):,}" for value in values if value.isdecimal()}
-    if not values:
+    alternatives = set()
+    for item in contract["source_candidates"]:
+        values = {item["quantity"]}
+        values |= {f"{int(value):,}" for value in values if value.isdecimal()}
+        entity = ENGLISH_COUNT_ENTITIES.get(item.get("entity"))
+        for value in values:
+            prefix = re.escape(value) + r"[ \t]+"
+            if entity:
+                # Retain room for bounds and source qualifiers. Pair quantities
+                # with their own entity, and keep this intermediate stage in
+                # English even when the original user question is Arabic.
+                prefix += r"(?:[A-Za-z][A-Za-z-]*[ \t]+){0,6}" + entity
+                prefix += r"(?:[ \t]+.+|[.!?])?"
+            else:
+                prefix += r".+"
+            alternatives.add(prefix)
+    if not alternatives:
         return None
     # Ollama's grammar converter requires both anchors and does not support
     # regex shorthand escapes such as \s. Unsupported patterns are ignored.
@@ -169,6 +193,6 @@ def count_text_pattern(contract):
     # Permit the source's bounds; the unchanged semantic audit must check them.
     return (
         r"^(?:(?:over|more than|at least|at most|less than|under|up to)[ \t]+)?(?:"
-        + "|".join(re.escape(value) for value in sorted(values))
-        + r")[ \t]+.+$"
+        + "|".join(sorted(alternatives))
+        + r")$"
     )

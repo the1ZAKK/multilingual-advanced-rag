@@ -31,6 +31,8 @@ def test_checksum_failure_prevents_any_model_import(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("profile", ["base", "instruct", "qwen25"])
 def test_verified_blob_upload_and_report(tmp_path, monkeypatch, profile):
+    monkeypatch.setenv("LLAMA_ARG_CACHE_RAM", "0")
+    monkeypatch.setenv("RAG_TEST_PRIVATE_KEY", "must-not-be-recorded")
     path = tmp_path / "tiny.gguf"
     data = b"contract fixture only"
     path.write_bytes(data)
@@ -86,6 +88,8 @@ def test_verified_blob_upload_and_report(tmp_path, monkeypatch, profile):
     assert result["sha256"] == digest
     assert imported_parameters == [result["model_parameters"]]
     assert result["model_parameters"] == {"num_ctx": 8192, "num_thread": 4}
+    assert result["declared_runtime_environment"] == {"LLAMA_ARG_CACHE_RAM": "0"}
+    assert "must-not-be-recorded" not in json.dumps(result)
     assert set(result["execution_host"]) == {"system", "machine", "logical_cpu_count"}
     assert json.loads((tmp_path / "report.json").read_text())["bytes"] == len(data)
 

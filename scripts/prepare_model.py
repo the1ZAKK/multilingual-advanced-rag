@@ -101,6 +101,12 @@ def prepare(cache: Path, output: Path, url="http://127.0.0.1:11434", model=None,
         publisher=selected["publisher"],
         profile=profile,
         model_parameters=model_parameters,
+        # Client declarations are recorded separately from server introspection.
+        # The hosted workflow supplies the same allowlisted value to its owned
+        # container; its preserved server log confirms the effective cache cap.
+        declared_runtime_environment={
+            key: os.environ[key] for key in ("LLAMA_ARG_CACHE_RAM",) if key in os.environ
+        },
         execution_host={
             "system": platform.system(),
             "machine": platform.machine(),

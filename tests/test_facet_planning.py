@@ -68,6 +68,25 @@ def test_count_schema_pattern_has_both_required_grammar_anchors():
     assert not re.fullmatch(pattern, "23 ")
 
 
+@pytest.mark.parametrize("question", ["How many models?", "كم عدد النماذج؟"])
+def test_count_schema_keeps_its_intermediate_entity_in_english(question):
+    contract, _ = plan_facet(source("23 models were evaluated."), question)
+    pattern = count_text_pattern(contract)
+    assert re.fullmatch(pattern, "23 evaluated models")
+    assert re.fullmatch(pattern, "23 LLMs.")
+    assert not re.fullmatch(pattern, "23 نماذج")
+
+
+def test_count_schema_pairs_each_source_quantity_with_its_own_entity():
+    contract, _ = plan_facet(
+        source("We evaluated 23 models from 9 providers."), "How many models and providers?"
+    )
+    pattern = count_text_pattern(contract)
+    assert re.fullmatch(pattern, "23 models") and re.fullmatch(pattern, "9 providers")
+    assert not re.fullmatch(pattern, "23 providers")
+    assert not re.fullmatch(pattern, "9 models")
+
+
 def test_the_requested_condition_pair_excludes_a_different_real_comparison():
     good = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
     other = "Few-shot methods achieve 2.2x the zero-shot accuracy (80% vs 36%)."
