@@ -118,6 +118,108 @@ def test_attribute_prompt_fix_does_not_accept_an_added_existence_assertion():
         )
 
 
+@pytest.mark.parametrize(
+    "source,arabic",
+    [
+        ("few-shot chain-of-thought prompting", "التلقين باستخدام سلسلة التفكير بأمثلة قليلة"),
+        ("zero-shot approaches", "أساليب دون أمثلة"),
+        ("few-shot accuracy", "دقة بأمثلة قليلة"),
+        ("accuracies", "قيم الدقة"),
+    ],
+)
+def test_scientific_compounds_preserve_the_condition_and_noun_as_one_source_span(source, arabic):
+    from rag.generation.ollama import expand_scientific_terms, protect_answer_identifiers
+
+    template, bindings = protect_answer_identifiers(source, translate_terms=True)
+    assert template == "__TERM_1__"
+    assert bindings == [("__TERM_1__", source, arabic)]
+    assert expand_scientific_terms(template, bindings) == arabic
+
+
+def test_compound_guidance_uses_only_selected_spans_and_reverse_has_no_forward_context(
+    service, monkeypatch
+):
+    seen = []
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        seen.append(body)
+        if "into Arabic" in body["messages"][0]["content"]:
+            guidance = json.loads(body["messages"][1]["content"])
+            assert guidance["required_technical_terms"] == [
+                {"source": "Few-shot prompting", "arabic": "التلقين بأمثلة قليلة"},
+                {"source": "accuracy", "arabic": "دقة"},
+                {"source": "zero-shot approaches", "arabic": "أساليب دون أمثلة"},
+                {"source": "accuracies", "arabic": "قيم الدقة"},
+            ]
+            assert (
+                user
+                == "__TERM_1__ improves __TERM_2__ over __TERM_3__, with __TERM_4__ of 93% vs 31%."
+            )
+            result = {
+                "text": "يحسن __TERM_1__ __TERM_2__ مقارنة بـ__TERM_3__، مع __TERM_4__ 93% مقابل 31%."
+            }
+        else:
+            assert len(body["messages"]) == 2
+            assert "few-shot prompting" in user and "zero-shot approaches" in user
+            assert "accuracies" in user and "models" not in user
+            assert "previous_translation" not in json.dumps(body)
+            assert "validation_error" not in json.dumps(body)
+            result = {
+                "text": "Few-shot prompting improves accuracy over zero-shot approaches, with accuracies of 93% vs 31%."
+            }
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    install(monkeypatch, respond)
+    arabic = service.generator.translate_ordinary_text(
+        "Few-shot prompting improves accuracy over zero-shot approaches, with accuracies of 93% vs 31%.",
+        "ar",
+    )
+    assert "أساليب دون أمثلة" in arabic and "قيم الدقة" in arabic
+    service.generator.translate_ordinary_text(arabic, "en")
+
+
+@pytest.mark.parametrize(
+    "source,wrong",
+    [
+        ("zero-shot approaches", "نماذج دون أمثلة"),
+        ("accuracies", "دقائق"),
+        ("few-shot accuracy", "دقة دون أمثلة"),
+    ],
+)
+def test_wrong_noun_or_condition_cannot_replace_a_protected_compound(
+    service, monkeypatch, source, wrong
+):
+    install(
+        monkeypatch,
+        lambda request: httpx.Response(
+            200, json={"message": {"content": json.dumps({"text": wrong})}}
+        ),
+    )
+    with pytest.raises(ValueError, match="Protected translation token"):
+        service.generator.translate_ordinary_text(source, "ar")
+
+
+def test_reverse_compounds_cannot_invent_an_approach_when_the_arabic_says_models(
+    service, monkeypatch
+):
+    from rag.generation.ollama import validate_roundtrip_content
+
+    def respond(request):
+        body = json.loads(request.content)
+        assert len(body["messages"]) == 2
+        assert json.loads(body["messages"][-1]["content"]) == "نماذج zero-shot."
+        return httpx.Response(
+            200, json={"message": {"content": json.dumps({"text": "Zero-shot models."})}}
+        )
+
+    install(monkeypatch, respond)
+    reverse = service.generator.translate_ordinary_text("نماذج دون أمثلة.", "en")
+    with pytest.raises(ValueError, match="round-trip content"):
+        validate_roundtrip_content("Zero-shot approaches.", reverse)
+
+
 def test_translation_repairs_only_the_failed_stage_and_keeps_reverse_input_blind(
     service, monkeypatch, tmp_path
 ):

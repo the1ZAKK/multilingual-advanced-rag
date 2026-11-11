@@ -273,6 +273,37 @@ PROMPT_STRATEGY_TERMS = (
     (r"\bzero[- ]shot\b", "zero-shot", "دون أمثلة", r"(?:دون|بدون)\s+امثلة"),
 )
 
+PROMPT_NOUN_TERMS = (
+    ("prompting", "التلقين", "التلقين {strategy}"),
+    ("approaches", "أساليب", "أساليب {strategy}"),
+    ("approach", "أسلوب", "أسلوب {strategy}"),
+    ("accuracies", "قيم الدقة", "قيم دقة {strategy}"),
+    ("accuracy", "دقة", "دقة {strategy}"),
+)
+
+
+def prompt_noun_phrase(noun, arabic, template):
+    # A named reasoning method needs a preposition; a few/zero-example
+    # qualification already supplies its grammatical link to prompting.
+    if noun == "prompting" and arabic.startswith("سلسلة"):
+        arabic = "باستخدام " + arabic
+    return template.format(strategy=arabic)
+
+
+# Preserve each source-present condition and its scientific noun together.
+# A prompting approach must not become a model, or an accuracy become minutes.
+# These are generic lexical bindings, never paper identities or numeric answers.
+PROMPT_NOUN_COMPOUNDS = tuple(
+    (
+        rf"{pattern}\s+{noun}\b",
+        f"{term} {noun}",
+        prompt_noun_phrase(noun, arabic, template),
+        re.escape(normalize(prompt_noun_phrase(noun, arabic, template))),
+    )
+    for pattern, term, arabic, _ in PROMPT_STRATEGY_TERMS
+    for noun, _, template in PROMPT_NOUN_TERMS
+)
+
 BASE_TECHNICAL_TERMS = (
     (
         r"\bModern Standard Arabic\b",
@@ -291,6 +322,11 @@ ORDINARY_TECHNICAL_TERMS = (
         (r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),
         (r"\brespectively\b", "respectively", "على التوالي", r"علي\s+التوالي"),
     )
+    + tuple(
+        (rf"\b{noun}\b", noun, arabic, re.escape(normalize(arabic)))
+        for noun, arabic, _ in PROMPT_NOUN_TERMS
+    )
+    + PROMPT_NOUN_COMPOUNDS
     + PROMPT_STRATEGY_TERMS
 )
 
@@ -1008,13 +1044,7 @@ class OllamaGenerator:
     def translate_ordinary_text(self, text, language):
         terms = []
         translation_source = text
-        if language == "ar":
-            terms = [
-                {"source": term, "arabic": arabic}
-                for pattern, term, arabic, _ in ORDINARY_TECHNICAL_TERMS
-                if re.search(pattern, text, re.IGNORECASE)
-            ]
-        else:
+        if language != "ar":
             # Source-independent lexical bindings: inspect only the Arabic
             # candidate, never the forward English claim or repair feedback.
             for _, term, arabic, _ in sorted(
@@ -1031,6 +1061,15 @@ class OllamaGenerator:
         translation_input, bindings = protect_answer_identifiers(
             translation_source, translate_terms=language == "ar"
         )
+        if language == "ar":
+            # Match the actual nonoverlapping spans used by token protection.
+            # Nested glossary matches must not ask the translator to repeat
+            # a condition or noun already preserved inside a longer term.
+            terms = [
+                {"source": source, "arabic": target}
+                for _, source, target in bindings
+                if source != target
+            ]
         system = (
             "Translate the supplied verified answer sentence into Arabic. "
             "Preserve EVERY fact, qualification, number and relation. Keep proper names "

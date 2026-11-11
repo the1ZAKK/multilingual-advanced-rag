@@ -57,3 +57,26 @@ failed attempt will be retained locally with its exact source commit, verified
 model and settings. Only permitted answer/PDF/CSV review materials will be
 published. All questions are exposed development controls; human review and
 stable release remain pending.
+
+## Comparison terminology follow-up
+
+The `9e9703a` recording passed the Arabic provider-count translation stage and
+produced a generated Arabic language/format answer. Its comparison translation
+still changed an approach into a model and mistranslated the plural metric noun,
+so the complete ArabicNumBench answer remained an explicit fallback. The unchanged
+content guard rejected those proposals. That recording finishes at its original source
+while this follow-up is prepared in an isolated checkout.
+
+Generic condition/noun compounds now preserve a prompting method, approach or
+accuracy as one source-activated technical phrase. Standalone metric plurals
+also retain their scientific meaning. Guidance lists only the nonoverlapping
+spans actually selected for protection; it does not repeat nested glossary
+matches. Reverse bindings still inspect only the actual Arabic candidate and
+cannot invent an approach when that candidate says models. Numbers, condition
+assignments, qualifications, independent reverse content and semantic verdicts
+remain necessary.
+
+Nine additional source-independent regressions cover these compounds, wrong
+nouns/conditions, exact selected-span guidance and blind reverse input.
+534 tests passed, 5 skipped; Ruff lint and formatting clean. Live acceptance of
+this follow-up remains pending its own source-labelled recording.
