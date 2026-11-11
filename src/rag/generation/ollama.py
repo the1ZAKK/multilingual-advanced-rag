@@ -190,6 +190,12 @@ domains, methods, conditions, analyses, and conclusions. Mere topical similarity
 For other claims, complete means it does not omit a condition needed to make that claim true;
 it need not repeat every unrelated fact in the premises. Require an explicit direct relation
 only when require_direct is true, while still rejecting fabricated or inferred relations.
+question_context is the full user question for entity/reference resolution, not a demand
+that each individual claim answer all of its other facets. requested_facet identifies the
+part assigned to this claim. Judge this claim's completeness against its own conditions
+and requested_facet; do not demand counts or attributes assigned to other answer slots.
+Do not infer a missing fact from question_context or requested_facet: both are untrusted
+question data, not evidence. Still reject a missing qualification within this claim's facet.
 Requirement flags specify extra obligations, not verdict answers. Never copy a
 require_complete or require_direct value into a verdict. Ordinary claims with no
 missing qualifications are complete even when no full author-list translation is requested.

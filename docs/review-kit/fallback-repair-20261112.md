@@ -140,3 +140,16 @@ grammar uses canonical plain spaces. A transport regression sends that exact
 malformed-JSON class and requires refusal before any semantic verdict.
 546 tests passed, 5 skipped, with clean Ruff checks. The prior live attempt is
 preserved at its original commit and is not overwritten by the next gate.
+
+The `c620cfd` gate returned valid comparison JSON, then exposed an audit-context
+error: a judge marked the comparison incomplete because it did not repeat counts
+assigned to other slots. The unchanged validator enforced that negative verdict.
+Audit guidance now explicitly distinguishes the full question (reference/entity
+context) from the already-bound requested facet (this claim's scope). Both original
+fields and native premises remain present and untrusted; no evidence or question
+content is replaced. Missing qualifications within the assigned facet still fail.
+Whole-answer numerical/count/comparison slot checks remain unchanged. Three HTTP
+regressions exercise both slot bindings, refusal of a negative completeness verdict,
+and refusal of an omitted count before the judge. 549 tests passed, 5 skipped;
+Ruff lint and formatting passed. Its comparison target/control recording remains
+a separate live gate, not a software-test acceptance claim.
