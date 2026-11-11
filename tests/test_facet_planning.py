@@ -148,13 +148,15 @@ def test_comparison_value_grammar_uses_only_the_native_condition_mapping_and_rep
     pattern = comparison_text_pattern(contract)
     good = "few-shot chain-of-thought accuracy: 91% versus zero-shot accuracy: 35% (2.6x)"
     assert re.fullmatch(pattern, good)
-    assert r"\s" not in pattern and r"\b" not in pattern
+    assert all(escape not in pattern for escape in [r"\s", r"\b", r"\t"])
     for wrong in [
         good.replace("91%", "35%", 1),
         good.replace("2.6x", "2.2x"),
         good.replace("few-shot chain-of-thought", "few-shot"),
         good.replace(" (2.6x)", ""),
         good + " up to 2.6x",
+        good.replace("accuracy: ", "accuracy\t: "),
+        good.replace(" versus ", "\nversus "),
     ]:
         assert not re.fullmatch(pattern, wrong)
     contract["source_comparisons"].append(

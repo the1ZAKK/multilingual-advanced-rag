@@ -240,11 +240,12 @@ def comparison_text_pattern(contract):
     }
     parts = []
     for role, value in conditions:
-        label = r"[ \t]+".join(word.replace("-", "[- ]") for word in labels[role].split())
-        parts.append(label + r"[ \t]+accuracy[ \t]*:[ \t]*" + re.escape(value) + "%")
-    return (
-        "^" + r"[ \t]+versus[ \t]+".join(parts) + r"[ \t]*[(]" + re.escape(ratio) + r"[x×][)][.]?$"
-    )
+        label = " ".join(word.replace("-", "[- ]") for word in labels[role].split())
+        parts.append(label + " accuracy: " + re.escape(value) + "%")
+    # The provider's pattern converter can emit literal tabs inside a JSON
+    # string for [ \t]. Keep this canonical value form to plain spaces; never
+    # sanitize malformed JSON after generation or relax its validation.
+    return "^" + " versus ".join(parts) + " [(]" + re.escape(ratio) + r"[x×][)][.]?$"
 
 
 def required_count_refs(contract):

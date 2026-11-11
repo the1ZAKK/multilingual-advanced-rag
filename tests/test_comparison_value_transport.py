@@ -10,7 +10,15 @@ from rag.models import Chunk, Hit
 
 @pytest.mark.parametrize(
     "proposal",
-    ["complete", "missing_ratio", "wrong_ratio", "swapped", "wrong_source", "negative_judge"],
+    [
+        "complete",
+        "missing_ratio",
+        "wrong_ratio",
+        "swapped",
+        "wrong_source",
+        "negative_judge",
+        "invalid_json_control",
+    ],
 )
 def test_source_derived_comparison_values_cannot_bypass_full_validation(
     service, monkeypatch, proposal
@@ -68,6 +76,12 @@ def test_source_derived_comparison_values_cannot_bypass_full_validation(
                 value = value.replace("91%", "TEMP").replace("35%", "91%").replace("TEMP", "35%")
             elif proposal == "wrong_source":
                 ref = "S1:Q2"
+            elif proposal == "invalid_json_control":
+                # This is the exact failure class observed from the provider:
+                # a literal tab inside its JSON text, not an escaped JSON tab.
+                raw = json.dumps({"statements": [dict(text=good, citations=[dict(ref_id=ref)])]})
+                raw = raw.replace("accuracy: ", "accuracy\t: ")
+                return httpx.Response(200, json={"message": {"content": raw}})
             result = {"statements": [dict(text=value, citations=[dict(ref_id=ref)])]}
         return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
 

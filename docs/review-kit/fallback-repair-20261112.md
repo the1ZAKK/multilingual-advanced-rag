@@ -131,3 +131,12 @@ ratios, ambiguous comparisons, wrong sources and a negative semantic verdict.
 and English comparison control from the original eight-case suite. Every earlier
 recording retains its own exact source commit and settings. Review remains
 ungraded and no stable release is approved.
+
+The `db564bb` live English comparison control exposed a provider-converter
+transport defect: allowing tab whitespace in this value grammar produced a
+literal tab inside the returned JSON string. Strict JSON parsing rejected it;
+no whitespace repair or permissive parsing was used. The follow-up comparison
+grammar uses canonical plain spaces. A transport regression sends that exact
+malformed-JSON class and requires refusal before any semantic verdict.
+546 tests passed, 5 skipped, with clean Ruff checks. The prior live attempt is
+preserved at its original commit and is not overwritten by the next gate.
