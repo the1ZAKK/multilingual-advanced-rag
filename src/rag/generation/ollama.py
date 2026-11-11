@@ -22,6 +22,7 @@ from rag.generation.numerical import (
     validate_comparison_slot,
     validate_count_slot,
     validate_numeric_support,
+    validate_quantity_comparison,
     validate_score_slot,
 )
 from rag.generation.questions import flatten_parts, focus_sources, question_parts
@@ -659,6 +660,9 @@ class OllamaGenerator:
                     validate_count_slot(part, answer_part, list(catalog.values()))
                     validate_comparison_slot(part, answer_part, list(catalog.values()))
                     validate_score_slot(part, answer_part, list(catalog.values()))
+                    validate_quantity_comparison(
+                        question, part, answer_part, list(catalog.values())
+                    )
             if translate_ordinary:
                 return self.translate_verified_answer(payload, evidence, question)
             return GeneratedAnswer(

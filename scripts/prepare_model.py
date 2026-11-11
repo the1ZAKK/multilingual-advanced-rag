@@ -1,4 +1,4 @@
-"""Explicitly prepare the pinned 4B test model; never run on import."""
+"""Explicitly prepare a checksum-pinned test model; never run on import."""
 
 import argparse
 import hashlib
@@ -24,15 +24,25 @@ INSTRUCT_PROFILE = {
     "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
 }
 
+QWEN25_PROFILE = {
+    "repository": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "revision": "8911e8a47f92bac19d6f5c64a2e2095bd2f7d031",
+    "filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "bytes": 4683074240,
+    "model": "qwen25-instruct-hf:7b",
+    "publisher": "Bartowski community quantization of Qwen2.5-7B-Instruct",
+}
+
 
 def prepare(cache: Path, output: Path, url="http://127.0.0.1:11434", model=None, *, profile="base"):
     from huggingface_hub import hf_hub_download
 
-    if profile not in {"base", "instruct"}:
+    if profile not in {"base", "instruct", "qwen25"}:
         raise ValueError("Unknown model profile")
     selected = (
-        INSTRUCT_PROFILE
-        if profile == "instruct"
+        {"instruct": INSTRUCT_PROFILE, "qwen25": QWEN25_PROFILE}[profile]
+        if profile != "base"
         else {
             "repository": REPOSITORY,
             "revision": REVISION,
@@ -102,7 +112,7 @@ def main():
     parser.add_argument("--cache", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--url", default="http://127.0.0.1:11434")
-    parser.add_argument("--profile", choices=["base", "instruct"], default="base")
+    parser.add_argument("--profile", choices=["base", "instruct", "qwen25"], default="base")
     args = parser.parse_args()
     prepare(args.cache, args.output, args.url, profile=args.profile)
 

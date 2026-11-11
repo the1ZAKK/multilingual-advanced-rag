@@ -150,3 +150,16 @@ def validate_score_slot(question, answer, premises):
     scores = {m[1] for p in premises for m in re.finditer(rf"({NUMBER})\s*%", clean_numbers(p))}
     if scores and not scores & atoms(answer):
         raise ValueError("Incomplete quantitative answer: missing requested score")
+
+
+def validate_quantity_comparison(original_question, part, answer, premises):
+    """Keep a deictic count comparison bound to the quantities just requested.
+
+    'Distinguish the two quantities' must not silently substitute another real
+    source count. Values still come only from evidence, never a reference guide.
+    """
+    text = clean_numbers(part)
+    if re.search(r"\b(?:distinguish|compare)\b|ميز|قارن", text) and re.search(
+        r"\b(?:quantities|counts)\b|الكميتين|الكميات|العددين", text
+    ):
+        validate_count_slot(original_question, answer, premises)

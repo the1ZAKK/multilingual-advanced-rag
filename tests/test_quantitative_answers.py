@@ -10,6 +10,7 @@ from rag.generation.numerical import (
     validate_comparison_slot,
     validate_count_slot,
     validate_numeric_support,
+    validate_quantity_comparison,
     validate_score_slot,
 )
 from rag.generation.ollama import GenerationUnavailable, semantic_items
@@ -186,6 +187,26 @@ def test_a_supported_but_nonnumeric_score_answer_is_still_incomplete(question):
             question, "The top model performed well.", ["The top model scored 61.4%."]
         )
     validate_score_slot(question, "The top model scored 61.4%.", ["The top model scored 61.4%."])
+
+
+def test_deictic_comparison_cannot_substitute_another_supported_quantity():
+    source = ["We evaluated 29 models on 180 tasks, comprising 45,360 individual test cases."]
+    question = (
+        "How many tasks and individual test cases were evaluated? Distinguish the two quantities."
+    )
+    with pytest.raises(ValueError, match="missing requested evaluation count"):
+        validate_quantity_comparison(
+            question,
+            "Distinguish the two quantities.",
+            "The two quantities are 180 tasks and 29 models.",
+            source,
+        )
+    validate_quantity_comparison(
+        question,
+        "Distinguish the two quantities.",
+        "The two quantities are 180 tasks and 45,360 individual test cases.",
+        source,
+    )
 
 
 def test_explicit_abstract_selection_excludes_later_conflicting_aggregates(service):
