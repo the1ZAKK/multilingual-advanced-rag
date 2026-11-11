@@ -1,0 +1,21 @@
+{
+  "source_code_sha": "a32a07cbb8c4e1924c88dbe5a20e54df9c580bc1",
+  "file": "generation-wire.jsonl.gz",
+  "raw_bytes": 502160,
+  "raw_sha256": "0ef05be3b915a9a9854968840d9ce19cb062097c07ba6084dbb44d41ac013e4e",
+  "compressed_bytes": 17922,
+  "compressed_sha256": "ff8a08be9679ba3397237d2edc013559cf916340bf514fc1d0a9991a56dc99bd",
+  "events": 174,
+  "stages": {
+    "generation": 15,
+    "generation-raw": 49,
+    "generation-wire-response": 49,
+    "ordinary-translation-ar": 6,
+    "ordinary-translation-en": 2,
+    "ordinary-translation-wire-response": 8,
+    "semantic-audit": 28,
+    "validation-rejection": 17
+  },
+  "independent_human_reviews": 0,
+  "review_status": "Ungraded wire evidence, including rejected and failed attempts"
+}
