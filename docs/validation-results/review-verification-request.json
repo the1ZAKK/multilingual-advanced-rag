@@ -1,9 +1,9 @@
 {
-  "workflow_run": 43014685739,
-  "artifact_id": 13855991775,
-  "artifact_sha256": "ee4e77058aae9326ba755472c6222513f939aca2bcfebae132622379b1ce3723",
-  "source_code_sha": "c5719b436b2b35f4c36f868a16a55ee6ee3b4475",
-  "packet_git_blob_sha": "28043319481450f0002601aba9a7672c0b1829a5",
+  "workflow_run": 43025032186,
+  "artifact_id": 13859069378,
+  "artifact_sha256": "b714ba9ab36d096d3d8b14a817e7b7d571fb0dc454cffef87dc3a791bdbbf90f",
+  "source_code_sha": "3f7544c80247f90606026b866014f5e58202db86",
+  "packet_git_blob_sha": "ea855d7d65d507f8e06095aa880e843c5aee6e8b",
   "model_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
-  "note": "Previously locally verified failed recording, used as a hosted packet-verification control after workspace loss; no semantic or human verdicts assigned."
+  "note": "Exact eight-question recording after the Arabic clause and identifier repairs; this requests integrity/native-source checks and permanent raw-trace preservation, not semantic or human grades."
 }
