@@ -13,12 +13,20 @@ require a separate deployment and operating plan.
 
 ## Current candidate
 
-`arabic-quality-candidate` adds an explicitly selected, checksum-pinned
-Qwen3-4B-Instruct-2507 test profile. Its GGUF is a community quantization
-published by Unsloth, not an official Qwen GGUF. The original official base-model
-profile remains available. Neither profile changes the application's default.
-The model report records repository, revision, file hash, size, installed model,
-and runtime version.
+`arabic-quality-candidate` has explicitly selected, checksum-pinned comparison
+profiles for Qwen3-4B-Instruct-2507 (Unsloth community GGUF) and
+Qwen2.5-7B-Instruct (Bartowski community GGUF). The original official base-model
+profile remains available. These profiles leave the application's model default
+unchanged. Every model report records repository, revision, file hash, size,
+installed model, exact source commit, generation settings and runtime version.
+
+The [2026-10-31 cycle](review-kit/quality-cycle-20261031.md) adds general count,
+numerical-relation, citation and translation guards plus portable review export.
+The [2026-11-11 continuation](review-kit/quality-cycle-20261111.md) preserves the
+failed 4B recordings and tests an explicit 7B comparison. Eight exposed bilingual
+development controls include the four original questions without changes. A
+finished recording or successful CI does not establish answer-quality acceptance.
+The CSV in every newly exported packet remains ungraded for source inspection.
 
 The hosted recording workflow accepts a model profile and an explicit choice
 of experimental question-coverage auditing. The new Instruct recording uses

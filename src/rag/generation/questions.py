@@ -11,7 +11,7 @@ def question_parts(question: str) -> list[str]:
     """
     parts = re.split(
         r"\s*,?\s+and\s+(?=(?:what|which|how|why|where|when|who|does|do|is|are)\b)"
-        r"|[،,]?\s+و(?=(?:ما\s|ماذا\s|كيف\s|هل\s|لماذا\s|أي\s))"
+        r"|[،,]?\s+و(?=(?:ما\s|ماذا\s|كم\s|كيف\s|هل\s|لماذا\s|أي\s))"
         r"|(?<=[?؟])\s+(?=Distinguish\b|Explain\b|Compare\b|مي[ّ]?ز\b|اشرح\b|قارن\b)",
         question.strip(),
         flags=re.IGNORECASE,

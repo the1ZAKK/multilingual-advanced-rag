@@ -1,5 +1,22 @@
 # Implementation and validation tracker
 
+## Numerical and Arabic quality cycle — 31 October / 11 November 2026
+
+- [x] Reuse abstract routing; recognize inline abstract boundaries without changing source text.
+- [x] Require explicit count slots and preserve count/entity and prompting-condition/accuracy relationships.
+- [x] Reject omitted numerical values, unrelated comparison citations and untranslated answer prose; retain strict translation checks.
+- [x] Preserve raw attempts and export exact answers, original PDFs and an ungraded UTF-8 review CSV.
+- [x] Add adversarial regressions; 444 local software tests passed, 5 skipped; Ruff clean. Windows/Linux matrix plus Docker passed at c5719b4 (435 tests).
+- [x] Preserve failed 4B recordings separately from the original 3 partial / 1 fail AI-assisted review of d66c62d.
+- [x] Record eight real verified-7B controls at c5719b4; all eight fell back and acceptance failed. Preserve their exact outputs and lossless wire trace.
+- [x] Repair observed Arabic count-clause decomposition and source-bound identifier translation without relaxing validation.
+- [ ] Accept complete English and faithful Arabic answers on the new recorded outputs.
+- [ ] Independent human source review, native Arabic source-prose evaluation and actual laptop acceptance.
+
+See the [current cycle](docs/review-kit/quality-cycle-20261111.md) for exact
+commits, model profiles, recordings and remaining defects. The application
+default model is unchanged; these cases are exposed development controls.
+
 ## Continuation — 19 October 2026
 
 - [x] Required slots for explicit compound questions, source-bound quote focus and budget refusal.

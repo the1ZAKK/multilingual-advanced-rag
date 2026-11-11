@@ -109,6 +109,12 @@ A count slot may use a short quantity-and-entity phrase. Do not add metalinguist
 claims such as 'the abstract states/reports' or invent defining-feature qualifications.
 The server already records the source document and page."""
 
+ANSWER_IDENTIFIER = (
+    r"(?<![A-Za-z0-9_])(?:[A-Z][A-Z0-9_-]{1,}|"
+    r"[A-Z][a-z]+[A-Z][A-Za-z0-9_-]*|[A-Za-z]+[-_]?\d[A-Za-z0-9_.-]*)"
+    r"(?![A-Za-z0-9_])"
+)
+
 
 def generation_instructions(authored, language, multipart=False, *, force_english=False):
     instructions = SYSTEM if authored else BASIC_SYSTEM
@@ -765,13 +771,7 @@ class OllamaGenerator:
         translated = {"statements": []}
         for index, original in enumerate(payload["statements"], 1):
             text = self.translate_ordinary_text(original["text"], "ar")
-            identifiers = set(
-                re.findall(
-                    r"\b(?:[A-Z][A-Z0-9_-]{1,}|[A-Z][a-z]+[A-Z][A-Za-z0-9_-]*|"
-                    r"[A-Za-z]+[-_]?\d[A-Za-z0-9_.-]*)\b",
-                    original["text"],
-                )
-            )
+            identifiers = set(re.findall(ANSWER_IDENTIFIER, original["text"]))
             if any(identifier not in text for identifier in identifiers):
                 raise ValueError("Answer translation changed a source-grounded identifier")
             if numeric_atoms(text) != numeric_atoms(original["text"]):
@@ -808,6 +808,7 @@ class OllamaGenerator:
         return GeneratedAnswer(answer, citations, "translated-answer")
 
     def translate_ordinary_text(self, text, language):
+        translation_input, bindings = protect_answer_identifiers(text)
         system = (
             "Translate the supplied verified answer sentence into Arabic. "
             "Preserve EVERY fact, qualification, number and relation. Keep proper names "
@@ -817,6 +818,12 @@ class OllamaGenerator:
             if language == "ar"
             else REVERSE_TRANSLATION_SYSTEM
         )
+        if bindings:
+            system += (
+                "\nEach __TERM_N__ token is an opaque identifier from this input. "
+                "Copy every supplied token exactly once, without changing, expanding "
+                "or translating it. Translate the surrounding prose completely."
+            )
         with httpx.Client(timeout=self.request_timeout(), trust_env=False) as client:
             response = client.post(
                 self.settings.ollama_url.rstrip("/") + "/api/chat",
@@ -832,7 +839,10 @@ class OllamaGenerator:
                     },
                     "messages": [
                         {"role": "system", "content": system},
-                        {"role": "user", "content": json.dumps(text, ensure_ascii=False)},
+                        {
+                            "role": "user",
+                            "content": json.dumps(translation_input, ensure_ascii=False),
+                        },
                     ],
                     "options": {
                         "temperature": 0,
@@ -847,6 +857,7 @@ class OllamaGenerator:
             "ordinary-translation-wire-response",
             {
                 "text": text,
+                "translation_input": translation_input,
                 "language": language,
                 "model": self.settings.translation_model or self.settings.ollama_model,
             },
@@ -858,12 +869,15 @@ class OllamaGenerator:
         candidate = result["text"]
         if not isinstance(candidate, str) or len(candidate) > 1200:
             raise ValueError("Invalid ordinary answer translation text")
+        candidate = expand_scientific_terms(candidate, bindings)
+        if len(candidate) > 1200:
+            raise ValueError("Invalid ordinary answer translation text")
         validate_output_language(candidate, language)
         reject_prompt_echo(candidate, system, text)
         trace_generation(
             "ordinary-translation-" + language,
             {"text": text, "model": self.settings.translation_model or self.settings.ollama_model},
-            result,
+            {"text": candidate},
         )
         return candidate
 
@@ -1519,6 +1533,25 @@ def render_translation_slots(payload, slots):
         raise ValueError("Invalid translation tail")
     pieces.append(payload["tail"].strip())
     return " ".join(piece for piece in pieces if piece).replace(" .", ".").replace(" ،", "،")
+
+
+def protect_answer_identifiers(text):
+    """Preserve identifiers from this input only, in either translation direction.
+
+    No forward English source is supplied to reverse translation. Tokens protect
+    spelling, not claims: numbers, language, round-trip meaning and semantic
+    grounding must still be verified after restoration.
+    """
+    if re.search(r"__TERM_\w+__", text):
+        raise ValueError("Source contains reserved scientific translation token")
+    bindings = []
+
+    def replace(match):
+        token = f"__TERM_{len(bindings) + 1}__"
+        bindings.append((token, match[0], match[0]))
+        return token
+
+    return re.sub(ANSWER_IDENTIFIER, replace, text), bindings
 
 
 def protect_scientific_terms(text):

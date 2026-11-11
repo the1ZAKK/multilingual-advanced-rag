@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "independent_human_reviews": 0,
+  "note": "Unmodified model wire traces, compressed losslessly; failed proposals are preserved. These are exposed development controls, not semantic acceptance grades.",
+  "recordings": [
+    {
+      "workflow_run": 41185838438,
+      "source_code_sha": "2a085bfb7ddb6667106cee8f8cd0f10b388b90ec",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13037581200,
+      "artifact_sha256": "c173005af21c7dc417162d361b1ab569eb73e98abb1b311ae98bc4f09f06b8ff",
+      "model_report_sha256": "577648849749556bec88e3f0ad75bce6a7aa5114b61184a0e59d6a361cea5790",
+      "trace_file": "41185838438.jsonl.gz",
+      "trace_sha256": "6eb7a9a02784936236a20c96be4bfbfb0a879feec37814a44080831e0fa32eab",
+      "gzip_sha256": "974e288cb2f4b46965fc8b1acb929f4be9dc91bdeb191a481131328e9fc3c66f",
+      "event_counts": {
+        "generation-wire-response": 44,
+        "generation-raw": 44,
+        "generation": 15,
+        "semantic-audit": 12,
+        "validation-rejection": 14
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 41186116651,
+      "source_code_sha": "60c4f4cdd9ad4c9dc368416c63b077fd45117c5c",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13037951219,
+      "artifact_sha256": "7bc1f273c12cfe9df01b49e71c8ac6748fa353ff7a74eda2c242601edbc12b82",
+      "model_report_sha256": "be9eaf6203dc659ffbfe848c349eb9561b9d4a2b89594b1ee37875f05e677a08",
+      "trace_file": "41186116651.jsonl.gz",
+      "trace_sha256": "806c9069a4958665fd8aa6df6813a1b3268d1b54601a897a029888fd799aa827",
+      "gzip_sha256": "c1a7e48019fc2612856328f41769fcc6608b91ee81d7d33fdc736c9c130db048",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 15,
+        "semantic-audit": 10,
+        "validation-rejection": 14
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 41186460507,
+      "source_code_sha": "0fcaa2b9193da23f737653691c06b0edfb7630cc",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13037427765,
+      "artifact_sha256": "f5d98932a27bf6b33b956594a38542d6bb65967c126accf2cc7672423dff3982",
+      "model_report_sha256": "8bc3f7b36da076563c566a7a2f633ae991f96768f8f03c42b846e49615509b20",
+      "trace_file": "41186460507.jsonl.gz",
+      "trace_sha256": "ea37e65b46ddc58789d8d162e5a364337c3c6fc5a95a8de8d3ef2b3a8ae860ef",
+      "gzip_sha256": "003de6c2596dd3c8ddde68ee1e952dbf38d9bb20692648d6effd5bca3368fa42",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 15,
+        "semantic-audit": 10,
+        "validation-rejection": 14
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 41186741681,
+      "source_code_sha": "893675f39c234a4fd352708b3deb42c523578811",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13037726049,
+      "artifact_sha256": "53e35fbbf5e19b93ff153031daa93d1bed8bc0b95f00d05f15ae3a624dd1336e",
+      "model_report_sha256": "3d908d92b3b0dee72295a07d78f5c591705735642be55ba40bb26fc945099187",
+      "trace_file": "41186741681.jsonl.gz",
+      "trace_sha256": "1e6586868f5f3984bc5b8c88626187dd0a77c040c1c1adc4f2f8a8d33cbe6764",
+      "gzip_sha256": "fbbf3a1774ea2aadaa86d1783f466d21dace69b1820fe0183477b35210556945",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 14,
+        "semantic-audit": 8,
+        "validation-rejection": 13
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 41187192503,
+      "source_code_sha": "c3e4d9784a64e304a3324e7cfe1b94cbdb387e3b",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13037434036,
+      "artifact_sha256": "fed03b60f4018c974c42706f560a5b36967810c11b2857aff481018fecfc7e2d",
+      "model_report_sha256": "4016e41f412cca5eabb47c4844b6fa981f6aeab87bb3d92f40a7800d8dfb92cd",
+      "trace_file": "41187192503.jsonl.gz",
+      "trace_sha256": "a86f3fb36335944b6630eb9ae9447fa4ddb2e50345ea859aebf5106d6eae1476",
+      "gzip_sha256": "0aa3cb0990ce39b7e3487bba864ebeb21b6d32a2f844432ebb07b239de97b01f",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 15,
+        "semantic-audit": 10,
+        "validation-rejection": 14
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 41188100282,
+      "source_code_sha": "af2a8e24fd0d5679625c5a3858fcca806f00ab26",
+      "model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13038246907,
+      "artifact_sha256": "1e59b3726eb1119d5bddb21b9b354ecb2b6d57ac05a08c91674b6b42bc8e0982",
+      "model_report_sha256": "4239243e7a82c76330457b221bee2e05a409038eaefd3e14216e58e34fc03fdc",
+      "trace_file": "41188100282.jsonl.gz",
+      "trace_sha256": "37aa125289da04b454ccb8bade6336e88b1b5567ccf51a6ba1c731ce82998716",
+      "gzip_sha256": "b3b911dda58e53b72116c87ba88dbcd6f26e140e15d4bf0b62aaebea7d50e45d",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 15,
+        "semantic-audit": 12,
+        "validation-rejection": 14
+      },
+      "cases": 8
+    },
+    {
+      "workflow_run": 43014685739,
+      "source_code_sha": "c5719b436b2b35f4c36f868a16a55ee6ee3b4475",
+      "model": "qwen25-instruct-hf:7b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "artifact_id": 13855991775,
+      "artifact_sha256": "ee4e77058aae9326ba755472c6222513f939aca2bcfebae132622379b1ce3723",
+      "model_report_sha256": "a1770016c8de5110b88253063ad5c88d423bc0911cdd4df73714c806a8e1190f",
+      "trace_file": "43014685739.jsonl.gz",
+      "trace_sha256": "241810c41409a29e40f0bc4cfc8493b15882de6e7f32a584bbeb83a5de6271d8",
+      "gzip_sha256": "8a7b74ed0569cb27764ecc674956a2e8868bdc7f16ae291100018a55dc3007cf",
+      "event_counts": {
+        "generation-wire-response": 45,
+        "generation-raw": 45,
+        "generation": 12,
+        "semantic-audit": 16,
+        "validation-rejection": 13,
+        "ordinary-translation-wire-response": 2,
+        "ordinary-translation-ar": 2
+      },
+      "cases": 8
+    }
+  ]
+}

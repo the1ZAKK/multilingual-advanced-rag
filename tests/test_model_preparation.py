@@ -56,6 +56,7 @@ def test_verified_blob_upload_and_report(tmp_path, monkeypatch, profile):
         else getattr(prepare_model, profile_name)["filename"]
     )
     imported = []
+    imported_parameters = []
     real_client = httpx.Client
 
     def handle(request):
@@ -68,6 +69,7 @@ def test_verified_blob_upload_and_report(tmp_path, monkeypatch, profile):
             body = json.loads(request.content)
             assert body["files"] == {filename: "sha256:" + digest}
             imported.append(body["model"])
+            imported_parameters.append(body["parameters"])
             return httpx.Response(200, json={"status": "success"})
         if request.url.path == "/api/tags":
             return httpx.Response(
@@ -82,6 +84,9 @@ def test_verified_blob_upload_and_report(tmp_path, monkeypatch, profile):
     assert imported == [expected_name]
     assert result["profile"] == profile
     assert result["sha256"] == digest
+    assert imported_parameters == [result["model_parameters"]]
+    assert result["model_parameters"] == {"num_ctx": 8192, "num_thread": 4}
+    assert set(result["execution_host"]) == {"system", "machine", "logical_cpu_count"}
     assert json.loads((tmp_path / "report.json").read_text())["bytes"] == len(data)
 
 

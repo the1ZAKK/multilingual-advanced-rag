@@ -209,6 +209,130 @@ def test_deictic_comparison_cannot_substitute_another_supported_quantity():
     )
 
 
+def test_arabic_coordinated_count_questions_keep_independent_required_slots():
+    parts = question_parts("كم عدد المستشعرات، وكم عدد حالات الاختبار الفردية؟ ميّز بين الكميتين.")
+    assert parts == [
+        "كم عدد المستشعرات",
+        "كم عدد حالات الاختبار الفردية؟",
+        "ميّز بين الكميتين.",
+    ]
+    assert len(question_parts("كيف تعمل المستشعرات والكاميرات معًا؟")) == 1
+
+
+def test_ordinary_identifier_protection_keeps_reverse_input_independent(service, monkeypatch):
+    original_client = httpx.Client
+    calls = []
+    original = "The SensorSet questions use NLP."
+
+    def respond(request):
+        body = json.loads(request.content)
+        calls.append(body)
+        result = (
+            "تستخدم أسئلة __TERM_1__ منهج __TERM_2__."
+            if len(calls) == 1
+            else "The __TERM_1__ questions use __TERM_2__."
+        )
+        return httpx.Response(200, json={"message": {"content": json.dumps({"text": result})}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kw: original_client(transport=httpx.MockTransport(respond))
+    )
+    arabic = service.generator.translate_ordinary_text(original, "ar")
+    reverse = service.generator.translate_ordinary_text(arabic, "en")
+    assert arabic == "تستخدم أسئلة SensorSet منهج NLP."
+    assert reverse == original
+    assert json.loads(calls[0]["messages"][1]["content"]) == (
+        "The __TERM_1__ questions use __TERM_2__."
+    )
+    reverse_input = json.loads(calls[1]["messages"][1]["content"])
+    assert reverse_input == "تستخدم أسئلة __TERM_1__ منهج __TERM_2__."
+    assert original not in json.dumps(calls[1])
+
+
+@pytest.mark.parametrize(
+    "text,reason",
+    [
+        ("تحتوي البيانات على 23 سؤالا.", "must occur once"),
+        ("يحتوي __TERM_1__ و__TERM_1__ على 23 سؤالا.", "must occur once"),
+        ("يحتوي __TERM_9__ على 23 سؤالا.", "Unknown protected translation token"),
+    ],
+)
+def test_ordinary_translation_rejects_dropped_duplicated_or_unknown_identifiers(
+    service, monkeypatch, text, reason
+):
+    original_client = httpx.Client
+    monkeypatch.setattr(
+        httpx,
+        "Client",
+        lambda **kw: original_client(
+            transport=httpx.MockTransport(
+                lambda request: httpx.Response(
+                    200, json={"message": {"content": json.dumps({"text": text})}}
+                )
+            )
+        ),
+    )
+    with pytest.raises(ValueError, match=reason):
+        service.generator.translate_ordinary_text("SensorSet contains 23 questions.", "ar")
+
+
+@pytest.mark.parametrize("change", [None, "number", "meaning"])
+def test_protected_identifiers_do_not_bypass_number_or_meaning_checks(service, monkeypatch, change):
+    hits = [evidence("SensorSet contains 23 questions.")]
+    original_client = httpx.Client
+
+    def respond(request):
+        body = json.loads(request.content)
+        user = json.loads(body["messages"][-1]["content"])
+        if isinstance(user, str):
+            if (
+                "Translate the supplied verified answer sentence into Arabic"
+                in body["messages"][0]["content"]
+            ):
+                result = {"text": f"يحتوي __TERM_1__ على {99 if change == 'number' else 23} سؤالا."}
+            else:
+                result = {
+                    "text": f"__TERM_1__ contains 23 {'models' if change == 'meaning' else 'questions'}."
+                }
+        elif user.get("task") == "semantic-grounding-audit":
+            result = {
+                "verdicts": [
+                    dict(
+                        item_id=user["items"][0]["item_id"],
+                        supported=True,
+                        complete=True,
+                        direct=True,
+                        reason="Positive model verdict cannot bypass deterministic checks.",
+                    )
+                ]
+            }
+        else:
+            result = {
+                "statements": [
+                    {"text": "SensorSet contains 23 questions.", "citations": [{"ref_id": "S1:Q1"}]}
+                ]
+            }
+        return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
+
+    monkeypatch.setattr(
+        httpx, "Client", lambda **kw: original_client(transport=httpx.MockTransport(respond))
+    )
+    if change:
+        with pytest.raises(
+            GenerationUnavailable, match="source-grounded number|round-trip content"
+        ):
+            service.generator.generate("كم عدد الأسئلة؟", "ar", hits)
+    else:
+        result = service.generator.generate("كم عدد الأسئلة؟", "ar", hits)
+        assert result.mode == "translated-answer" and "SensorSet" in result.answer
+        assert result.citations[0].quote == hits[0].chunk.text
+
+
+def test_ordinary_translation_refuses_reserved_tokens_in_input(service):
+    with pytest.raises(ValueError, match="reserved scientific translation token"):
+        service.generator.translate_ordinary_text("__TERM_1__ contains 23 questions.", "ar")
+
+
 def test_explicit_abstract_selection_excludes_later_conflicting_aggregates(service):
     abstract = evidence("Abstract\nThe study evaluated 23 models.")
     later = evidence("The table compares 9 models and scores.", section="Results", page=3)

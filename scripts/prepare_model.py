@@ -3,6 +3,8 @@
 import argparse
 import hashlib
 import json
+import os
+import platform
 from pathlib import Path
 
 import httpx
@@ -56,6 +58,7 @@ def prepare(cache: Path, output: Path, url="http://127.0.0.1:11434", model=None,
     repository, revision, filename = (selected[k] for k in ("repository", "revision", "filename"))
     expected_digest, size = selected["sha256"], selected["bytes"]
     model = model or selected["model"]
+    model_parameters = {"num_ctx": 8192, "num_thread": 4}
     if output.exists():
         raise ValueError("Refusing to overwrite existing model verification report")
     path = Path(hf_hub_download(repository, filename, revision=revision, cache_dir=cache))
@@ -82,7 +85,7 @@ def prepare(cache: Path, output: Path, url="http://127.0.0.1:11434", model=None,
                 "model": model,
                 "files": {filename: "sha256:" + expected_digest},
                 "stream": False,
-                "parameters": {"num_ctx": 8192, "num_thread": 4},
+                "parameters": model_parameters,
             },
         )
         response.raise_for_status()
@@ -97,6 +100,12 @@ def prepare(cache: Path, output: Path, url="http://127.0.0.1:11434", model=None,
         bytes=size,
         publisher=selected["publisher"],
         profile=profile,
+        model_parameters=model_parameters,
+        execution_host={
+            "system": platform.system(),
+            "machine": platform.machine(),
+            "logical_cpu_count": os.cpu_count(),
+        },
         installed_model=installed,
         ollama=version,
     )

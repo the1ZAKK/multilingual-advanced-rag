@@ -1,0 +1,328 @@
+{
+  "source_code_sha": "c5719b436b2b35f4c36f868a16a55ee6ee3b4475",
+  "extraction_versions": {
+    "arabicmmlu": "columns-sentences-v5",
+    "arabicnumbench": "columns-sentences-v5"
+  },
+  "embedding_backend": "hash",
+  "llm_used": false,
+  "note": "Source-selection/provenance controls only; separate from learned real-model recording and answer-quality acceptance.",
+  "records": [
+    {
+      "id": "mmlu-size-en",
+      "parts": [
+        "According to the ArabicMMLU abstract, how many tasks?",
+        "According to the ArabicMMLU abstract, how many questions?",
+        "According to the ArabicMMLU abstract, how many evaluated models?",
+        "what score did the best Arabic-centric model achieve? Cite each number."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "model",
+          "35"
+        ],
+        [
+          "question",
+          "14575"
+        ],
+        [
+          "task",
+          "40"
+        ]
+      ],
+      "conditions": [],
+      "native_quotes": true,
+      "chars": 1297
+    },
+    {
+      "id": "mmlu-size-ar",
+      "parts": [
+        "وفقًا لملخص ArabicMMLU، كم عدد المهام؟",
+        "وفقًا لملخص ArabicMMLU، كم عدد الأسئلة؟",
+        "وفقًا لملخص ArabicMMLU، كم عدد النماذج؟",
+        "ما نتيجة أفضل نموذج متمحور حول العربية؟ استشهد بكل رقم."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "model",
+          "35"
+        ],
+        [
+          "question",
+          "14575"
+        ],
+        [
+          "task",
+          "40"
+        ]
+      ],
+      "conditions": [],
+      "native_quotes": true,
+      "chars": 1297
+    },
+    {
+      "id": "numbers-prompt-en",
+      "parts": [
+        "According to the ArabicNumBench abstract, how many models?",
+        "According to the ArabicNumBench abstract, how many providers?",
+        "According to the ArabicNumBench abstract, how many individual test cases?",
+        "Compare few-shot chain-of-thought accuracy with zero-shot accuracy, using the reported numbers."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "evaluation",
+          "59010"
+        ],
+        [
+          "model",
+          "6"
+        ],
+        [
+          "model",
+          "71"
+        ],
+        [
+          "provider",
+          "10"
+        ],
+        [
+          "task",
+          "210"
+        ]
+      ],
+      "conditions": [
+        [
+          "few-cot",
+          "80.06"
+        ],
+        [
+          "zero",
+          "28.76"
+        ]
+      ],
+      "native_quotes": true,
+      "chars": 1623
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "parts": [
+        "وفقًا لملخص ArabicNumBench، كم عدد النماذج؟",
+        "وفقًا لملخص ArabicNumBench، كم عدد مقدميها؟",
+        "وفقًا لملخص ArabicNumBench، كم عدد حالات الاختبار الفردية؟",
+        "قارن دقة سلسلة التفكير بأمثلة قليلة بالدقة دون أمثلة باستخدام الأرقام الواردة."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "evaluation",
+          "59010"
+        ],
+        [
+          "model",
+          "6"
+        ],
+        [
+          "model",
+          "71"
+        ],
+        [
+          "provider",
+          "10"
+        ],
+        [
+          "task",
+          "210"
+        ]
+      ],
+      "conditions": [
+        [
+          "few-cot",
+          "80.06"
+        ],
+        [
+          "zero",
+          "28.76"
+        ]
+      ],
+      "native_quotes": true,
+      "chars": 1623
+    },
+    {
+      "id": "mmlu-format-en",
+      "parts": [
+        "According to the ArabicMMLU abstract, in what language and question format is the dataset written?"
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "model",
+          "35"
+        ],
+        [
+          "question",
+          "14575"
+        ],
+        [
+          "task",
+          "40"
+        ]
+      ],
+      "conditions": [],
+      "native_quotes": true,
+      "chars": 1297
+    },
+    {
+      "id": "mmlu-format-ar",
+      "parts": [
+        "وفقا لملخص ArabicMMLU، ما لغة الأسئلة",
+        "ما صيغة الأسئلة في مجموعة البيانات؟"
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "model",
+          "35"
+        ],
+        [
+          "question",
+          "14575"
+        ],
+        [
+          "task",
+          "40"
+        ]
+      ],
+      "conditions": [],
+      "native_quotes": true,
+      "chars": 1297
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "parts": [
+        "According to the ArabicNumBench abstract, how many distinct number-reading tasks are used",
+        "how many individual test cases are evaluated?",
+        "Distinguish the two quantities."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "evaluation",
+          "59010"
+        ],
+        [
+          "model",
+          "6"
+        ],
+        [
+          "model",
+          "71"
+        ],
+        [
+          "provider",
+          "10"
+        ],
+        [
+          "task",
+          "210"
+        ]
+      ],
+      "conditions": [
+        [
+          "few-cot",
+          "80.06"
+        ],
+        [
+          "zero",
+          "28.76"
+        ]
+      ],
+      "native_quotes": true,
+      "chars": 1623
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "parts": [
+        "وفقا لملخص ArabicNumBench، كم عدد مهام قراءة الأعداد المتميزة، وكم عدد حالات الاختبار الفردية التي جرى تقييمها؟",
+        "ميّز بين الكميتين."
+      ],
+      "pages": [
+        1
+      ],
+      "sections": [
+        "Abstract"
+      ],
+      "counts": [
+        [
+          "evaluation",
+          "59010"
+        ],
+        [
+          "model",
+          "6"
+        ],
+        [
+          "model",
+          "71"
+        ],
+        [
+          "provider",
+          "10"
+        ],
+        [
+          "task",
+          "210"
+        ]
+      ],
+      "conditions": [
+        [
+          "few-cot",
+          "80.06"
+        ],
+        [
+          "zero",
+          "28.76"
+        ]
+      ],
+      "native_quotes": true,
+      "chars": 1623
+    }
+  ]
+}
