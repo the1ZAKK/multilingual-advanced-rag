@@ -491,9 +491,9 @@ def test_protected_prompt_terms_cannot_swap_their_accuracies(service, monkeypatc
         body = json.loads(request.content)
         seen.append(body)
         assert json.loads(body["messages"][-1]["content"]) == (
-            "__TERM_1__ achieves 91% versus __TERM_2__ 35%, a 2.6x ratio."
+            "__TERM_1__ achieves 91% __TERM_2__ __TERM_3__ 35%, a 2.6x ratio."
         )
-        result = {"text": "تحقق __TERM_2__ دقة 91% مقابل __TERM_1__ بدقة 35%، بنسبة 2.6 ضعف."}
+        result = {"text": "تحقق __TERM_3__ دقة 91% __TERM_2__ __TERM_1__ بدقة 35%، بنسبة 2.6 ضعف."}
         return httpx.Response(200, json={"message": {"content": json.dumps(result)}})
 
     install(monkeypatch, respond)

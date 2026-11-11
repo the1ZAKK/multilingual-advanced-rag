@@ -102,3 +102,32 @@ the Arabic size/score and English numerical-comparison controls. Those six exact
 questions are selected unchanged from the frozen eight-case suite. The other
 two English controls already completed at `9e9703a`; their results are labelled
 with that commit rather than relabelled as a new run.
+
+## Source-derived comparison values
+
+The six-case recording at `31f7d359cded69c04c0a0446b52b9611a517da99`
+completed with five generated answers and one explicit fallback. Three of the
+four original fallback cases now generate: Arabic language/format, English
+task/evaluation counts, and Arabic task/evaluation counts. The Arabic size/score
+and English numerical-comparison regression controls also generate. The Arabic
+numerical comparison still fails: a protected term was omitted, and its repair
+added an unsupported upper-bound qualification. Both rejected attempts remain
+local; their failure is not reclassified as success.
+
+For an unambiguous native quote that explicitly reports an accuracy multiplier,
+the comparison decoder now requests two condition/accuracy value phrases and
+that reported multiplier. Conditions, percentages and ratio come from the
+retrieved quote, not from paper-specific constants. An unrelated cost multiplier
+cannot supply the accuracy ratio. Ambiguous or unsupported source forms receive
+no additional decoding constraint. The ordinary relation word "versus" also has
+an actual-candidate-only Arabic binding. This keeps the translation short without
+accepting omitted terms or new bounds in the former proposal.
+
+Numerical roles, native citations, completeness, independent reverse translation
+and semantic verdicts remain mandatory. Ten additional regressions cover
+independent values, swapped conditions, wrong/missing ratios, unrelated cost
+ratios, ambiguous comparisons, wrong sources and a negative semantic verdict.
+545 tests passed, 5 skipped; the next live gate is the unchanged Arabic target
+and English comparison control from the original eight-case suite. Every earlier
+recording retains its own exact source commit and settings. Review remains
+ungraded and no stable release is approved.

@@ -6,6 +6,7 @@ import httpx
 import pytest
 
 from rag.generation.facets import (
+    comparison_text_pattern,
     count_text_pattern,
     plan_facet,
     requested_counts,
@@ -135,6 +136,60 @@ def test_quantity_distinction_uses_qualified_noun_phrases_without_an_added_evalu
     assert "noun phrases" in contract["answer_style"]
     assert "Retain source qualifications" in contract["answer_style"]
     assert re.fullmatch(count_text_pattern(contract), "67 tasks and 2,040 individual test cases.")
+
+
+def test_comparison_value_grammar_uses_only_the_native_condition_mapping_and_reported_ratio():
+    contract, _ = plan_facet(
+        source(
+            "Few-shot CoT achieves 2.6x higher accuracy than zero-shot approaches (91% vs 35%)."
+        ),
+        "Compare few-shot CoT accuracy with zero-shot accuracy.",
+    )
+    pattern = comparison_text_pattern(contract)
+    good = "few-shot chain-of-thought accuracy: 91% versus zero-shot accuracy: 35% (2.6x)"
+    assert re.fullmatch(pattern, good)
+    assert r"\s" not in pattern and r"\b" not in pattern
+    for wrong in [
+        good.replace("91%", "35%", 1),
+        good.replace("2.6x", "2.2x"),
+        good.replace("few-shot chain-of-thought", "few-shot"),
+        good.replace(" (2.6x)", ""),
+        good + " up to 2.6x",
+    ]:
+        assert not re.fullmatch(pattern, wrong)
+    contract["source_comparisons"].append(
+        {**contract["source_comparisons"][0], "multiplier": "2.7"}
+    )
+    assert comparison_text_pattern(contract) is None
+
+
+def test_a_source_without_an_unambiguous_reported_comparison_gets_no_value_grammar():
+    contract, _ = plan_facet(
+        source("Few-shot CoT versus zero-shot accuracy is 91% versus 35%."),
+        "Compare few-shot CoT accuracy with zero-shot accuracy.",
+    )
+    assert comparison_text_pattern(contract) is None
+
+
+def test_an_unrelated_cost_multiplier_cannot_become_the_accuracy_multiplier():
+    contract, _ = plan_facet(
+        source(
+            "Few-shot CoT has higher accuracy than zero-shot approaches (91% vs 35%), but costs 2.6x more."
+        ),
+        "Compare few-shot CoT accuracy with zero-shot accuracy.",
+    )
+    assert comparison_text_pattern(contract) is None
+
+
+def test_the_reported_accuracy_multiplier_remains_distinct_from_a_cost_multiplier():
+    contract, _ = plan_facet(
+        source(
+            "Few-shot CoT has 2.2x higher accuracy than zero-shot approaches (33% vs 15%), but costs 2.6x more."
+        ),
+        "Compare few-shot CoT accuracy with zero-shot accuracy.",
+    )
+    assert contract["source_comparisons"][0]["multiplier"] == "2.2"
+    assert "2\\.2" in comparison_text_pattern(contract)
 
 
 def test_distinct_quantities_bind_their_own_unambiguous_sources_after_overlap_deduplication():

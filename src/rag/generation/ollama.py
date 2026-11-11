@@ -16,7 +16,12 @@ import httpx
 
 from rag.config import Settings
 from rag.generation.contradictions import reject_polarity_conflicts
-from rag.generation.facets import count_text_pattern, plan_facet, required_count_refs
+from rag.generation.facets import (
+    comparison_text_pattern,
+    count_text_pattern,
+    plan_facet,
+    required_count_refs,
+)
 from rag.generation.numerical import (
     atoms as numerical_values,
 )
@@ -321,6 +326,7 @@ ORDINARY_TECHNICAL_TERMS = (
         (r"\bprovider\b", "provider", "مزود", r"مزود"),
         (r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),
         (r"\brespectively\b", "respectively", "على التوالي", r"علي\s+التوالي"),
+        (r"\bversus\b", "versus", "مقابل", r"مقابل"),
     )
     + tuple(
         (rf"\b{noun}\b", noun, arabic, re.escape(normalize(arabic)))
@@ -685,7 +691,7 @@ class OllamaGenerator:
                         statement_schema["properties"]["citations"]["items"]["properties"][
                             "ref_id"
                         ]["enum"] = [q["ref_id"] for source in scoped for q in source["quotes"]]
-                    pattern = count_text_pattern(contract)
+                    pattern = count_text_pattern(contract) or comparison_text_pattern(contract)
                     if pattern:
                         statement_schema["properties"]["text"]["pattern"] = pattern
                     elif translate_ordinary:
@@ -715,7 +721,7 @@ class OllamaGenerator:
                     statement_schema["properties"]["citations"]["items"]["properties"]["ref_id"][
                         "enum"
                     ] = [q["ref_id"] for source in scoped for q in source["quotes"]]
-                    pattern = count_text_pattern(contract)
+                    pattern = count_text_pattern(contract) or comparison_text_pattern(contract)
                     if pattern:
                         statement_schema["properties"]["text"]["pattern"] = pattern
                 if translate_ordinary:

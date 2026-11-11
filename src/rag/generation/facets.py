@@ -4,6 +4,7 @@ import re
 
 from rag.generation.numerical import (
     ENGLISH_COUNT_QUALIFIERS,
+    NUMBER,
     ROLES,
     clean_numbers,
     count_bindings,
@@ -113,6 +114,36 @@ def plan_facet(sources, question, original_question=None):
                 "source-reported multiplier. Avoid extra prose or repeated condition names. "
                 "Do not substitute other study counts or another comparison.",
             }
+            comparisons = []
+            for _, quote, _, _ in chosen:
+                text = clean_numbers(quote["quote"])
+                values = dict(strategy_bindings(text))
+                order = list(dict.fromkeys(role for _, _, role in strategy_mentions(text)))
+                ratios = set(
+                    re.findall(rf"(?<![\w.])({NUMBER})\s*[x×]\s+higher\s+accuracy\s+than\b", text)
+                )
+                if (
+                    len(order) == len(values) == 2
+                    and len(ratios) == 1
+                    and re.search(r"\bhigher\s+accuracy\s+than\b", text)
+                    and float(values[order[0]]) > float(values[order[1]])
+                ):
+                    comparisons.append(
+                        dict(
+                            ref_id=quote["ref_id"],
+                            multiplier=next(iter(ratios)),
+                            conditions=[
+                                dict(condition=role, percentage=values[role]) for role in order
+                            ],
+                        )
+                    )
+            if comparisons:
+                contract["source_comparisons"] = comparisons
+                contract["answer_style"] = (
+                    "Give the two condition/accuracy value phrases and the source-reported "
+                    "multiplier in parentheses. Avoid narrative verbs, new bounds or definitions. "
+                    "Every condition, percentage and multiplier must come from its native quote."
+                )
     elif re.search(r"\bwhat\s+score\b|(?:ما|وما)\s+(?:نتيجة|درجة|دقة)\b", normalized):
         chosen = [
             (source, quote, None, None)
@@ -177,7 +208,43 @@ def plan_facet(sources, question, original_question=None):
             for candidate in contract["source_candidates"]
             if candidate["ref_id"] in available
         ]
+    if contract and "source_comparisons" in contract:
+        available = {q["ref_id"] for source in scoped for q in source["quotes"]}
+        contract["source_comparisons"] = [
+            c for c in contract["source_comparisons"] if c["ref_id"] in available
+        ]
     return contract, scoped
+
+
+def comparison_text_pattern(contract):
+    """Constrain an unambiguous native comparison to qualified value phrases.
+
+    The original numerical/citation/completeness/semantic checks remain required.
+    Ambiguous or unsupported source forms get no extra decoding constraint.
+    """
+    if not contract or contract["kind"] != "condition-comparison":
+        return None
+    candidates = contract.get("source_comparisons", [])
+    signatures = {
+        (tuple((p["condition"], p["percentage"]) for p in c["conditions"]), c["multiplier"])
+        for c in candidates
+    }
+    if len(signatures) != 1:
+        return None
+    conditions, ratio = next(iter(signatures))
+    labels = {
+        "few-cot": "few-shot chain-of-thought",
+        "zero-cot": "zero-shot chain-of-thought",
+        "few": "few-shot",
+        "zero": "zero-shot",
+    }
+    parts = []
+    for role, value in conditions:
+        label = r"[ \t]+".join(word.replace("-", "[- ]") for word in labels[role].split())
+        parts.append(label + r"[ \t]+accuracy[ \t]*:[ \t]*" + re.escape(value) + "%")
+    return (
+        "^" + r"[ \t]+versus[ \t]+".join(parts) + r"[ \t]*[(]" + re.escape(ratio) + r"[x×][)][.]?$"
+    )
 
 
 def required_count_refs(contract):
