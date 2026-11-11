@@ -188,3 +188,11 @@ The skipped optional Ragas test and four absent external-PDF fixtures predate th
 cycle. The new full application recordings must still establish their actual
 outcomes before an exact ungraded packet is delivered. Every case is an exposed
 development control, not unseen evaluation; independent human reviews remain zero.
+
+The `c0b28b8` local rerun now accepts the complete English and Arabic ArabicMMLU
+answers. It then exposes another supported comparison form: both conditions are
+named before the two accuracies and linked by "respectively". That explicit
+ordered mapping now receives the same necessary relation checks, with swapped,
+unnamed and negated mappings still rejected. Ordinary translation preserves the
+ordering qualifier through its exact Arabic equivalent. Fresh complete recordings
+are required at this repair checkpoint; the earlier recording stays intact.

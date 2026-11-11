@@ -79,6 +79,8 @@ def strategy_bindings(text):
     percentages = list(re.finditer(rf"({NUMBER})\s*%", text))
     if len({role for _, _, role in matches}) != 2 or len(percentages) != 2:
         return set()
+    if re.search(r"\bnot\s+respectively\b", text):
+        return set()
     before = [role for start, _, role in matches if start < percentages[0].start()]
     between = [
         role for start, _, role in matches if percentages[0].end() <= start < percentages[1].start()
@@ -92,7 +94,7 @@ def strategy_bindings(text):
         # A versus B (90% vs 30%). A later mention cannot fill a missing
         # condition in the ordered pair before the values.
         ordered = list(dict.fromkeys(before))
-        if re.search(r"\b(?:vs|versus|compared)\b|مقابل", text):
+        if re.search(r"\b(?:vs|versus|compared|respectively)\b|مقابل|علي\s+التوالي", text):
             if len(ordered) == 2:
                 return {(ordered[i], percentages[i][1]) for i in (0, 1)}
             # Arabic also puts a condition immediately after its percentage:

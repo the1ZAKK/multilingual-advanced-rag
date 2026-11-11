@@ -151,6 +151,28 @@ def test_repeated_conditions_cannot_invent_a_missing_or_ambiguous_mapping(claim)
         )
 
 
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "Few-shot CoT and zero-shot accuracy have values of 91% and 35%, respectively, with a 2.6x ratio.",
+        "تبلغ دقتا سلسلة التفكير بأمثلة قليلة ودون أمثلة 91% و35% على التوالي، بنسبة 2.6x.",
+    ],
+)
+def test_respectively_explicitly_binds_the_ordered_condition_pair(claim):
+    source = "Few-shot CoT achieves 2.6x the zero-shot accuracy (91% vs 35%)."
+    assert strategy_bindings(claim) == {("few-cot", "91"), ("zero", "35")}
+    validate_numeric_support(claim, [source])
+    validate_comparison_slot("Compare few-shot CoT and zero-shot accuracy.", claim, [source])
+    swapped = claim.replace("91%", "TMP").replace("35%", "91%").replace("TMP", "35%")
+    with pytest.raises(ValueError, match="swapped condition"):
+        validate_numeric_support(swapped, [source])
+
+
+def test_respectively_cannot_fill_an_unnamed_condition_or_an_explicitly_negated_mapping():
+    assert not strategy_bindings("Few-shot CoT has values of 91% and 35%, respectively.")
+    assert not strategy_bindings("Few-shot CoT and zero-shot have 91% and 35%, not respectively.")
+
+
 def test_every_numeric_citation_must_contribute_not_only_the_union():
     good = "Few-shot CoT achieves 2.8x the zero-shot accuracy (87.5% vs 31.25%)."
     extra = "Few-shot methods overall achieve 2.4x (75% vs 31%)."

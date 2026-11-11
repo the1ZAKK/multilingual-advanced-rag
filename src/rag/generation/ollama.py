@@ -285,7 +285,10 @@ BASE_TECHNICAL_TERMS = (
 
 ORDINARY_TECHNICAL_TERMS = (
     BASE_TECHNICAL_TERMS
-    + ((r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),)
+    + (
+        (r"\bscore\b", "score", "درجة تقييم", r"درجة|نتيجة"),
+        (r"\brespectively\b", "respectively", "على التوالي", r"علي\s+التوالي"),
+    )
     + PROMPT_STRATEGY_TERMS
 )
 

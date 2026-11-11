@@ -84,6 +84,23 @@ jobs:
         run: uv run --no-sync python -m scripts.validate_workflow --dataset ${{ env.EVAL_DATASET }} --sources reports/papers --output reports/completion-model --profile learned --context-chars 6000 --max-statements 4
       - name: Export ungraded review outputs
         run: uv run --no-sync python -m scripts.compact_run --input reports/completion-model/answers.json --runtime reports/model-runtime.json --output reports/model-review.json --trace reports/translation-trace/generation-wire.jsonl
+      - name: Require exact source, verified model and frozen question bindings
+        run: |
+          uv run --no-sync python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from rag.evaluation.review import ReviewSuite
+          report = json.loads(Path('reports/model-review.json').read_text())
+          suite = ReviewSuite.model_validate_json(Path(os.environ['EVAL_DATASET']).read_text())
+          if report['source_code_sha'] != os.environ['GITHUB_SHA']:
+              raise ValueError('Recorded application source differs from this workflow commit')
+          if report['model'] != os.environ['RAG_OLLAMA_MODEL'] or report['runtime']['installed_model']['name'] != report['model']:
+              raise ValueError('Recorded model differs from the verified selected model')
+          for record, case in zip(report['records'], suite.cases, strict=True):
+              if (record['id'], record['question'], record['language']) != (case.id, case.question, case.language):
+                  raise ValueError('Recorded questions differ from the frozen suite')
+          print('Verified recording identity only; no answer-quality verdict assigned')
+          PY
       - name: Export portable ungraded packet with verified original PDFs
         run: uv run --no-sync python -m scripts.review_packet --dataset ${{ env.EVAL_DATASET }} --run reports/model-review.json --sources reports/papers --output reports/review-packet --zip reports/RAG-PDF-Review-Kit-${{ github.run_id }}.zip
       - name: Preserve model server diagnostics, including schema compatibility warnings
