@@ -1,5 +1,10 @@
 # Recovered Arabic answer-quality cycle — 12 November 2026
 
+The [fallback-repair continuation](quality-cycle-20261112-fallback-repairs.md)
+records the subsequently recovered hosted final status/log, the evidence that its
+exact model recording is unavailable, strict repairs and new source-labelled runs.
+This document retains the earlier checkpoint and its original limitations.
+
 The interrupted work was recovered rather than restarted. The semantic audit
 format change was already saved at `c0b28b8`, and the active eight-question
 recording at `d2e5b89` was reused. Recovery commit `01b868a` adds five HTTP-path

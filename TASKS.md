@@ -1,5 +1,18 @@
 # Implementation and validation tracker
 
+## Four-fallback repair continuation — 12 November 2026
+
+- [x] Recover `d2e5b89` hosted final failure, full model-job log and verified Windows archive; document that exact model answers/packet/wire recording are unavailable after artifact creation failed.
+- [x] Keep the rejected diagnostic archive local and byte-identical to its recovery checkpoint; publish only permitted source and fresh final-answer review materials.
+- [x] Repair finite count decoding, native source-reference selection, Arabic provider/metric/prompting compounds, attribute/count phrasing, valid comparison JSON and per-claim audit scope without weakening validation.
+- [x] Run 549 software tests (5 skipped), Ruff and the Windows/Linux Python matrix plus Docker at `e72ae99`.
+- [x] Preserve the full eight-case run and subsequent affected/control attempts under their actual commits, model and settings; retain intermediate failures.
+- [x] Prepare a source-labelled eight-question review view from three separate recordings, with original PDFs and 16 ungraded rows; no raw diagnostics included.
+- [ ] Independent human source/language review of the new answers, native Arabic source-prose evaluation and actual user-laptop acceptance.
+
+See the [fallback-repair report](docs/quality-cycle-20261112-fallback-repairs.md).
+Generated mode is not semantic acceptance. No stable release is approved.
+
 ## Interrupted-cycle recovery — 12 November 2026
 
 - [x] Recover saved semantic explanation-before-verdict format and preserve both original diagnostic archives.
@@ -7,7 +20,7 @@
 - [x] Publish tests/documentation-only recovery at `01b868a`; Windows/Linux Python matrix and Docker passed.
 - [x] Export and verify an ungraded packet for the completed local `c0b28b8` 4B recording: four generated outputs, four explicit fallbacks.
 - [x] Reuse hosted `43086599560` at `d2e5b89` without starting a duplicate; retain its recording identity and observed artifact-upload failure.
-- [ ] Recover the hosted model report/packet; GitHub reports inconsistent step state and job/log reads time out.
+- [x] Resolve hosted recovery: final status and full log recovered; exact model report/packet unavailable because artifact creation failed and the result branch is absent. See the continuation report for evidence.
 - [ ] Accept complete faithful English/Arabic answers, independent human source review, native Arabic source-prose evaluation and actual laptop acceptance.
 
 See the [recovery cycle report](docs/quality-cycle-20261112.md). The separate raw

@@ -1,0 +1,674 @@
+{
+  "starting_commit": "7def51e44aa0ec4b8827d7b3a4ab174fcedf603c",
+  "tested_code_commit": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+  "recordings": [
+    {
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465",
+      "created_at_utc": "2026-11-11T21:25:37.183700+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "translation_model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "runtime": {
+        "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+        "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+        "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "bytes": 2497281120,
+        "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+        "profile": "instruct",
+        "model_parameters": {
+          "num_ctx": 8192,
+          "num_thread": 4
+        },
+        "installed_model": {
+          "name": "qwen3-instruct-hf:4b",
+          "model": "qwen3-instruct-hf:4b",
+          "modified_at": "2026-11-12T05:25:25.940730382+08:00",
+          "size": 2497281267,
+          "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+          "details": {
+            "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "llamacpp"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        },
+        "ollama": {
+          "version": "0.40.5"
+        },
+        "execution_host": {
+          "system": "Linux",
+          "machine": "x86_64",
+          "logical_cpu_count": 9
+        },
+        "declared_runtime_environment": {
+          "LLAMA_ARG_CACHE_RAM": "0",
+          "OLLAMA_NO_CLOUD": "true",
+          "OLLAMA_NOPRUNE": "true",
+          "OLLAMA_NUM_PARALLEL": "1"
+        }
+      },
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "records": [
+        {
+          "id": "mmlu-size-en",
+          "generation_mode": "ollama",
+          "latency_ms": 91106.01238799791,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "mmlu-size-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 249948.41075799923,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "latency_ms": 89629.088048001,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "extractive",
+          "latency_ms": 589156.031450002,
+          "language_matches": false,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "mmlu-format-en",
+          "generation_mode": "ollama",
+          "latency_ms": 52447.99488100034,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "mmlu-format-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 148053.65833000178,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-task-evaluations-en",
+          "generation_mode": "ollama",
+          "latency_ms": 74306.52578599984,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-task-evaluations-ar",
+          "generation_mode": "extractive",
+          "latency_ms": 421958.373423,
+          "language_matches": false,
+          "citation_provenance_valid": true
+        }
+      ],
+      "raw_diagnostics": "preserved_local_only",
+      "independent_human_reviews": 0
+    },
+    {
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17",
+      "created_at_utc": "2026-11-11T21:56:49.145101+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "translation_model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "runtime": {
+        "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+        "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+        "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "bytes": 2497281120,
+        "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+        "profile": "instruct",
+        "model_parameters": {
+          "num_ctx": 8192,
+          "num_thread": 4
+        },
+        "installed_model": {
+          "name": "qwen3-instruct-hf:4b",
+          "model": "qwen3-instruct-hf:4b",
+          "modified_at": "2026-11-12T05:56:36.360176211+08:00",
+          "size": 2497281267,
+          "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+          "details": {
+            "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "llamacpp"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        },
+        "ollama": {
+          "version": "0.40.5"
+        },
+        "execution_host": {
+          "system": "Linux",
+          "machine": "x86_64",
+          "logical_cpu_count": 9
+        },
+        "declared_runtime_environment": {
+          "LLAMA_ARG_CACHE_RAM": "0",
+          "OLLAMA_NO_CLOUD": "true",
+          "OLLAMA_NOPRUNE": "true",
+          "OLLAMA_NUM_PARALLEL": "1"
+        }
+      },
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "records": [
+        {
+          "id": "mmlu-size-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 255833.6196300006,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "latency_ms": 93041.3343250002,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "extractive",
+          "latency_ms": 580659.3075729979,
+          "language_matches": false,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "mmlu-format-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 140926.92535400056,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-task-evaluations-en",
+          "generation_mode": "ollama",
+          "latency_ms": 70829.86964099837,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-task-evaluations-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 190373.44484400091,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        }
+      ],
+      "raw_diagnostics": "preserved_local_only",
+      "independent_human_reviews": 0
+    },
+    {
+      "source_code_sha": "db564bb33783f839068eda366614f7a1c011be16",
+      "run_id": "0f3fca89-2304-4ba0-9f37-e1d9f9b04696",
+      "created_at_utc": "2026-11-11T22:31:08.131783+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "translation_model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "runtime": {
+        "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+        "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+        "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "bytes": 2497281120,
+        "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+        "profile": "instruct",
+        "model_parameters": {
+          "num_ctx": 8192,
+          "num_thread": 4
+        },
+        "installed_model": {
+          "name": "qwen3-instruct-hf:4b",
+          "model": "qwen3-instruct-hf:4b",
+          "modified_at": "2026-11-12T06:30:53.976066237+08:00",
+          "size": 2497281267,
+          "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+          "details": {
+            "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "llamacpp"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        },
+        "ollama": {
+          "version": "0.40.5"
+        },
+        "execution_host": {
+          "system": "Linux",
+          "machine": "x86_64",
+          "logical_cpu_count": 9
+        },
+        "declared_runtime_environment": {
+          "LLAMA_ARG_CACHE_RAM": "0",
+          "OLLAMA_NO_CLOUD": "true",
+          "OLLAMA_NOPRUNE": "true",
+          "OLLAMA_NUM_PARALLEL": "1"
+        }
+      },
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "records": [
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "extractive",
+          "latency_ms": 95631.24183800028,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 306334.4787120004,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        }
+      ],
+      "raw_diagnostics": "preserved_local_only",
+      "independent_human_reviews": 0
+    },
+    {
+      "source_code_sha": "c620cfdb78f45a104cde2ea7eced3faa0912ae95",
+      "run_id": "8d5b9d7a-73b5-41bc-bdc1-7ae90c43e320",
+      "created_at_utc": "2026-11-11T22:38:30.553320+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "translation_model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "runtime": {
+        "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+        "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+        "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "bytes": 2497281120,
+        "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+        "profile": "instruct",
+        "model_parameters": {
+          "num_ctx": 8192,
+          "num_thread": 4
+        },
+        "installed_model": {
+          "name": "qwen3-instruct-hf:4b",
+          "model": "qwen3-instruct-hf:4b",
+          "modified_at": "2026-11-12T06:38:18.090557541+08:00",
+          "size": 2497281267,
+          "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+          "details": {
+            "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "llamacpp"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        },
+        "ollama": {
+          "version": "0.40.5"
+        },
+        "execution_host": {
+          "system": "Linux",
+          "machine": "x86_64",
+          "logical_cpu_count": 9
+        },
+        "declared_runtime_environment": {
+          "LLAMA_ARG_CACHE_RAM": "0",
+          "OLLAMA_NO_CLOUD": "true",
+          "OLLAMA_NOPRUNE": "true",
+          "OLLAMA_NUM_PARALLEL": "1"
+        }
+      },
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "records": [
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "extractive",
+          "latency_ms": 321803.85223399935,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 260155.29450800022,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        }
+      ],
+      "raw_diagnostics": "preserved_local_only",
+      "independent_human_reviews": 0
+    },
+    {
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e",
+      "created_at_utc": "2026-11-11T22:48:46.951727+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "translation_model": "qwen3-instruct-hf:4b",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "runtime": {
+        "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+        "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+        "filename": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "bytes": 2497281120,
+        "publisher": "Unsloth community quantization of Qwen3-4B-Instruct-2507",
+        "profile": "instruct",
+        "model_parameters": {
+          "num_ctx": 8192,
+          "num_thread": 4
+        },
+        "installed_model": {
+          "name": "qwen3-instruct-hf:4b",
+          "model": "qwen3-instruct-hf:4b",
+          "modified_at": "2026-11-12T06:48:32.920713918+08:00",
+          "size": 2497281267,
+          "digest": "3498d832d66ee489cf5ba929d3184cf7a4df4a6cc2412d5da13e4ad26be03fca",
+          "details": {
+            "parent_model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "llamacpp"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        },
+        "ollama": {
+          "version": "0.40.5"
+        },
+        "execution_host": {
+          "system": "Linux",
+          "machine": "x86_64",
+          "logical_cpu_count": 9
+        },
+        "declared_runtime_environment": {
+          "LLAMA_ARG_CACHE_RAM": "0",
+          "OLLAMA_NO_CLOUD": "true",
+          "OLLAMA_NOPRUNE": "true",
+          "OLLAMA_NUM_PARALLEL": "1"
+        }
+      },
+      "retrieval": {
+        "mode": "hybrid",
+        "embedding_backend": "sentence-transformer",
+        "reranker_used": false,
+        "configured_reranker_backend": "none"
+      },
+      "records": [
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "latency_ms": 100486.60496899902,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "translated-answer",
+          "latency_ms": 265957.0270910008,
+          "language_matches": true,
+          "citation_provenance_valid": true
+        }
+      ],
+      "raw_diagnostics": "preserved_local_only",
+      "independent_human_reviews": 0
+    }
+  ],
+  "latest_records": [
+    {
+      "id": "mmlu-size-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "01-eight-controls-9e9703a",
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465"
+    },
+    {
+      "id": "mmlu-size-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-prompt-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "03-comparison-e72ae99",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e"
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "03-comparison-e72ae99",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e"
+    },
+    {
+      "id": "mmlu-format-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "01-eight-controls-9e9703a",
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465"
+    },
+    {
+      "id": "mmlu-format-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    }
+  ],
+  "review_packet": {
+    "path": "docs/review-kit/RAG-PDF-Review-Kit-fallback-repairs-20261112.zip",
+    "sha256": "50508d7133cb422ef807d0d56438f08dad18734deea01c402887e58c1b757f31",
+    "bytes": 3905646,
+    "recordings": 3,
+    "rows": 16,
+    "unique_cases": 8,
+    "human_reviews": 0,
+    "verdicts": "ungraded",
+    "raw_diagnostics_included": false
+  },
+  "software_validation": {
+    "passed": 549,
+    "skipped": 5,
+    "ruff": "passed",
+    "quality_run": 43114105765,
+    "conclusion": "success"
+  },
+  "observed_quality_issues": [
+    {
+      "case": "numbers-prompt-ar",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "assessment_type": "ai_assisted_inspection",
+      "status": "needs_language_revision",
+      "finding": "Extraneous Arabic word الكلمة before the accuracy comparison. Exact recorded answer is unchanged."
+    },
+    {
+      "case": "numbers-task-evaluations-ar",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "assessment_type": "ai_assisted_inspection",
+      "status": "needs_language_revision",
+      "finding": "Awkward count agreement, including 210 مهام. Numerical distinctions are retained; fluent Arabic acceptance remains unmet."
+    }
+  ],
+  "auto_review": {
+    "rejected_action": "Push local diagnostic-archive commit 1b00f7d to the public repository",
+    "stated_reason": "Would publicly disclose model outputs, traces, logs and source-related data; initial rejection also called the remote unverified",
+    "disposition": "Not retried. Original archive is byte-identical to its preserved local recovery commit. Only permitted fresh final-answer review exports and aggregate metadata are published."
+  },
+  "acceptance": "Exposed development controls, not unseen accuracy; independent human review, native Arabic source-prose evaluation and actual laptop acceptance remain pending. No stable release."
+}

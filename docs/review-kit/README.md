@@ -1,14 +1,26 @@
 # PDF answer review kit
 
-Download [RAG-PDF-Review-Kit.zip](RAG-PDF-Review-Kit.zip), then choose the download button on its GitHub file page.
-Extract the archive and open `START_HERE.html` in a browser.
+The latest continuation packet is
+[RAG-PDF-Review-Kit-fallback-repairs-20261112.zip](RAG-PDF-Review-Kit-fallback-repairs-20261112.zip).
+Choose the download button on its GitHub file page, extract it, and open
+`START_HERE.html` in a browser.
 
-The kit includes two public research PDFs, four recorded candidate answers,
-source references, and an ungraded `review.csv`. It contains known incomplete
-answers and excerpt fallbacks. It is a diagnostic review, not release approval.
-The recorded Instruct model run is 39219463133, source commit d66c62d,
-before the later abstract-routing correction. Reviewer identity fields are blank;
-all four verdicts are `not_reviewed`.
+It preserves separate recordings at `9e9703a` (eight cases), `31f7d35` (six
+affected/control cases), and `e72ae99` (two comparison cases). Its index selects
+the latest recorded answer per question across the actual commits; it does not
+represent an eight-case run at the final commit. Exact model, runtime and settings
+are included for each recording. Earlier failures remain in their own recordings.
+
+Each folder contains exact final answers, source references, two original public
+PDFs, a frozen AI-curated reference guide and an ungraded `review.csv`. All 16 rows
+are `not_reviewed`; reviewer fields are blank and human reviews remain zero.
+Raw diagnostic archives, wire traces, rejected proposals and logs are excluded.
+See the [cycle report](../quality-cycle-20261112-fallback-repairs.md) for outcomes,
+limitations and verification. Generated mode is not release or source-review approval.
 
 Edit only reviewer, reviewer_type, verdict, and notes in review.csv.
 Save as UTF-8 CSV and return the file in ChatGPT for review processing.
+
+The [earlier four-case kit](RAG-PDF-Review-Kit.zip) is retained unchanged: run
+39219463133 at `d66c62d`, before the abstract-routing correction. Its answers and
+judgments must not be relabelled as results from the newer recordings.

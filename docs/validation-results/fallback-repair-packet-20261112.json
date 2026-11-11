@@ -1,0 +1,325 @@
+{
+  "scope": "Latest recorded view of eight frozen development cases across three exact commits",
+  "recordings": [
+    {
+      "folder": "01-eight-controls-9e9703a",
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465",
+      "created_at_utc": "2026-11-11T21:25:37.183700+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "model_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "records": [
+        {
+          "id": "mmlu-size-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "mmlu-size-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "extractive",
+          "language_matches": false,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "mmlu-format-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "mmlu-format-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-task-evaluations-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-task-evaluations-ar",
+          "generation_mode": "extractive",
+          "language_matches": false,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        }
+      ],
+      "rows": 8,
+      "human_reviews": 0,
+      "verdicts": "ungraded",
+      "packet_manifest_sha256": "08a9f005b0798a9765e054469939358fb8c25cbe6740ee036b676a7e0e1868eb"
+    },
+    {
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17",
+      "created_at_utc": "2026-11-11T21:56:49.145101+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "model_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "records": [
+        {
+          "id": "mmlu-size-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "extractive",
+          "language_matches": false,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "mmlu-format-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-task-evaluations-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-task-evaluations-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        }
+      ],
+      "rows": 6,
+      "human_reviews": 0,
+      "verdicts": "ungraded",
+      "packet_manifest_sha256": "6386019fe782497b3c1c6ca53e7a33f180a9d40bf3df415ce5711cade158b1f3"
+    },
+    {
+      "folder": "03-comparison-e72ae99",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e",
+      "created_at_utc": "2026-11-11T22:48:46.951727+00:00",
+      "model": "qwen3-instruct-hf:4b",
+      "model_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+      "generation_limits": {
+        "context_chars": 6000,
+        "total_timeout": 600.0,
+        "max_statements": 4,
+        "question_coverage_audit": false,
+        "context_tokens": 8192,
+        "request_timeout": 300.0,
+        "temperature": 0
+      },
+      "records": [
+        {
+          "id": "numbers-prompt-en",
+          "generation_mode": "ollama",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        },
+        {
+          "id": "numbers-prompt-ar",
+          "generation_mode": "translated-answer",
+          "language_matches": true,
+          "citation_provenance_valid": true,
+          "pages": [
+            1
+          ]
+        }
+      ],
+      "rows": 2,
+      "human_reviews": 0,
+      "verdicts": "ungraded",
+      "packet_manifest_sha256": "f0bc01cd28a794102a4778e160fed0e35705574e23810d627198f7f940decd23"
+    }
+  ],
+  "latest_records": [
+    {
+      "id": "mmlu-size-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "01-eight-controls-9e9703a",
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465"
+    },
+    {
+      "id": "mmlu-size-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-prompt-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "03-comparison-e72ae99",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e"
+    },
+    {
+      "id": "numbers-prompt-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "03-comparison-e72ae99",
+      "source_code_sha": "e72ae99e30f3823dc54fd9ec9f3a272761eb8f19",
+      "run_id": "e2e49e7a-babf-4e43-94ee-fc053e385d1e"
+    },
+    {
+      "id": "mmlu-format-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "01-eight-controls-9e9703a",
+      "source_code_sha": "9e9703ac5cd4299f707834dc899fcdd99aad2eaf",
+      "run_id": "e5c3c2da-ba4f-4e6e-9d33-c6736bd81465"
+    },
+    {
+      "id": "mmlu-format-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-task-evaluations-en",
+      "generation_mode": "ollama",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    },
+    {
+      "id": "numbers-task-evaluations-ar",
+      "generation_mode": "translated-answer",
+      "language_matches": true,
+      "citation_provenance_valid": true,
+      "pages": [
+        1
+      ],
+      "folder": "02-affected-controls-31f7d35",
+      "source_code_sha": "31f7d359cded69c04c0a0446b52b9611a517da99",
+      "run_id": "2690ed61-64ac-4de7-b1ec-f40d3141bc17"
+    }
+  ],
+  "review_rows": 16,
+  "unique_cases": 8,
+  "human_reviews": 0,
+  "verdicts": "ungraded",
+  "raw_diagnostics_included": false,
+  "packet_sha256": "50508d7133cb422ef807d0d56438f08dad18734deea01c402887e58c1b757f31",
+  "packet_bytes": 3905646,
+  "files_checked": 28,
+  "native_pdf_citations_verified": true
+}

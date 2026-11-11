@@ -153,3 +153,19 @@ regressions exercise both slot bindings, refusal of a negative completeness verd
 and refusal of an omitted count before the judge. 549 tests passed, 5 skipped;
 Ruff lint and formatting passed. Its comparison target/control recording remains
 a separate live gate, not a software-test acceptance claim.
+
+The final gate completed at `e72ae99e30f3823dc54fd9ec9f3a272761eb8f19`,
+run `e2e49e7a-babf-4e43-94ee-fc053e385d1e`: both the English comparison
+control and Arabic comparison target generated, with no recorded rejection.
+All four original fallback cases now have generated follow-up recordings. The
+source-labelled eight-case view combines actual recordings rather than implying
+an all-eight rerun at the final commit. The final code's Windows/Linux matrix
+and Docker Quality workflow `43114105765` passed.
+
+This is not Arabic quality acceptance. AI-assisted inspection flags the extraneous
+`الكلمة` before the Arabic comparison and awkward count agreement in the Arabic
+distinction. These exact answers need language revision and remain unchanged in
+the ungraded packet. The [continuation report](../quality-cycle-20261112-fallback-repairs.md)
+records every attempt, settings, remaining defects and the permitted packet.
+Human review, native Arabic-source evaluation and actual laptop acceptance remain
+open. All raw diagnostics and the restricted original archive stay local.
